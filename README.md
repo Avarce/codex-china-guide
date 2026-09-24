@@ -6,7 +6,7 @@
 
 ![Codex 国内使用与报错速查：按报错原文查原因和处理步骤](images/cover.webp)
 
-国内用 Codex，卡住的地方基本就那几处：装不上、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。
+国内用 Codex，卡住的地方基本就那几处：装不上、打不开、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。
 
 由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 整理维护。我们提供 ChatGPT / Claude 会员充值服务，和 OpenAI 没有隶属关系；这页只讲 Codex 本身，充值相关只放在[最后一节](#国内怎么开通)。
 
@@ -17,10 +17,11 @@
 - [2. 登录](#2-登录)
 - [3. 要验证手机号](#3-要验证手机号)
 - [4. 国内网络：终端要单独设代理](#4-国内网络终端要单独设代理)
-- [5. 报错逐条处理](#5-报错逐条处理)
-- [6. 额度用完了](#6-额度用完了)
-- [7. 中文界面和英文教程对不上](#7-中文界面和英文教程对不上)
-- [8. AGENTS.md 中文模板](#8-agentsmd-中文模板)
+- [5. 桌面版打不开](#5-桌面版打不开)
+- [6. 报错逐条处理](#6-报错逐条处理)
+- [7. 额度用完了](#7-额度用完了)
+- [8. 怎么设置中文](#8-怎么设置中文)
+- [9. AGENTS.md 中文模板](#9-agentsmd-中文模板)
 - [常见问题](#常见问题)
 - [国内怎么开通](#国内怎么开通)
 - [官方来源](#官方来源) · [更新日志](CHANGELOG.md) · [投稿一条报错](#投稿一条报错)
@@ -41,7 +42,11 @@
 | `exceeded retry limit, last status: 429 Too Many Requests` | 官方故障或请求太多 | [429](#请求太多429-too-many-requests) |
 | `ran out of room in the model's context window` | 这个会话的上下文满了 | [上下文满了](#上下文满了ran-out-of-room-in-the-models-context-window) |
 | 证书错误、`certificate` | 公司网络或抓包软件 | [证书错误](#证书错误公司网络抓包软件) |
-| `You've hit your usage limit`、你已达到使用上限 | 额度用完 | [6. 额度用完了](#6-额度用完了) |
+| `You've hit your usage limit`、你已达到使用上限 | 额度用完 | [7. 额度用完了](#7-额度用完了) |
+| Windows 安装未完成 · `helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [Windows 安装未完成](#windows-安装未完成helper_failed) |
+| 已在另一个应用中打开 | 这个会话在别处开着 | [5. 桌面版打不开](#5-桌面版打不开) |
+| 更新后打不开、只有启动动画、窗口空白 | 多半是新版本的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
+| 界面是英文，想切成中文 | 设置里就能改 | [8. 怎么设置中文](#8-怎么设置中文) |
 
 不知道是哪一类，先在终端跑一次 `codex doctor`。它会检查安装、配置、登录和网络，每一项打 ✓ 或 ⚠，最后一栏 Connectivity 就是网络情况。
 
@@ -168,7 +173,66 @@ Connectivity
 
 还有一条：**节点尽量固定，别频繁切换地区。** OpenAI 帮助中心把「从陌生的地点登录」列为账号被临时限制的安全原因之一。
 
-## 5. 报错逐条处理
+## 5. 桌面版打不开
+
+先看是哪一种：
+
+| 你看到的 | 多半是 | 怎么办 |
+| --- | --- | --- |
+| Windows 安装未完成 · `helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [看下面](#windows-安装未完成helper_failed) |
+| 已在另一个应用中打开 | 这个会话还在终端、编辑器或另一个窗口里开着 | 在那边关掉这个会话，回来点「重试」 |
+| 更新后双击没反应、只有启动动画、窗口一片空白 | 多半是新版本的问题 | [看下面](#更新后打不开只有启动动画或白屏) |
+| 能打开，但登录页出不来、一直转圈 | 网络 | [第 4 节](#4-国内网络终端要单独设代理) |
+
+### Windows 安装未完成（helper_failed）
+
+Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个沙盒（隔离环境），这一步需要一次管理员授权。界面会提示「完成 Windows 设置以继续」，失败时显示「Windows 安装未完成」和一个错误码，比如 `helper_failed`。
+
+官方文档列的常见原因：弹出「用户账户控制」时点了「否」；电脑不允许创建本地用户和组、不允许改防火墙；公司的管理策略挡住了其中一步。
+
+按顺序试：
+
+1. 点「重试 Windows 设置」，弹出「用户账户控制」时点「是」。
+2. 公司电脑：问 IT 是否允许这类管理员授权的设置（创建本地用户和组、改防火墙规则、给沙盒用户登录权限）。
+3. 急着用，可以换成官方的备用沙盒。它的隔离比默认的弱一些，但能继续改代码、跑命令。在 `%USERPROFILE%\.codex\config.toml` 里加：
+
+   ```toml
+   [windows]
+   sandbox = "unelevated"
+   ```
+
+   也可以先点「继续使用受限访问」，这样只能聊天，不能建文件、改代码。
+4. 打开日志 `%USERPROFILE%\.codex\.sandbox\setup_error.json`。如果里面是 `helper_sandbox_lock_failed ... SetNamedSecurityInfoW ... 5`（拒绝访问），openai/codex 里有人这样解决（[#45003](https://github.com/openai/codex/issues/45003)，这条回复有 19 人点赞）：完全退出 Codex，用管理员身份打开 PowerShell，删掉下面这个目录，再打开 Codex 重新走一遍设置。
+
+   ```powershell
+   Remove-Item "$env:USERPROFILE\.codex\.sandbox-bin" -Recurse -Force
+   ```
+
+   这是社区里的办法，不是官方步骤；日志里是别的错误就别用。
+5. 看到 Windows 错误 `1385`：说明 Windows 策略不允许沙盒用户登录，要找 IT 处理（官方说明）。
+6. 要发日志给官方，发 `%USERPROFILE%\.codex\.sandbox\sandbox.log`，**不要**发 `.sandbox-secrets` 目录里的东西。
+
+系统要求：官方推荐 Windows 11；Windows 10 要 1809 或更新的版本，而且要有 `winget`。
+
+### 更新后打不开、只有启动动画或白屏
+
+这类问题大多出在新版本本身，而且往往很多人同时遇到：
+
+- 8 月 26 日，Windows 版更新到 26.820 后不少人打不开，报 `Unable to locate Codex CLI`，官方回复正在加急修（[#40752](https://github.com/openai/codex/issues/40752)、[#40700](https://github.com/openai/codex/issues/40700)）。
+- 6 月的 26.609 版也出现过更新后打不开，官方按高优先级处理，已经修复（[#27979](https://github.com/openai/codex/issues/27979)）。
+- 9 月的 26.915 版，Mac 上有白屏报告，issue 还开着（[#46641](https://github.com/openai/codex/issues/46641)）。
+
+按顺序试：
+
+1. 彻底退出再打开：Windows 在任务管理器里结束 ChatGPT（旧版叫 Codex）的进程；Mac 按 Cmd + Q。
+2. 重启电脑。
+3. 检查更新。已知问题一般靠新版本修，Windows 可以在 Microsoft Store 里看有没有更新。
+4. Windows：设置 → 应用 → 已安装的应用 → ChatGPT → 高级选项，先点「修复」（不删数据）；不行再点「重置」（会清掉应用自己的数据，要重新登录）。
+5. 到 [openai/codex 的 issue](https://github.com/openai/codex/issues) 里搜你的版本号和现象，看是不是已知问题。
+
+> issue 里常有人贴「临时办法」，比如改 `CODEX_CLI_PATH`、从第三方镜像降级。这些官方都没认可，[#40752](https://github.com/openai/codex/issues/40752) 里就有人反馈改完之后历史会话打不开。能等就等官方修。
+
+## 6. 报错逐条处理
 
 ### 断线重连：stream disconnected before completion
 
@@ -258,7 +322,7 @@ The 'gpt-6-astra' model is not supported when using Codex with a ChatGPT account
 exceeded retry limit, last status: 429 Too Many Requests
 ```
 
-先看 [status.openai.com](https://status.openai.com)。6 月 3 日那次 429，维护者的回复是官方事故、不是客户端问题，修好就恢复（[#26034](https://github.com/openai/codex/issues/26034)）。没有事故的话，看看是不是额度快用完了（[第 6 节](#6-额度用完了)），或者同时开的会话太多。
+先看 [status.openai.com](https://status.openai.com)。6 月 3 日那次 429，维护者的回复是官方事故、不是客户端问题，修好就恢复（[#26034](https://github.com/openai/codex/issues/26034)）。没有事故的话，看看是不是额度快用完了（[第 6 节](#7-额度用完了)），或者同时开的会话太多。
 
 `last status: 401 Unauthorized` 是另一回事：登录失效了，`codex logout` 后重新登录。
 
@@ -288,7 +352,7 @@ codex login
 
 没设 `CODEX_CA_CERTIFICATE` 时，Codex 会退回读 `SSL_CERT_FILE`。登录、普通请求和 WebSocket 都用这一份证书。
 
-## 6. 额度用完了
+## 7. 额度用完了
 
 ```text
 You've hit your usage limit. Upgrade your plan to continue, or try again at …
@@ -310,11 +374,23 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 
 各套餐多少钱、每 5 小时大概能发多少条、Astra / Sol / Luna 哪个更省额度：[Codex 多少钱？Plus 和 Pro 怎么选](https://aonir.com/guides/codex-pricing/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_pricing)，或者看我们的 [ChatGPT / Claude 速查表](https://github.com/Avarce/chatgpt-claude-cheatsheet)。
 
-## 7. 中文界面和英文教程对不上
+## 8. 怎么设置中文
 
-桌面版可以切成中文：设置 → 常规 → 语言，选简体中文（默认是「自动检测」，跟随系统语言）。
+**桌面版自带简体中文，不用装汉化包。**
 
-但官方文档、英文教程和视频、GitHub issue、Tibo 的推文，还有终端里的 CLI，都是英文。照着英文教程找按钮时，常常对不上。最常用的几个：
+- **桌面版**：按 Cmd + 逗号（Windows 是 Ctrl + 逗号）打开设置，在「常规」里找到「语言」（英文界面叫 Language），选「中文（中国）」，也就是简体中文。列表很长，可以在搜索框里输入「中文」或 Chinese。默认是「自动检测」，跟随系统语言。
+- **VS Code / Cursor 插件**：跟着编辑器的显示语言走。只想让插件显示中文，在设置里把 `chatgpt.localeOverride` 设成 `zh-CN`。
+- **命令行 CLI**：没有中文界面，官方配置里也没有这个选项。想让它用中文回复，在 `~/.codex/AGENTS.md` 里写一句「用简体中文回复」（见[第 9 节](#9-agentsmd-中文模板)）。
+
+**设置里没有「语言」这一项？** 这个选项由 OpenAI 后台的开关控制。我们看了桌面版 26.915 安装包里的代码，「语言」这一项和中文文字包都受同一个开关控制，没对你的账号打开时就不显示。先更新到最新版并重启；还是没有，就只能等官方开放。
+
+**不建议装第三方汉化包。** 这类工具要么解包修改安装文件（app.asar），再改掉程序的完整性校验；要么通过调试端口往运行中的应用里注入脚本。官方一更新就容易失效，甚至打不开。有的还捆绑了跳过官方登录、多账号切换这类功能。
+
+详细步骤和官方示意图：[Codex 怎么设置中文](https://aonir.com/guides/codex-chinese-settings/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_chinese)。
+
+### 中文界面和英文教程对不上
+
+界面切成中文以后，还有一个问题：官方文档、英文教程和视频、GitHub issue、Tibo 的推文，还有终端里的 CLI，都是英文。照着英文教程找按钮时，常常对不上。最常用的几个：
 
 | 英文 | 中文界面 |
 | --- | --- |
@@ -329,7 +405,7 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 
 完整对照 100 多条，按界面区域分组：[UI-GLOSSARY.md](UI-GLOSSARY.md)。中文取自 ChatGPT 桌面版 26.915 自带的简体中文界面，英文取自同一版本的原文。
 
-## 8. AGENTS.md 中文模板
+## 9. AGENTS.md 中文模板
 
 `AGENTS.md` 是写给 Codex 看的项目说明书。官方文档的说法是，Codex 在动手之前会先读它，所以「怎么装依赖、怎么跑测试、哪些文件别碰」写在这里，就不用每次在对话里重复。
 
@@ -397,6 +473,7 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 ## 官方来源
 
 - ChatGPT Learn：[Authentication](https://learn.chatgpt.com/docs/auth) · [Troubleshooting](https://learn.chatgpt.com/docs/reference/troubleshooting) · [Environment variables](https://learn.chatgpt.com/docs/config-file/environment-variables) · [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference)
+- ChatGPT Learn：[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox) · [Settings](https://learn.chatgpt.com/docs/reference/settings) · [Codex IDE extension](https://learn.chatgpt.com/docs/codex/ide)
 - ChatGPT Learn：[Codex CLI](https://learn.chatgpt.com/docs/codex/cli) · [ChatGPT desktop app](https://learn.chatgpt.com/docs/app) · [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) · [Pricing](https://learn.chatgpt.com/docs/pricing) · [Models](https://learn.chatgpt.com/docs/models)
 - OpenAI Help Center：[What does phone verification look like?](https://help.openai.com/en/articles/8983040-what-does-phone-verification-look-like) · [Troubleshooting Model Feature Access Issues](https://help.openai.com/en/articles/10258669-troubleshooting-model-feature-access-issues) · [How banked Codex resets work](https://help.openai.com/en/articles/20001498-how-banked-codex-resets-work)
 - GitHub：[openai/codex](https://github.com/openai/codex)，文中引用的 issue 都附了编号链接
