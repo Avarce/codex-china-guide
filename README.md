@@ -4,6 +4,8 @@
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
+![Codex 国内使用与报错速查：按报错原文查原因和处理步骤](images/cover.webp)
+
 国内用 Codex，卡住的地方基本就那几处：装不上、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。
 
 由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 整理维护。我们提供 ChatGPT / Claude 会员充值服务，和 OpenAI 没有隶属关系；这页只讲 Codex 本身，充值相关只放在[最后一节](#国内怎么开通)。
