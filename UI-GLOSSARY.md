@@ -1,6 +1,6 @@
 # Codex 桌面版中英界面对照
 
-> 取自 ChatGPT 桌面版 26.915.31945（macOS）自带的简体中文界面，英文取自同一版本的原文。2026 年 9 月 24 日整理。
+> 取自 ChatGPT 桌面版（macOS）自带的简体中文界面，英文取自同一版本的原文。2026 年 9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 逐条复核：103 条里 100 条没变，3 条换了译法（Steer、Queue、Work locally），另外补了 7 条 Windows 设置和启动任务的提示。
 > 界面文字会随版本变化，以你电脑上显示的为准。发现对不上的，欢迎提 Issue。
 
 桌面版可以切中文：设置 → 常规 → 语言，选「中文（中国）」（默认「自动检测」，跟随系统语言）。设置里没有「语言」、VS Code 和命令行怎么切，见 [README 第 8 节](README.md#8-怎么设置中文)。这张表是给照着英文文档、英文教程、GitHub issue 找按钮的时候用的。
@@ -32,7 +32,7 @@
 | 英文 | 中文界面 |
 | --- | --- |
 | Local | 本地 |
-| Work locally | 在本地工作 / 本地模式 |
+| Work locally | 在本地处理 / 本地模式（26.915 及更早：在本地工作） |
 | Worktree | 工作树 |
 | New worktree | 新建工作树 |
 | Cloud | 云端 |
@@ -55,8 +55,8 @@
 | Fast | 快速 |
 | Plan mode | 计划模式 |
 | Code review | 代码审查 |
-| Steer | 调整方向 |
-| Queue | 加入队列 |
+| Steer | 引导（26.915 及更早：调整方向） |
+| Queue | 排队（26.915 及更早：加入队列） |
 | Stop | 停止 |
 | Continue | 继续 |
 | Retry | 重试 |
@@ -160,5 +160,12 @@
 | Your ChatGPT session on this device has expired. Sign in again and try again. | 此设备上的 ChatGPT 会话已过期。请重新登录后重试。 |
 | Our services are not available in your country or region | 我们的服务在你所在的国家或地区不可用 |
 | Checking the proxy, firewall, and DNS configuration | 检查代理、防火墙和 DNS 配置 |
+| Starting your task | 正在启动你的任务 |
+| Finish Windows setup to continue | 完成 Windows 设置以继续 |
+| Windows setup didn’t finish | Windows 设置未完成 |
+| Setup could not complete | 设置无法完成（错误码 `helper_failed`） |
+| Setup timed out | 设置超时（错误码 `setup_timeout`） |
+| Retry setup | 重新设置 |
+| Continue without administrator access | 在没有管理员访问权限的情况下继续 |
 
 这些提示怎么处理，见 [README 的报错速查](README.md#按报错找)。

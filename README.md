@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 9 月 24 日**（北京时间）· Codex CLI 0.156.1 · ChatGPT 桌面版 26.915
+> **最后核对：2026 年 10 月 3 日**（北京时间）· Codex CLI 0.160.0 · ChatGPT 桌面版 26.930
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -13,6 +13,7 @@
 ## 目录
 
 - [按报错找](#按报错找)
+- [最近两周的已知问题](#最近两周的已知问题)
 - [1. 安装](#1-安装)
 - [2. 登录](#2-登录)
 - [3. 要验证手机号](#3-要验证手机号)
@@ -40,15 +41,41 @@
 | `Selected model is at capacity` | 服务器满载，或账号被临时限制 | [模型满载](#模型满载selected-model-is-at-capacity) |
 | `The '...' model is not supported when using Codex with a ChatGPT account` | 模型名写错、旧设置或还没开放 | [模型不支持](#模型不支持model-is-not-supported) |
 | `exceeded retry limit, last status: 429 Too Many Requests` | 官方故障或请求太多 | [429](#请求太多429-too-many-requests) |
+| `unexpected status 401 Unauthorized`、`Incorrect API key provided: sk-svcac…` | 官方故障，或登录失效 | [401](#登录失效或官方故障401-unauthorized) |
+| `start the Windows daemon from a non-elevated terminal`、`host Job Object prevents daemon detachment` | 0.157 起新增的后台服务 | [后台服务报错](#后台服务daemon报错) |
+| Windows 上终端窗口一闪一闪 | 旧版后台服务的问题，已修 | [后台服务报错](#后台服务daemon报错) |
+| 改了代理，终端里还是连不上 | 后台服务还在用旧的代理设置 | [4. 国内网络](#4-国内网络终端要单独设代理) |
+| Mac 终端里 Cmd + C 复制不了 | CLI 改成了全屏界面 | [复制不了文字](#终端里复制不了文字) |
 | `ran out of room in the model's context window` | 这个会话的上下文满了 | [上下文满了](#上下文满了ran-out-of-room-in-the-models-context-window) |
 | 证书错误、`certificate` | 公司网络或抓包软件 | [证书错误](#证书错误公司网络抓包软件) |
 | `You've hit your usage limit`、你已达到使用上限 | 额度用完 | [7. 额度用完了](#7-额度用完了) |
-| Windows 安装未完成 · `helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [Windows 安装未完成](#windows-安装未完成helper_failed) |
+| Windows 设置未完成（旧版本写的是「Windows 安装未完成」）、设置无法完成、`helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [Windows 设置未完成](#windows-设置未完成helper_failed) |
 | 已在另一个应用中打开 | 这个会话在别处开着 | [5. 桌面版打不开](#5-桌面版打不开) |
 | 更新后打不开、只有启动动画、窗口空白 | 多半是新版本的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
+| `Unable to load organization settings`、一直停在 `Starting your task`（正在启动你的任务） | 桌面版 26.924 的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
 | 界面是英文，想切成中文 | 设置里就能改 | [8. 怎么设置中文](#8-怎么设置中文) |
 
 不知道是哪一类，先在终端跑一次 `codex doctor`。它会检查安装、配置、登录和网络，每一项打 ✓ 或 ⚠，最后一栏 Connectivity 就是网络情况。
+
+## 最近两周的已知问题
+
+9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 3 日。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
+
+| 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
+| --- | --- | --- | --- |
+| Windows 上每发一次请求，终端窗口就闪几下 | CLI 0.157.0 起 | **已修**，0.159.2（[#48074](https://github.com/openai/codex/issues/48074)，这段时间反馈最多的一条） | `codex update`；升级后还闪，在会话里输入 `/daemon` 把后台服务也更新 |
+| `host Job Object prevents daemon detachment`，CLI 启动不了 | CLI 0.157.0，Windows | **已修**，0.157.1（[#48016](https://github.com/openai/codex/issues/48016)） | `codex update` |
+| `start the Windows daemon from a non-elevated terminal` | CLI 0.157.0 起，Windows 管理员终端 | 没修，官方还在征求意见（[#48043](https://github.com/openai/codex/issues/48043)） | 用普通（非管理员）终端打开，或者 `codex --no-daemon` |
+| `401 Unauthorized: Incorrect API key provided: sk-svcac…`，明明是用 ChatGPT 登录的 | 所有版本 | 官方故障，北京时间 9 月 26 日 06:58–07:54，**已恢复**（[#48237](https://github.com/openai/codex/issues/48237)） | 不用重新登录，见 [401](#登录失效或官方故障401-unauthorized) |
+| Mac 自带终端里 Cmd + C 复制不了 | CLI 0.157.0 起 | 官方不改，是 Terminal.app 的限制（[#48122](https://github.com/openai/codex/issues/48122)） | 见[复制不了文字](#终端里复制不了文字) |
+| VS Code 插件按回车后消息没了，Codex 也不回 | 插件 26.928.31416（10 月 1 日更新） | 修复已合并，等发版（[#49988](https://github.com/openai/codex/issues/49988)，10 月 3 日官方回复） | 先在扩展页「安装特定版本」退回 26.917.62051 |
+| VS Code 插件的模型列表里没有 GPT-6.1 Sol | 插件 26.917.62051（自带的 CLI 太旧） | 10 月 1 日已关闭（[#49464](https://github.com/openai/codex/issues/49464)） | 新版插件自带 CLI 0.159.2，有这个模型，但有上一行的问题；留在旧版的，可以按 issue 里的办法把 `chatgpt.cliExecutable` 指向自己装的新版 CLI |
+| Linux 桌面版任务一直停在 `Starting your task` | 桌面版 26.924 | **已修**，官方 9 月 29 日回复更新即可（[#48189](https://github.com/openai/codex/issues/48189)） | 更新到最新版 |
+| Windows 桌面版 `Unable to load organization settings`，或更新后一直转圈 | 桌面版 26.924 | 没修，官方还没回复（[#48324](https://github.com/openai/codex/issues/48324)、[#48463](https://github.com/openai/codex/issues/48463)） | 见[更新后打不开](#更新后打不开只有启动动画或白屏) |
+| Mac 桌面版白屏 | 桌面版 26.915 | 没修（[#46641](https://github.com/openai/codex/issues/46641)） | 同上 |
+| 安卓手机连电脑（Codex Remote），一直回到 `Authorize this phone` | ChatGPT 安卓版 1.2026.265 | 没修（[#48774](https://github.com/openai/codex/issues/48774)、[#48555](https://github.com/openai/codex/issues/48555)） | 等新版本。#48555 是电脑端换过 ChatGPT 账号之后出现的 |
+
+还有一件有日期的事：**GPT-5.5 在 10 月 14 日从 ChatGPT 和 Codex 下线**，设置或脚本里写死了 `gpt-5.5` 的要提前改，见[模型不支持](#模型不支持model-is-not-supported)。
 
 ## 1. 安装
 
@@ -69,7 +96,7 @@ winget install --id 9PLM9XGG6VKS -s msstore
 CLI 选一种装法就行。官方安装脚本要从 chatgpt.com 下载，国内经常卡住，**用 npm 国内镜像最省事**（需要 Node.js 16+）：
 
 ```bash
-# npm 国内镜像（9 月 24 日核对：镜像版本和 npm 官方一致，都是 0.156.1）
+# npm 国内镜像（10 月 3 日核对：镜像版本和 npm 官方一致，都是 0.160.0）
 npm install -g @openai/codex --registry=https://registry.npmmirror.com
 
 # 官方安装脚本（macOS / Linux）
@@ -87,6 +114,8 @@ brew install --cask codex
 ```bash
 codex --version
 ```
+
+从 0.156 或更早的版本升上来，会发现两处不一样：界面占满整个终端窗口（全屏模式），以及多了一个常驻的后台服务。不习惯的话都能关，见[终端里复制不了文字](#终端里复制不了文字)和[后台服务报错](#后台服务daemon报错)。
 
 > 别从网盘、群文件下载所谓的 Codex「中文版」「破解版」。CLI 是开源的，桌面版本身就能切中文（设置 → 常规 → 语言）。来路不明的安装包可能偷走你的登录凭证。
 
@@ -119,12 +148,14 @@ codex logout                # 退出登录
 
 网页版 ChatGPT 好好的，一到 Codex 就跳出 `Verify your phone number` 或 `Phone number required`。这是现在问得最多的问题。
 
-OpenAI 帮助中心 9 月 23 日更新的说法：
+OpenAI 帮助中心的说法（手机验证那篇 9 月 23 日更新；相关的四篇 10 月 3 日逐篇核对过）：
 
 - 在桌面版里使用 Codex 可能要求验证手机号。官方社区里不少人说 CLI 和 VS Code 插件登录也会被带到同一个验证页。
-- 验证码只发短信，部分国家可以发 WhatsApp。**邮箱和验证器 App（2FA）都代替不了。**
-- 座机、Google Voice 这类网络电话（VoIP）不行。中国大陆和香港不在支持名单里，国内手机号一般用不了。
-- **号码绑定后不能更换。** 好在正常情况下验证一次就够了，不会反复要求。
+- 验证码只发短信，不发邮件，也不打电话。12 个国家的号码可以改用 WhatsApp 收：阿联酋、埃及、印度尼西亚、以色列、印度、马来西亚、尼日利亚、巴基斯坦、沙特阿拉伯、土耳其、乌克兰、越南。**邮箱和验证器 App（2FA）都代替不了。**
+- 座机、收费号码、Google Voice 这类网络电话（VoIP）都不行。中国大陆、香港、澳门不在支持的国家和地区名单里，国内手机号一般用不了。
+- **号码绑定后不能更换**，帮助中心写明 ChatGPT 和 API 都不提供改号。好在正常情况下验证一次就够了，不会反复要求。所以要用一个以后还收得到短信的号码：官方社区里有人因为几年前绑的旧号码早就不用了，进不了 Codex，客服 9 月 24 日的答复只是让他重新提交工单（[帖子](https://community.openai.com/t/codex-desktop-still-requires-verification-of-inaccessible-old-phone-number-case-11547509/1387193)）。
+
+9 月 30 日的 CLI 0.159.3 起，用 ChatGPT 登录的本地会话里可能出现一条提醒，让你「完成账号安全设置」。发布说明写的是可选提醒（optional reminders），给谁显示由 OpenAI 服务器决定，不是每个人都有。
 
 手边没有境外手机号：有实体卡或 eSIM 的直接用；没有的可以用接码平台（比如 hero-sms.com）临时买一个号码收码。不是每个号码都收得到，收不到就换一个；这类号码大多是临时的，OpenAI 又不支持改号，万一以后又要求验证，原来的号码可能已经用不了。
 
@@ -171,6 +202,13 @@ Connectivity
   ✓ websocket    connected (HTTP 101 Switching Protocols) ← 这行是 connected 就说明通了
 ```
 
+**改了代理却不生效（CLI 0.157.0 起）。** 新版 CLI 会启动一个常驻的后台服务，真正连 OpenAI 的是它。官方仓库里有用户报告，后台服务一直用它启动那一刻的代理变量，之后换端口、换变量，新开的窗口也不认（[#48195](https://github.com/openai/codex/issues/48195)，用户报告，官方还没回复）。改完代理后把它停掉再开：
+
+```bash
+codex app-server daemon stop   # 停掉后台服务，下次运行 codex 会带着新的代理变量重新启动
+codex --no-daemon              # 或者这一次不用后台服务
+```
+
 还有一条：**节点尽量固定，别频繁切换地区。** OpenAI 帮助中心把「从陌生的地点登录」列为账号被临时限制的安全原因之一。
 
 ## 5. 桌面版打不开
@@ -179,20 +217,22 @@ Connectivity
 
 | 你看到的 | 多半是 | 怎么办 |
 | --- | --- | --- |
-| Windows 安装未完成 · `helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [看下面](#windows-安装未完成helper_failed) |
+| Windows 设置未完成（旧版本写的是「Windows 安装未完成」）、设置无法完成、`helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [看下面](#windows-设置未完成helper_failed) |
 | 已在另一个应用中打开 | 这个会话还在终端、编辑器或另一个窗口里开着 | 在那边关掉这个会话，回来点「重试」 |
 | 更新后双击没反应、只有启动动画、窗口一片空白 | 多半是新版本的问题 | [看下面](#更新后打不开只有启动动画或白屏) |
+| `Unable to load organization settings`，点重试没用 | Windows 桌面版 26.924 的问题，官方还没修 | [看下面](#更新后打不开只有启动动画或白屏) |
+| 任务一直停在 `Starting your task`（中文界面：正在启动你的任务） | Linux 桌面版 26.924 的问题，已修 | 更新到最新版 |
 | 能打开，但登录页出不来、一直转圈 | 网络 | [第 4 节](#4-国内网络终端要单独设代理) |
 
-### Windows 安装未完成（helper_failed）
+### Windows 设置未完成（helper_failed）
 
-Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个沙盒（隔离环境），这一步需要一次管理员授权。界面会提示「完成 Windows 设置以继续」，失败时显示「Windows 安装未完成」和一个错误码，比如 `helper_failed`。
+Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个沙盒（隔离环境），这一步需要一次管理员授权。界面会提示「完成 Windows 设置以继续」，失败时显示「Windows 设置未完成」（旧版本写的是「Windows 安装未完成」），下面一行小字是原因：「设置无法完成」对应错误码 `helper_failed`，「设置超时」对应 `setup_timeout`，另外还有「审批已取消」「启动设置未成功」。
 
 官方文档列的常见原因：弹出「用户账户控制」时点了「否」；电脑不允许创建本地用户和组、不允许改防火墙；公司的管理策略挡住了其中一步。
 
 按顺序试：
 
-1. 点「重试 Windows 设置」，弹出「用户账户控制」时点「是」。
+1. 点「重新设置」（英文 Retry setup），弹出「用户账户控制」时点「是」。
 2. 公司电脑：问 IT 是否允许这类管理员授权的设置（创建本地用户和组、改防火墙规则、给沙盒用户登录权限）。
 3. 急着用，可以换成官方的备用沙盒。它的隔离比默认的弱一些，但能继续改代码、跑命令。在 `%USERPROFILE%\.codex\config.toml` 里加：
 
@@ -201,7 +241,7 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
    sandbox = "unelevated"
    ```
 
-   也可以先点「继续使用受限访问」，这样只能聊天，不能建文件、改代码。
+   界面上的「在没有管理员访问权限的情况下继续」（Continue without administrator access）走的也是不需要管理员权限的沙盒。如果提示的是「你可以继续聊天，但 ChatGPT 无法创建文件、编辑代码或执行操作」，那是公司的管理策略不允许更新沙盒，这时只能聊天，要找 IT。
 4. 打开日志 `%USERPROFILE%\.codex\.sandbox\setup_error.json`。如果里面是 `helper_sandbox_lock_failed ... SetNamedSecurityInfoW ... 5`（拒绝访问），openai/codex 里有人这样解决（[#45003](https://github.com/openai/codex/issues/45003)，这条回复有 19 人点赞）：完全退出 Codex，用管理员身份打开 PowerShell，删掉下面这个目录，再打开 Codex 重新走一遍设置。
 
    ```powershell
@@ -220,11 +260,12 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 
 - 8 月 26 日，Windows 版更新到 26.820 后不少人打不开，报 `Unable to locate Codex CLI`，官方回复正在加急修（[#40752](https://github.com/openai/codex/issues/40752)、[#40700](https://github.com/openai/codex/issues/40700)）。
 - 6 月的 26.609 版也出现过更新后打不开，官方按高优先级处理，已经修复（[#27979](https://github.com/openai/codex/issues/27979)）。
-- 9 月的 26.915 版，Mac 上有白屏报告，issue 还开着（[#46641](https://github.com/openai/codex/issues/46641)）。
+- 9 月的 26.915 版，Mac 上有白屏报告，issue 到 10 月 3 日还开着（[#46641](https://github.com/openai/codex/issues/46641)）。
+- 9 月 25 日前后的 26.924 版：Linux 上任务一直停在 `Starting your task`，官方 9 月 29 日回复已修复，更新即可（[#48189](https://github.com/openai/codex/issues/48189)）。Windows 上有人一打开 Codex 就弹 `Unable to load organization settings`（[#48324](https://github.com/openai/codex/issues/48324)），也有人更新后一直转圈（[#48463](https://github.com/openai/codex/issues/48463)、[#48333](https://github.com/openai/codex/issues/48333)），这几条官方还没回复。
 
 按顺序试：
 
-1. 彻底退出再打开：Windows 在任务管理器里结束 ChatGPT（旧版叫 Codex）的进程；Mac 按 Cmd + Q。
+1. 彻底退出再打开：Windows 在任务管理器里结束 ChatGPT（旧版叫 Codex）的进程，后台残留的 `codex.exe` 也一起结束（#48333 的报告人就是结束它之后才进去的）；Mac 按 Cmd + Q。
 2. 重启电脑。
 3. 检查更新。已知问题一般靠新版本修，Windows 可以在 Microsoft Store 里看有没有更新。
 4. Windows：设置 → 应用 → 已安装的应用 → ChatGPT → 高级选项，先点「修复」（不删数据）；不行再点「重置」（会清掉应用自己的数据，要重新登录）。
@@ -310,9 +351,9 @@ The 'gpt-6-astra' model is not supported when using Codex with a ChatGPT account
 
 常见原因有三种：
 
-- **模型名写错了。** 命令行里要写完整 ID，比如 `gpt-6-astra`。写 `--model astra` 这种简称，CLI 能启动，发消息时才报这个错（[#46410](https://github.com/openai/codex/issues/46410)）。
-- **旧设置还指着下线的模型。** `~/.codex/config.toml` 里的 `model = "..."`、脚本、定时任务写死了旧模型。GPT-5.5 在 2026 年 10 月 14 日从 ChatGPT 和 Codex 下线，官方建议改成 `gpt-5.6-sol`。
-- **新模型还在分批开放，或者你的套餐没有。** 9 月有好几个 Pro 账号反映 Astra、Sol 被拒，官方 issue 还开着（[#46304](https://github.com/openai/codex/issues/46304)、[#47333](https://github.com/openai/codex/issues/47333)）。
+- **模型名写错了。** 命令行里要写完整 ID。官方 Models 页现在推荐的三个是 `gpt-6-astra`、`gpt-6.1-sol`、`gpt-6-luna`，另外 `gpt-6-sol` 和 GPT-5.6 的三款也还能选（10 月 3 日核对）。写 `--model astra` 这种简称，CLI 能启动，发消息时才报这个错（[#46410](https://github.com/openai/codex/issues/46410)）。
+- **旧设置还指着下线的模型。** `~/.codex/config.toml` 里的 `model = "..."`、脚本、定时任务写死了旧模型。**GPT-5.5 在 2026 年 10 月 14 日从 ChatGPT 和 Codex 下线**，API 不受影响。官方 Models 页给的替换：Plus、Pro、Business、Enterprise、Edu 改成 `gpt-6-sol`，Free 和 Go 改成 `gpt-6-luna`。
+- **新模型还在分批开放，或者你的套餐、客户端没有。** GPT-6.1 Sol 9 月 29 日发布，官方写的是能不能用取决于套餐、客户端和工作区设置；CLI 是 0.159.1 才把它加进自带的模型列表的，旧版本先升级。9 月有好几个 Pro 账号反映 Astra、Sol 被拒，官方 issue 到 10 月 3 日还开着（[#46304](https://github.com/openai/codex/issues/46304)、[#47333](https://github.com/openai/codex/issues/47333)）。
 
 处理：在会话里输入 `/model`，从列表里选一个；删掉 config.toml 里写死的 `model`；把 Codex 升级到最新。列表里选了还报错，多半是开放范围的问题，用 `/feedback` 反馈后等。
 
@@ -322,9 +363,57 @@ The 'gpt-6-astra' model is not supported when using Codex with a ChatGPT account
 exceeded retry limit, last status: 429 Too Many Requests
 ```
 
-先看 [status.openai.com](https://status.openai.com)。6 月 3 日那次 429，维护者的回复是官方事故、不是客户端问题，修好就恢复（[#26034](https://github.com/openai/codex/issues/26034)）。没有事故的话，看看是不是额度快用完了（[第 6 节](#7-额度用完了)），或者同时开的会话太多。
+先看 [status.openai.com](https://status.openai.com)。6 月 3 日那次 429，维护者的回复是官方事故、不是客户端问题，修好就恢复（[#26034](https://github.com/openai/codex/issues/26034)）。没有事故的话，看看是不是额度快用完了（[第 7 节](#7-额度用完了)），或者同时开的会话太多。
 
-`last status: 401 Unauthorized` 是另一回事：登录失效了，`codex logout` 后重新登录。
+### 登录失效或官方故障：401 Unauthorized
+
+```text
+unexpected status 401 Unauthorized: Incorrect API key provided: sk-svcac***…. You can find your API key at https://platform.openai.com/account/api-keys., url: https://chatgpt.com/backend-api/codex/responses
+```
+
+401 有两种，处理办法相反，先分清：
+
+- **报错里带 `Incorrect API key provided: sk-svcac…`，而你明明是用 ChatGPT 登录的，没填过 API Key。** 这是 OpenAI 服务器那边的故障，不是你的账号问题。北京时间 9 月 26 日 06:58–07:54 出过一次，CLI、桌面版、插件、网页版同时受影响，维护者回复是大范围故障，不用重复报告（[#48237](https://github.com/openai/codex/issues/48237)，[官方事故记录](https://status.openai.com/incidents/01M3DCNWMW57HYK8FJ5FBFPA39)）。这时**重新登录没用**，看 [status.openai.com](https://status.openai.com)，等恢复。当时压缩上下文也会报同一个错（`Error running remote compact task`）。
+- **只有 `401 Unauthorized`，状态页一切正常，别人也没事。** 多半是你本机的登录失效了：`codex logout`，再 `codex login`。反复出现的，看[登录过期](#登录过期refresh-token-was-already-used)那一节。
+
+### 后台服务（daemon）报错
+
+```text
+Error: start the Windows daemon from a non-elevated terminal; shared clients must not inherit administrator privileges
+Error: host Job Object prevents daemon detachment; start from a host that allows breakaway
+To work without the background server, rerun the same command with --no-daemon (including resume or fork and its arguments).
+```
+
+CLI 0.157.0（9 月 25 日）起，运行 `codex` 会自动启动一个常驻的后台服务（daemon），所有终端窗口共用它；窗口关了它还在，还会自己更新。维护者的解释是，这样多个会话之间能互相看到谁在跑（[#48043](https://github.com/openai/codex/issues/48043)）。它带来了一批新报错，大多出在 Windows 上：
+
+| 你看到的 | 原因 | 怎么办 |
+| --- | --- | --- |
+| `start the Windows daemon from a non-elevated terminal` | 你用管理员身份开的终端。后台服务只允许用普通权限启动，不然普通会话就能借它执行管理员命令 | 用普通终端打开；必须用管理员终端的，加 `--no-daemon`。官方在考虑让管理员终端自动这样处理，还没定 |
+| `host Job Object prevents daemon detachment` | 0.157.0 的问题 | 升级，0.157.1 已修（[#48016](https://github.com/openai/codex/issues/48016)） |
+| 每发一次请求，终端窗口闪几下 | 0.157.0–0.159.1 的问题 | 升级，0.159.2 已修（[#48074](https://github.com/openai/codex/issues/48074)） |
+| 升级了，问题还在 | 后台服务还是旧版本。CLI 和后台服务的版本是分开的 | 会话里输入 `/status` 看后台服务的版本，输入 `/daemon` 让它马上更新 |
+
+常用命令：
+
+```bash
+codex --no-daemon                          # 这一次不用后台服务，每个窗口各跑各的（和以前一样）
+codex app-server daemon version            # 看后台服务的版本
+codex app-server daemon stop               # 停掉后台服务
+codex app-server daemon restart            # 重启后台服务
+codex features disable daemon_auto_start   # 以后都不自动启动
+```
+
+最后一条是 issue 里用户的做法（[#48195](https://github.com/openai/codex/issues/48195)），维护者在排查时用的是对应的 `codex features enable daemon_auto_start`。关掉以后，「CLI 退出后任务继续在后台跑」这类依赖后台服务的功能就没有了。
+
+### 终端里复制不了文字
+
+CLI 0.157.0 起默认用全屏界面：Codex 自己接管整个终端窗口，和 vim 一样，不再往终端的滚动记录里写。好处是长对话滚动快、输入框固定在底部；代价是在 Mac 自带的终端（Terminal.app）里，选中文字按 Cmd + C 没反应。维护者的答复是 Terminal.app 在全屏模式下不会把 Cmd + C 传给 Codex，这个不会改（[#48122](https://github.com/openai/codex/issues/48122)）。三个办法：
+
+1. 输入 `/tui`，切回原来的滚动模式；或者启动时加 `--no-alt-screen`（`codex --no-alt-screen`）。全屏模式的那些功能就没有了。
+2. 用选中即复制（copy-on-select）或右键复制，不按 Cmd + C。0.158.0 起这两项可以自己开关。
+3. 换一个终端，比如 Ghostty、Kitty，它们没有这个限制。
+
+全屏模式的官方介绍：[Codex CLI goes fullscreen](https://github.com/openai/codex/discussions/49129)。
 
 ### 上下文满了：ran out of room in the model's context window
 
@@ -358,21 +447,32 @@ codex login
 You've hit your usage limit. Upgrade your plan to continue, or try again at …
 ```
 
-中文界面：「你已达到使用上限。升级套餐以继续，或在 … 再试。」也可能是「你已达到 GPT-6 Astra 的使用限额。请在 … 后重试，或与其他模型新建对话。」后一种说明是**这个模型**的限额用完了，换一个模型往往还能继续用。
+中文界面：「你已达到使用上限。升级套餐以继续，或在 … 后重试。」后半句也可能是「升级套餐或充值额度以继续」「请充值后继续」。还有一种是「你已达到 GPT-6 Astra 的使用限额。请在 … 后重试，或与其他模型新建对话。」后一种说明是**这个模型**的限额用完了，换一个模型往往还能继续用。
 
 先看还剩多少：CLI 里输入 `/status`；桌面版点个人菜单里的「使用情况」；网页看 [chatgpt.com/codex/settings/usage](https://chatgpt.com/codex/settings/usage)。然后按情况选：
 
 | 情况 | 怎么办 |
 | --- | --- |
-| 5 小时额度用完 | 等报错里写的时间，一般几小时内就回来。Plus 有 5 小时限制；Pro 目前没有，只算每周额度（Codex 负责人 Tibo 8 月 25 日说明） |
+| 5 小时额度用完 | 等报错里写的时间，一般几小时内就回来。Plus 有 5 小时限制；Pro 目前没有，只算每周额度（官方定价页，10 月 3 日核对） |
 | 每周额度用完 | 等周额度重置；急用就换个消耗低的模型，或者买额外额度 |
 | 当前模型用完了 | 按提示换一个模型开新会话 |
-| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」。Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，[这里有时间线](https://aonir.com/guides/codex-pricing/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets#resets) |
-| 经常用完，影响干活 | 考虑升级：Plus → Pro 5×，Codex 用量是 Plus 的 5 倍 |
+| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近一张重置卡是北京时间 9 月 30 日凌晨 DevDay 现场发的。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
+| 经常用完，影响干活 | 考虑升级。9 月 29 日起 Pro 分三档：Pro 100、Pro 200、Pro 500（$100 / $200 / $500），Codex 额度分别是 Plus 的 5、10、25 倍 |
+
+Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 3 日核对）：
+
+| 模型 | Plus 每 5 小时 |
+| --- | --- |
+| GPT-6 Astra | 5–45 条 |
+| GPT-6.1 Sol | 15–160 条 |
+| GPT-6 Sol | 15–150 条 |
+| GPT-6 Luna | 350–3,000 条 |
+
+这是估算，不是固定次数，任务越大越耗，另外还有每周上限。同一份额度，用 Sol 能跑的条数大约是 Astra 的 3 倍，日常写代码先用 GPT-6.1 Sol，难活再换 Astra。
 
 > 中文界面里有个容易看混的地方：**「额度」有两种意思。**「每周使用限额」「5 小时使用限额」是套餐自带、会自动恢复的；「添加额度」「额度余额」对应英文的 credits，是用完后另外花钱买的点数。官方说明 Plus 和 Pro 用完限额后可以买 credits 继续用，不一定要升级。
 
-各套餐多少钱、每 5 小时大概能发多少条、Astra / Sol / Luna 哪个更省额度：[Codex 多少钱？Plus 和 Pro 怎么选](https://aonir.com/guides/codex-pricing/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_pricing)，或者看我们的 [ChatGPT / Claude 速查表](https://github.com/Avarce/chatgpt-claude-cheatsheet)。
+各套餐多少钱、Astra / Sol / Luna 哪个更省额度：[Codex 多少钱？Plus 和 Pro 怎么选](https://aonir.com/guides/codex-pricing/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_pricing)；哪个套餐在哪个入口能用哪个模型：[ChatGPT 各套餐模型对照](https://aonir.com/guides/chatgpt-models-by-plan/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_models)；或者看我们的 [ChatGPT / Claude 速查表](https://github.com/Avarce/chatgpt-claude-cheatsheet)。
 
 ## 8. 怎么设置中文
 
@@ -399,11 +499,11 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 | Review | 审查（有些地方译成「审核」） |
 | Stage / Revert | 暂存 / 还原 |
 | Approve for me / Full access | 帮我批准 / 完全访问权限（设置里叫「完整访问权限」） |
-| Steer / Queue | 调整方向 / 加入队列 |
+| Steer / Queue | 引导 / 排队（26.915 及更早叫「调整方向 / 加入队列」） |
 | Compact | 压缩 |
 | Usage limits / Credits | 用量限制 / 额度（见上一节，两个都可能叫「额度」） |
 
-完整对照 100 多条，按界面区域分组：[UI-GLOSSARY.md](UI-GLOSSARY.md)。中文取自 ChatGPT 桌面版 26.915 自带的简体中文界面，英文取自同一版本的原文。
+完整对照 110 条，按界面区域分组：[UI-GLOSSARY.md](UI-GLOSSARY.md)。中文取自 ChatGPT 桌面版自带的简体中文界面，英文取自同一版本的原文，10 月 3 日对着 26.930 逐条复核过。
 
 ## 9. AGENTS.md 中文模板
 
@@ -445,8 +545,10 @@ codex --ask-for-approval never "总结一下你当前加载了哪些说明"
 两边带的 Codex 版本不一定一样，新功能常常先到 CLI。查 CLI 版本用 `codex --version`；Mac 上查桌面版自带的 Codex 版本：
 
 ```bash
-/Applications/Codex.app/Contents/Resources/codex --version
+/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex --version
 ```
+
+10 月 3 日我们的电脑上，桌面版 26.930 自带的是 0.159.0-alpha.12.1，npm 上最新的是 0.160.0。VS Code 插件也自带一份，同样可能比你自己装的旧。
 
 **日志在哪？**
 Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.codex/sessions`。发给别人前先看一眼，别把 token 带出去。
@@ -460,7 +562,7 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 
 1. **自己用礼品卡订阅**：见我们的两篇实测教程：[ChatGPT Plus 国内充值 / Apple 礼品卡实测](https://github.com/Avarce/chatgpt-plus-china-guide)、[OpenAI Gift Card 购买与兑换](https://github.com/Avarce/openai-gift-card-guide)。
 2. **先把几种方法比一遍**：[没有海外信用卡怎么开通 ChatGPT Plus：5 种方法对比](https://aonir.com/guides/chatgpt-plus-without-foreign-card/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_no_card)。
-3. **微信充值到本人账号**：AONIR 提供 [ChatGPT Plus ¥168 / 月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_plus)、[ChatGPT Pro 5× ¥730 / 月](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_5x)，充到你自己的账号，不需要密码，Codex 额度跟着套餐走。
+3. **微信充值到本人账号**：AONIR 提供 [ChatGPT Plus ¥168 / 月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_plus)、[ChatGPT Pro 5× ¥730 / 月](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_5x)（官方的 Pro 100），充到你自己的账号，不需要密码，Codex 额度跟着套餐走。
 
 有海外卡的，直接在官方订阅最划算。
 
@@ -475,11 +577,13 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 - ChatGPT Learn：[Authentication](https://learn.chatgpt.com/docs/auth) · [Troubleshooting](https://learn.chatgpt.com/docs/reference/troubleshooting) · [Environment variables](https://learn.chatgpt.com/docs/config-file/environment-variables) · [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference)
 - ChatGPT Learn：[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox) · [Settings](https://learn.chatgpt.com/docs/reference/settings) · [Codex IDE extension](https://learn.chatgpt.com/docs/codex/ide)
 - ChatGPT Learn：[Codex CLI](https://learn.chatgpt.com/docs/codex/cli) · [ChatGPT desktop app](https://learn.chatgpt.com/docs/app) · [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) · [Pricing](https://learn.chatgpt.com/docs/pricing) · [Models](https://learn.chatgpt.com/docs/models)
-- OpenAI Help Center：[What does phone verification look like?](https://help.openai.com/en/articles/8983040-what-does-phone-verification-look-like) · [Troubleshooting Model Feature Access Issues](https://help.openai.com/en/articles/10258669-troubleshooting-model-feature-access-issues) · [How banked Codex resets work](https://help.openai.com/en/articles/20001498-how-banked-codex-resets-work)
-- GitHub：[openai/codex](https://github.com/openai/codex)，文中引用的 issue 都附了编号链接
+- OpenAI Help Center：[What does phone verification look like?](https://help.openai.com/en/articles/8983040-what-does-phone-verification-look-like) · [哪些号码不能用](https://help.openai.com/en/articles/8983024) · [WhatsApp 验证支持的国家](https://help.openai.com/en/articles/8983038-which-countries-do-you-support-for-whatsapp-phone-verification) · [不支持改号](https://help.openai.com/en/articles/9135134-how-to-change-the-phone-number-associated-with-your-account) · [支持的国家和地区](https://help.openai.com/en/articles/7947663-chatgpt-supported-countries)
+- OpenAI Help Center：[Troubleshooting Model Feature Access Issues](https://help.openai.com/en/articles/10258669-troubleshooting-model-feature-access-issues) · [How banked Codex resets work](https://help.openai.com/en/articles/20001498-how-banked-codex-resets-work)
+- ChatGPT Learn：[Changelog](https://learn.chatgpt.com/docs/changelog)（版本和模型的发布日期）
+- GitHub：[openai/codex](https://github.com/openai/codex)，文中引用的 issue 都附了编号链接；各版本改了什么见 [Releases](https://github.com/openai/codex/releases)
 - [OpenAI 状态页](https://status.openai.com)
 
-中文界面的文字取自 ChatGPT 桌面版 26.915.31945（macOS）自带的简体中文语言包；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）。
+中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 3 日的开关状态和 OpenAI 员工的回复；标了「用户报告」「社区办法」的没有经过官方确认。
 
 ## 转载与许可
 
