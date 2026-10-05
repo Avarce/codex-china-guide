@@ -472,7 +472,7 @@ Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务
 
 > 中文界面里有个容易看混的地方：**「额度」有两种意思。**「每周使用限额」「5 小时使用限额」是套餐自带、会自动恢复的；「添加额度」「额度余额」对应英文的 credits，是用完后另外花钱买的点数。官方说明 Plus 和 Pro 用完限额后可以买 credits 继续用，不一定要升级。
 
-各套餐多少钱、Astra / Sol / Luna 哪个更省额度：[Codex 多少钱？Plus 和 Pro 怎么选](https://aonir.com/guides/codex-pricing/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_pricing)；哪个套餐在哪个入口能用哪个模型：[ChatGPT 各套餐模型对照](https://aonir.com/guides/chatgpt-models-by-plan/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_models)；或者看我们的 [ChatGPT / Claude 速查表](https://github.com/Avarce/chatgpt-claude-cheatsheet)。
+各套餐多少钱、Astra / Sol / Luna 哪个更省额度：[Codex 多少钱？Plus 和 Pro 怎么选](https://aonir.com/guides/codex-pricing/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_pricing)；哪个套餐在哪个入口能用哪个模型：[ChatGPT 各套餐模型对照](https://aonir.com/guides/chatgpt-models-by-plan/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_models)。
 
 ## 8. 怎么设置中文
 
