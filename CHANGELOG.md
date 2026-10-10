@@ -9,7 +9,8 @@ Codex 改了安装方式、登录流程、报错或额度规则，这里记一�
 - 新增「WSL：Failed to create unified exec process (os error 2)」：Windows 桌面版开了 Run agent in WSL 之后每条命令都失败，附用户给出的挂载目录临时办法。
 - 新增「网页版：Unable to determine project root for task」：云端任务第一条消息发不出去，未修。
 - 「后台服务报错」补两条：`Server is draining; retry after reconnecting`、`Background server has incompatible feature settings`。
-- 「最近两周的已知问题」加 6 条 10 月的新问题，状态核对到 10 月 10 日；VS Code 插件丢消息那条改为已修。
+- 「最近两周的已知问题」加 9 条：除上面几条外，还有 VS Code 语音输入 403、Linux 沙盒 `mountinfo path is not absolute`、10 月 2 日重置没到账、套餐额度用完后输入框变灰、dot 建不了本地任务。状态核对到 10 月 10 日；VS Code 插件丢消息那条改为已修。
+- 「国内怎么开通」补充 Pro 10×（官方 Pro 200）。
 
 ## 2026-10-03
 
