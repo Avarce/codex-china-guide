@@ -2,6 +2,15 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-10-10
+
+- 核对版本更新为 Codex CLI 0.162.1（npm 与 npmmirror 一致）、Windows 桌面版 26.1007。
+- 新增「Windows 沙盒：setup refresh had errors (os error 32)」：10 月 7 日 Windows 桌面版 26.1002 起所有命令失败，26.1007.21434 已修；单独安装的 CLI 0.162.x 还没修，可先装回 0.160.1。
+- 新增「WSL：Failed to create unified exec process (os error 2)」：Windows 桌面版开了 Run agent in WSL 之后每条命令都失败，附用户给出的挂载目录临时办法。
+- 新增「网页版：Unable to determine project root for task」：云端任务第一条消息发不出去，未修。
+- 「后台服务报错」补两条：`Server is draining; retry after reconnecting`、`Background server has incompatible feature settings`。
+- 「最近两周的已知问题」加 6 条 10 月的新问题，状态核对到 10 月 10 日；VS Code 插件丢消息那条改为已修。
+
 ## 2026-10-03
 
 - 核对版本更新为 Codex CLI 0.160.0（npm 与 npmmirror 一致）、ChatGPT 桌面版 26.930。

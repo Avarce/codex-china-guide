@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 3 日**（北京时间）· Codex CLI 0.160.0 · ChatGPT 桌面版 26.930
+> **最后核对：2026 年 10 月 10 日**（北京时间）· Codex CLI 0.162.1 · Windows 桌面版 26.1007
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -53,22 +53,33 @@
 | 已在另一个应用中打开 | 这个会话在别处开着 | [5. 桌面版打不开](#5-桌面版打不开) |
 | 更新后打不开、只有启动动画、窗口空白 | 多半是新版本的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
 | `Unable to load organization settings`、一直停在 `Starting your task`（正在启动你的任务） | 桌面版 26.924 的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
+| `helper_unknown_error: setup refresh had errors`、`trusted Node process exited unexpectedly`、日志里 `os error 32` | Windows 沙盒的问题，10 月 7 日那一版开始 | [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
+| `Failed to create unified exec process: No such file or directory (os error 2)` | Windows 桌面版开了 Run agent in WSL | [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
+| `Error submitting message`、`Unable to determine project root for task` | Codex 网页版云端任务的问题，还没修 | [网页版](#网页版unable-to-determine-project-root-for-task) |
+| `Server is draining; retry after reconnecting`、`Background server has incompatible feature settings` | 后台服务自己更新了 | [后台服务报错](#后台服务daemon报错) |
+| VS Code 里语音输入一闪就停，显示 `Dictation stopped`，日志里 `HTTP 403 Forbidden` | 插件的语音接口被拒，还没修 | [最近的已知问题](#最近两周的已知问题) |
 | 界面是英文，想切成中文 | 设置里就能改 | [8. 怎么设置中文](#8-怎么设置中文) |
 
 不知道是哪一类，先在终端跑一次 `codex doctor`。它会检查安装、配置、登录和网络，每一项打 ✓ 或 ⚠，最后一栏 Connectivity 就是网络情况。
 
 ## 最近两周的已知问题
 
-9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 3 日。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
+9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 10 日，10 月新出的排在前面。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
 
 | 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
 | --- | --- | --- | --- |
+| Windows 上所有命令都在执行前失败：`helper_unknown_error: setup refresh had errors`，日志里是 `os error 32` | Windows 桌面版 26.1002（10 月 7 日）；CLI 0.162.0、0.162.1 | 桌面版：10 月 9 日多位用户确认 26.1007.21434 **已修**（[#51601](https://github.com/openai/codex/issues/51601)，3 天 117 条回复）。CLI：10 月 10 日仍有人在 0.162.1 上复现（[#51634](https://github.com/openai/codex/issues/51634)） | 桌面版更新到 26.1007；CLI 见 [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
+| Windows 桌面版开了 Run agent in WSL，每条命令都是 `Failed to create unified exec process: No such file or directory (os error 2)` | 桌面版 26.928 起 | 没修，10 月 5 日的 26.930.41038 仍有（[#49731](https://github.com/openai/codex/issues/49731)） | 用户给了挂载目录的临时办法，见 [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
+| Codex 网页版第一条消息发不出去：`Unable to determine project root for task` | 9 月 30 日起，云端环境 | 没修，还没有官方回复（[#49497](https://github.com/openai/codex/issues/49497)） | 见[网页版](#网页版unable-to-determine-project-root-for-task) |
+| 会话突然断开：`Server is draining; retry after reconnecting`，恢复时提示 `Background server has incompatible feature settings` | 后台服务自动更新的时候 | 没修（[#51763](https://github.com/openai/codex/issues/51763)，10 月 7 日） | 按提示重启后台服务，见[后台服务报错](#后台服务daemon报错) |
+| VS Code 插件语音输入显示 `Dictation stopped`，日志里 `/transcribe` 返回 `HTTP 403 Forbidden` | 插件 26.917.62051 起 | 没修（[#49351](https://github.com/openai/codex/issues/49351)）。同一个账号在桌面版里语音正常 | 语音先用桌面版，插件里先打字 |
+| dot 建不了本地任务，提示 `not attached to an active Aeon` | Pro 的 dots，10 月 7 日起 | 没修（[#51730](https://github.com/openai/codex/issues/51730)） | 先在 Codex 里自己建任务 |
 | Windows 上每发一次请求，终端窗口就闪几下 | CLI 0.157.0 起 | **已修**，0.159.2（[#48074](https://github.com/openai/codex/issues/48074)，这段时间反馈最多的一条） | `codex update`；升级后还闪，在会话里输入 `/daemon` 把后台服务也更新 |
 | `host Job Object prevents daemon detachment`，CLI 启动不了 | CLI 0.157.0，Windows | **已修**，0.157.1（[#48016](https://github.com/openai/codex/issues/48016)） | `codex update` |
 | `start the Windows daemon from a non-elevated terminal` | CLI 0.157.0 起，Windows 管理员终端 | 没修，官方还在征求意见（[#48043](https://github.com/openai/codex/issues/48043)） | 用普通（非管理员）终端打开，或者 `codex --no-daemon` |
 | `401 Unauthorized: Incorrect API key provided: sk-svcac…`，明明是用 ChatGPT 登录的 | 所有版本 | 官方故障，北京时间 9 月 26 日 06:58–07:54，**已恢复**（[#48237](https://github.com/openai/codex/issues/48237)） | 不用重新登录，见 [401](#登录失效或官方故障401-unauthorized) |
 | Mac 自带终端里 Cmd + C 复制不了 | CLI 0.157.0 起 | 官方不改，是 Terminal.app 的限制（[#48122](https://github.com/openai/codex/issues/48122)） | 见[复制不了文字](#终端里复制不了文字) |
-| VS Code 插件按回车后消息没了，Codex 也不回 | 插件 26.928.31416（10 月 1 日更新） | 修复已合并，等发版（[#49988](https://github.com/openai/codex/issues/49988)，10 月 3 日官方回复） | 先在扩展页「安装特定版本」退回 26.917.62051 |
+| VS Code 插件按回车后消息没了，Codex 也不回 | 插件 26.928.31416（10 月 1 日更新） | **已修**，10 月 8 日有用户确认新版正常，issue 已关闭（[#49988](https://github.com/openai/codex/issues/49988)）。另一个「上一轮结束后新消息一直排队」的问题还开着（[#50118](https://github.com/openai/codex/issues/50118)） | 更新插件；还卡住就重启 VS Code |
 | VS Code 插件的模型列表里没有 GPT-6.1 Sol | 插件 26.917.62051（自带的 CLI 太旧） | 10 月 1 日已关闭（[#49464](https://github.com/openai/codex/issues/49464)） | 新版插件自带 CLI 0.159.2，有这个模型，但有上一行的问题；留在旧版的，可以按 issue 里的办法把 `chatgpt.cliExecutable` 指向自己装的新版 CLI |
 | Linux 桌面版任务一直停在 `Starting your task` | 桌面版 26.924 | **已修**，官方 9 月 29 日回复更新即可（[#48189](https://github.com/openai/codex/issues/48189)） | 更新到最新版 |
 | Windows 桌面版 `Unable to load organization settings`，或更新后一直转圈 | 桌面版 26.924 | 没修，官方还没回复（[#48324](https://github.com/openai/codex/issues/48324)、[#48463](https://github.com/openai/codex/issues/48463)） | 见[更新后打不开](#更新后打不开只有启动动画或白屏) |
@@ -96,7 +107,7 @@ winget install --id 9PLM9XGG6VKS -s msstore
 CLI 选一种装法就行。官方安装脚本要从 chatgpt.com 下载，国内经常卡住，**用 npm 国内镜像最省事**（需要 Node.js 16+）：
 
 ```bash
-# npm 国内镜像（10 月 3 日核对：镜像版本和 npm 官方一致，都是 0.160.0）
+# npm 国内镜像（10 月 10 日核对：镜像版本和 npm 官方一致，都是 0.162.1；Windows 上 0.162 有沙盒问题，见「Windows 沙盒」一节）
 npm install -g @openai/codex --registry=https://registry.npmmirror.com
 
 # 官方安装脚本（macOS / Linux）
@@ -391,6 +402,8 @@ CLI 0.157.0（9 月 25 日）起，运行 `codex` 会自动启动一个常驻的
 | `start the Windows daemon from a non-elevated terminal` | 你用管理员身份开的终端。后台服务只允许用普通权限启动，不然普通会话就能借它执行管理员命令 | 用普通终端打开；必须用管理员终端的，加 `--no-daemon`。官方在考虑让管理员终端自动这样处理，还没定 |
 | `host Job Object prevents daemon detachment` | 0.157.0 的问题 | 升级，0.157.1 已修（[#48016](https://github.com/openai/codex/issues/48016)） |
 | 每发一次请求，终端窗口闪几下 | 0.157.0–0.159.1 的问题 | 升级，0.159.2 已修（[#48074](https://github.com/openai/codex/issues/48074)） |
+| `Server is draining; retry after reconnecting (code -32600)` | 后台服务在自己更新，把正在跑的会话断开了。报告的人说自己什么都没改（[#51763](https://github.com/openai/codex/issues/51763)，10 月 7 日，未修） | 等几秒重新连接；不行就 `codex app-server daemon restart`，再 `codex resume` 接着干 |
+| `Background server has incompatible feature settings` | 后台服务更新后，功能开关和这个会话对不上 | 按提示重启后台服务。它会列出重启后用哪些设置，其他开着的会话会被断开，先让它们停在安全的地方 |
 | 升级了，问题还在 | 后台服务还是旧版本。CLI 和后台服务的版本是分开的 | 会话里输入 `/status` 看后台服务的版本，输入 `/daemon` 让它马上更新 |
 
 常用命令：
@@ -404,6 +417,58 @@ codex features disable daemon_auto_start   # 以后都不自动启动
 ```
 
 最后一条是 issue 里用户的做法（[#48195](https://github.com/openai/codex/issues/48195)），维护者在排查时用的是对应的 `codex features enable daemon_auto_start`。关掉以后，「CLI 退出后任务继续在后台跑」这类依赖后台服务的功能就没有了。
+
+### Windows 沙盒：setup refresh had errors (os error 32)
+
+```text
+helper_unknown_error: setup refresh had errors
+trusted Node process exited unexpectedly
+```
+
+10 月 7 日 Windows 桌面版更新到 26.1002 之后，很多人的所有命令都在执行前失败，连 `Get-Location` 都跑不了。沙盒日志里是 Windows 的 `os error 32`（文件正被占用）：沙盒启动时要检查自己运行目录的权限，里面的 `node_repl.exe` 却正被 Codex 自己占着（[#51601](https://github.com/openai/codex/issues/51601)）。issue 里的人试过重启电脑、修复安装，都没用。
+
+| 你用的是 | 现在的状态 | 怎么办 |
+| --- | --- | --- |
+| Windows 桌面版 | 10 月 9 日多位用户确认 **26.1007.21434** 已修 | 在 Microsoft Store 更新后重启。更新之前，有人退回 26.930.61225 能用 |
+| 单独安装的 CLI（npm） | 0.162.0、0.162.1 都有人复现，10 月 10 日还没修（[#51634](https://github.com/openai/codex/issues/51634)） | 报告的人在同一台机器上用 0.160.1 正常，可以先装回去 |
+
+```bash
+npm install -g @openai/codex@0.160.1 --registry=https://registry.npmmirror.com
+```
+
+issue 里有人提醒：别为了这个去手动改文件夹权限，退回旧版或者等更新更稳。
+
+### WSL：Failed to create unified exec process (os error 2)
+
+```text
+Failed to create unified exec process: No such file or directory (os error 2)
+```
+
+Windows 桌面版打开 Run agent in WSL（配置里是 `runCodexInWindowsSubsystemForLinux = true`）之后，每条命令都报这个错。从 9 月 30 日的 26.928 开始，10 月 5 日的 26.930.41038 还没修（[#49731](https://github.com/openai/codex/issues/49731)）。issue 里查到的原因：WSL 里的 Codex 把一个临时目录放在了 Windows 盘上（`/mnt/c/Users/<用户名>/.codex/tmp/arg0`），里面本该有的 `codex-linux-sandbox` 不见了。
+
+两个办法：
+
+1. 不是非用 WSL 不可的，先在设置里关掉 Run agent in WSL。
+2. 要继续用的，issue 里一位用户给了临时办法：把这个目录挂到 Linux 自己的文件系统上。在 WSL 里执行，把 `<用户名>` 换成你自己的：
+
+```bash
+mkdir -p ~/codex-arg0-local
+sudo mount --bind ~/codex-arg0-local /mnt/c/Users/<用户名>/.codex/tmp/arg0
+findmnt /mnt/c/Users/<用户名>/.codex/tmp/arg0     # 确认挂上了
+```
+
+WSL 重启后要重新挂一次；想撤销，对同一个路径执行 `sudo umount`。这是用户自己试出来的办法，不是官方方案，官方修好以后就不需要了。
+
+### 网页版：Unable to determine project root for task
+
+```text
+Error submitting message
+Unable to determine project root for task
+```
+
+在 Codex 网页版选好已经发布的云端环境，发第一条消息就报这个错，页面停在输入框不动。9 月 30 日起有人反馈，Windows 和 Mac 的浏览器都有，强制刷新、重新选环境都没用；到 10 月 10 日还没有官方回复（[#49497](https://github.com/openai/codex/issues/49497)）。
+
+多半不是你的环境配错了：反馈的人里，有人的环境已经能跑通 25 个测试，照样发不出去。目前没有确认可用的解决办法。着急的话先用桌面版或 CLI 在本地跑；想跟进展，可以去 issue 里点个 👍。
 
 ### 终端里复制不了文字
 
