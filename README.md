@@ -58,6 +58,10 @@
 | `Error submitting message`、`Unable to determine project root for task` | Codex 网页版云端任务的问题，还没修 | [网页版](#网页版unable-to-determine-project-root-for-task) |
 | `Server is draining; retry after reconnecting`、`Background server has incompatible feature settings` | 后台服务自己更新了 | [后台服务报错](#后台服务daemon报错) |
 | VS Code 里语音输入一闪就停，显示 `Dictation stopped`，日志里 `HTTP 403 Forbidden` | 插件的语音接口被拒，还没修 | [最近的已知问题](#最近两周的已知问题) |
+| `account/read failed during TUI bootstrap`、`workspace routing discovery failed` | 后台服务版本旧了，或者还记着旧的代理端口 | [后台服务报错](#后台服务daemon报错) |
+| Windows 桌面版登录后几十秒自己退出，没有任何提示 | 10 月 7 日那一版装运行时组件时崩溃 | [登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
+| VS Code 日志里 `Failed to release queued message send lock`、`"undefined" is not valid JSON` | 插件 10 月 1 日那一版的问题，已修 | [最近的已知问题](#最近两周的已知问题) |
+| `You have reached your Codex usage limits for code reviews` | GitHub 代码审查有单独的额度 | [最近的已知问题](#最近两周的已知问题) |
 | `mountinfo path is not absolute` | Linux 桌面版 9 月下旬几个版本的沙盒问题 | [最近的已知问题](#最近两周的已知问题) |
 | 界面是英文，想切成中文 | 设置里就能改 | [8. 怎么设置中文](#8-怎么设置中文) |
 
@@ -69,6 +73,10 @@
 
 | 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
 | --- | --- | --- | --- |
+| Windows 桌面版登录后 10–35 秒自己退出，没有报错窗口 | 桌面版 26.1002.7124.0（10 月 7 日） | 一位用户查到原因并给出办法，帖子已标记为解决（[OpenAI 社区](https://community.openai.com/t/1404464)，10 月 8 日） | 见[登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
+| CLI 启动就退出：`account/read failed during TUI bootstrap … workspace routing discovery failed (code -32603)` | CLI 0.162.0，走本地代理 | 发帖人确认重启后台服务后解决（[OpenAI 社区](https://community.openai.com/t/1404666)，10 月 9 日） | `codex app-server daemon restart`，见[后台服务报错](#后台服务daemon报错) |
+| 重置卡到了到期那天，没到晚上就不见了 | 所有版本 | **官方答复**（OpenAI_Support，10 月 6 日，[OpenAI 社区](https://community.openai.com/t/1403334)）：每张卡有具体的到期时间，过期不能恢复 | 网页版 Settings → Usage 里，把鼠标悬停在到期日期上能看到具体时间和时区。没到时间就消失的，找客服查 |
+| GitHub 上 `@codex review` 被拒：`You have reached your Codex usage limits for code reviews`，Usage 页面的周额度却还有 | 9 月 29 日起有人反馈 | 没有官方回复（[OpenAI 社区](https://community.openai.com/t/1402074)）。代码审查的用量是单独算的 | 帖子里用户的办法：账号里有 credits 的，在 Code review 设置里打开 use credits |
 | Windows 上所有命令都在执行前失败：`helper_unknown_error: setup refresh had errors`，日志里是 `os error 32` | Windows 桌面版 26.1002（10 月 7 日）；CLI 0.162.0、0.162.1 | 桌面版：10 月 9 日多位用户确认 26.1007.21434 **已修**（[#51601](https://github.com/openai/codex/issues/51601)，3 天 117 条回复）。CLI：10 月 10 日仍有人在 0.162.1 上复现（[#51634](https://github.com/openai/codex/issues/51634)） | 桌面版更新到 26.1007；CLI 见 [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
 | Windows 桌面版开了 Run agent in WSL，每条命令都是 `Failed to create unified exec process: No such file or directory (os error 2)` | 桌面版 26.928 起 | 没修，10 月 5 日的 26.930.41038 仍有（[#49731](https://github.com/openai/codex/issues/49731)） | 用户给了挂载目录的临时办法，见 [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
 | Codex 网页版第一条消息发不出去：`Unable to determine project root for task` | 9 月 30 日起，云端环境 | 没修，还没有官方回复（[#49497](https://github.com/openai/codex/issues/49497)） | 见[网页版](#网页版unable-to-determine-project-root-for-task) |
@@ -83,7 +91,7 @@
 | `start the Windows daemon from a non-elevated terminal` | CLI 0.157.0 起，Windows 管理员终端 | 没修，官方还在征求意见（[#48043](https://github.com/openai/codex/issues/48043)） | 用普通（非管理员）终端打开，或者 `codex --no-daemon` |
 | `401 Unauthorized: Incorrect API key provided: sk-svcac…`，明明是用 ChatGPT 登录的 | 所有版本 | 官方故障，北京时间 9 月 26 日 06:58–07:54，**已恢复**（[#48237](https://github.com/openai/codex/issues/48237)） | 不用重新登录，见 [401](#登录失效或官方故障401-unauthorized) |
 | Mac 自带终端里 Cmd + C 复制不了 | CLI 0.157.0 起 | 官方不改，是 Terminal.app 的限制（[#48122](https://github.com/openai/codex/issues/48122)） | 见[复制不了文字](#终端里复制不了文字) |
-| VS Code 插件按回车后消息没了，Codex 也不回 | 插件 26.928.31416（10 月 1 日更新） | **已修**，10 月 8 日有用户确认新版正常，issue 已关闭（[#49988](https://github.com/openai/codex/issues/49988)）。另一个「上一轮结束后新消息一直排队」的问题还开着（[#50118](https://github.com/openai/codex/issues/50118)） | 更新插件；还卡住就重启 VS Code |
+| VS Code 插件按回车后消息没了，Codex 也不回；日志里是 `Failed to release queued message send lock`、`"undefined" is not valid JSON` | 插件 26.928.31416（10 月 1 日更新） | **已修**，10 月 8 日有用户确认新版正常，issue 已关闭（[#49988](https://github.com/openai/codex/issues/49988)）。另一个「上一轮结束后新消息一直排队」的问题还开着（[#50118](https://github.com/openai/codex/issues/50118)） | 更新插件；还卡住就重启 VS Code |
 | VS Code 插件的模型列表里没有 GPT-6.1 Sol | 插件 26.917.62051（自带的 CLI 太旧） | 10 月 1 日已关闭（[#49464](https://github.com/openai/codex/issues/49464)） | 新版插件自带 CLI 0.159.2，有这个模型，但有上一行的问题；留在旧版的，可以按 issue 里的办法把 `chatgpt.cliExecutable` 指向自己装的新版 CLI |
 | Linux 桌面版任务一直停在 `Starting your task` | 桌面版 26.924 | **已修**，官方 9 月 29 日回复更新即可（[#48189](https://github.com/openai/codex/issues/48189)） | 更新到最新版 |
 | Windows 桌面版 `Unable to load organization settings`，或更新后一直转圈 | 桌面版 26.924 | 没修，官方还没回复（[#48324](https://github.com/openai/codex/issues/48324)、[#48463](https://github.com/openai/codex/issues/48463)） | 见[更新后打不开](#更新后打不开只有启动动画或白屏) |
@@ -407,6 +415,7 @@ CLI 0.157.0（9 月 25 日）起，运行 `codex` 会自动启动一个常驻的
 | `host Job Object prevents daemon detachment` | 0.157.0 的问题 | 升级，0.157.1 已修（[#48016](https://github.com/openai/codex/issues/48016)） |
 | 每发一次请求，终端窗口闪几下 | 0.157.0–0.159.1 的问题 | 升级，0.159.2 已修（[#48074](https://github.com/openai/codex/issues/48074)） |
 | `Server is draining; retry after reconnecting (code -32600)` | 后台服务在自己更新，把正在跑的会话断开了。报告的人说自己什么都没改（[#51763](https://github.com/openai/codex/issues/51763)，10 月 7 日，未修） | 等几秒重新连接；不行就 `codex app-server daemon restart`，再 `codex resume` 接着干 |
+| `account/read failed during TUI bootstrap: … workspace routing discovery failed (code -32603)` | CLI 升级了，后台服务还是旧版（帖子里是 CLI 0.162.0 配 0.161.0 的后台服务），或者后台服务还记着旧的代理设置。发帖人断网重启后开始出现（[OpenAI 社区](https://community.openai.com/t/1404666)） | `codex app-server daemon version` 看两边版本，`codex app-server daemon restart` 重启，不会删配置、登录和对话记录。顺便核对代理端口：HTTP 端口和 SOCKS 端口通常不是同一个 |
 | `Background server has incompatible feature settings` | 后台服务更新后，功能开关和这个会话对不上 | 按提示重启后台服务。它会列出重启后用哪些设置，其他开着的会话会被断开，先让它们停在安全的地方 |
 | 升级了，问题还在 | 后台服务还是旧版本。CLI 和后台服务的版本是分开的 | 会话里输入 `/status` 看后台服务的版本，输入 `/daemon` 让它马上更新 |
 
@@ -441,6 +450,25 @@ npm install -g @openai/codex@0.160.1 --registry=https://registry.npmmirror.com
 ```
 
 issue 里有人提醒：别为了这个去手动改文件夹权限，退回旧版或者等更新更稳。
+
+### Windows 桌面版登录后几十秒自己退出
+
+没有报错窗口，也不卡，登录后 10–35 秒整个应用直接消失，所有 ChatGPT 进程一起没了；不登录就一直正常。10 月 7 日桌面版更新到 26.1002.7124.0 之后有人遇到，重装、换新的用户配置都没用（[OpenAI 社区](https://community.openai.com/t/1404464)，帖子已标记为解决）。
+
+发帖人查到的原因：登录后应用会在后台下载并安装一个约 528 MB 的运行时组件（`OpenAI.CodexPrimaryRuntime`），安装这一步把主进程带崩了。因为是账号开启的功能触发的，所以重装没用。
+
+怎么确认是不是这个问题，看这两处：
+
+- `%LOCALAPPDATA%\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache` 里有没有一堆 `codex-windows-runtime-framework-*` 文件夹，每个里面一个约 528 MB 的 `.msix`，每启动一次多一个。
+- 同一目录下 `Local\Codex\Logs` 的日志，崩溃前最后一行是不是 `primary_runtime_install_started`。
+
+处理顺序：
+
+1. 先在 Microsoft Store 更新到最新版再试。
+2. 还闪退，按帖子里的办法手动装这个运行时组件：应用启动时发现组件已经装好，就会跳过会崩溃的那一步。帖子给了完整的 PowerShell 命令，其中有一步是确认安装包的签名是 OpenAI 的，这一步不要跳过。
+3. 那堆重复下载的文件夹很占硬盘，问题解决后可以删掉旧的。
+
+这是用户自己查出来的办法，不是官方方案。
 
 ### WSL：Failed to create unified exec process (os error 2)
 
