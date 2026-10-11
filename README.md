@@ -6,7 +6,7 @@
 
 ![Codex 国内使用与报错速查：按报错原文查原因和处理步骤](images/cover.webp)
 
-国内用 Codex，卡住的地方基本就那几处：装不上、打不开、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。
+国内用 Codex，卡住的地方基本就那几处：装不上、打不开、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。想接 DeepSeek 这类第三方 API 的，直接看[第 10 节](#10-接入-deepseek-和第三方-api)。
 
 由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 整理维护。我们提供 ChatGPT / Claude 会员充值服务，和 OpenAI 没有隶属关系；这页只讲 Codex 本身，充值相关只放在[最后一节](#国内怎么开通)。
 
@@ -30,6 +30,7 @@
 - [7. 额度用完了](#7-额度用完了)
 - [8. 怎么设置中文](#8-怎么设置中文)
 - [9. AGENTS.md 中文模板](#9-agentsmd-中文模板)
+- [10. 接入 DeepSeek 和第三方 API](#10-接入-deepseek-和第三方-api)
 - [常见问题](#常见问题)
 - [国内怎么开通](#国内怎么开通)
 - [官方来源](#官方来源) · [更新日志](CHANGELOG.md) · [投稿一条报错](#投稿一条报错)
@@ -75,6 +76,10 @@
 | VS Code 日志里 `Failed to release queued message send lock`、`"undefined" is not valid JSON` | 插件 10 月 1 日那一版的问题，已修 | [最近的已知问题](#最近两周的已知问题) |
 | `You have reached your Codex usage limits for code reviews` | GitHub 代码审查有单独的额度 | [最近的已知问题](#最近两周的已知问题) |
 | `mountinfo path is not absolute` | Linux 桌面版 9 月下旬几个版本的沙盒问题 | [最近的已知问题](#最近两周的已知问题) |
+| `` `wire_api = "chat"` is no longer supported ``、接 DeepSeek 或第三方 API 时 `404 Not Found … /responses` | Codex 只认 Responses 协议，或地址填得不对 | [接第三方时的报错](#接第三方时的报错) |
+| `API key login is required, but ChatGPT is currently being used. Logging out.` | 配置里的 `forced_login_method = "api"` 把 ChatGPT 登录退掉了 | [10. 接入 DeepSeek](#10-接入-deepseek-和第三方-api) |
+| `Missing environment variable`、`Model metadata for … not found`、`unrecognized configuration setting` | 第三方模型的配置没写全，或有新版不认的项 | [接第三方时的报错](#接第三方时的报错) |
+| `codex update` 之后版本没变；想卸载、降级 | 电脑里装了两份，或不知道当初怎么装的 | [更新、降级、卸载](#更新降级卸载) |
 | 界面是英文，想切成中文 | 设置里就能改 | [8. 怎么设置中文](#8-怎么设置中文) |
 
 不知道是哪一类，先在终端跑一次 `codex doctor`。它会检查安装、配置、登录和网络，每一项打 ✓ 或 ⚠，最后一栏 Connectivity 就是网络情况。
@@ -156,6 +161,39 @@ codex --version
 从 0.156 或更早的版本升上来，会发现两处不一样：界面占满整个终端窗口（全屏模式），以及多了一个常驻的后台服务。不习惯的话都能关，见[终端里复制不了文字](#终端里复制不了文字)和[后台服务报错](#后台服务daemon报错)。
 
 > 别从网盘、群文件下载所谓的 Codex「中文版」「破解版」。CLI 是开源的，桌面版本身就能切中文（设置 → 常规 → 语言）。来路不明的安装包可能偷走你的登录凭证。
+
+### 更新、降级、卸载
+
+`codex update` 会按你当初的安装方式去更新，背后跑的就是下表「更新」一栏的命令（对照 0.162.1 的源码）。它卡住的时候，自己跑那一条就行。
+
+| 当初怎么装的 | 更新 | 卸载 |
+| --- | --- | --- |
+| npm | `npm install -g @openai/codex`，想走国内镜像就加 `--registry=https://registry.npmmirror.com` | `npm uninstall -g @openai/codex` |
+| Homebrew | `brew upgrade --cask codex` | `brew uninstall --cask codex` |
+| 官方安装脚本（macOS / Linux） | 再跑一次安装脚本 | 删掉 `~/.local/bin/codex`、`~/.local/bin/codex-code-mode-host` 和 `~/.codex/packages/standalone` |
+| 官方安装脚本（Windows） | 再跑一次安装脚本 | 删掉 `%LOCALAPPDATA%\Programs\OpenAI\Codex\bin` 和 `%USERPROFILE%\.codex\packages\standalone` |
+| 桌面版 | 应用内检查更新；Windows 也可以在 Microsoft Store 里更新 | Mac：退出后把 ChatGPT 拖进废纸篓。Windows：设置 → 应用 → 已安装的应用 → ChatGPT → 卸载 |
+
+官方脚本没有提供卸载命令，上面两行是按安装脚本写入的位置列的（[install.sh](https://github.com/openai/codex/blob/main/scripts/install/install.sh)、[install.ps1](https://github.com/openai/codex/blob/main/scripts/install/install.ps1)）。
+
+**降级**只有 npm 方便，在包名后面写版本号：
+
+```bash
+npm install -g @openai/codex@0.160.1 --registry=https://registry.npmmirror.com
+```
+
+**更新了，`codex --version` 还是旧的？** 多半是电脑里装了两份，比如早先用 Homebrew 装过，后来又用 npm 装了一次。哪一份在 PATH 里排前面，运行的就是哪一份。把多余的那份卸掉：
+
+```bash
+which -a codex     # macOS / Linux：列出所有的 codex
+where codex        # Windows
+```
+
+**想卸干净。** 上面删的只是程序。配置、登录凭证和所有对话记录都在 `~/.codex`（Windows 是 `%USERPROFILE%\.codex`）：`config.toml` 是配置，`auth.json` 是登录凭证，`sessions` 是对话记录。Mac 桌面版另有日志在 `~/Library/Logs/com.openai.codex/`。
+
+1. 先停掉后台服务：`codex app-server daemon stop`。0.157 起它是常驻的，窗口关了也还在。
+2. 按上表卸载程序。
+3. 确定不要对话记录了，再删 `~/.codex`。只是想通过重装解决问题的，把这个目录改个名字留着，别直接删：删了要重新登录，之前没验证过手机号的账号，重新登录时可能会被要求[验证](#3-要验证手机号)。
 
 ## 2. 登录
 
@@ -715,6 +753,93 @@ Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务
 codex --ask-for-approval never "总结一下你当前加载了哪些说明"
 ```
 
+## 10. 接入 DeepSeek 和第三方 API
+
+Codex 不是只能用 ChatGPT 账号。在配置文件里加一个「模型提供方」（model provider），就能改用别家的 API：用那一家的 key，按那一家的价格付费，不走 ChatGPT 套餐的额度。CLI、桌面版、VS Code 插件读的是同一份配置：`~/.codex/config.toml`，Windows 是 `%USERPROFILE%\.codex\config.toml`。
+
+反过来不行：ChatGPT 套餐里的 Codex 额度只能用 ChatGPT 登录来用，它不是 API key，填不到别的工具里。
+
+### 先看能不能接：对方要支持 Responses API
+
+Codex 现在只认一种接口协议，`wire_api = "responses"`。老教程里的 `wire_api = "chat"`（Chat Completions）已经删掉了，写了会直接报错。官方配置文档的说法是 `responses` 是唯一支持的值。
+
+很多写着「兼容 OpenAI」的服务，兼容的只是 Chat Completions，这种直接填地址是接不上的。动手之前，先到那一家的文档里找有没有 Codex 或 Responses API 的接入说明。
+
+### DeepSeek
+
+DeepSeek 的 API 支持 Responses 格式，官方有一篇[接入 Codex 的文档](https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/codex)。模型名是 `deepseek-flash`（能看图）和 `deepseek-v4-pro`，key 在 [DeepSeek 开放平台](https://platform.deepseek.com/api_keys)创建。下面两种做法选一种。
+
+**做法一：照官方文档，把 DeepSeek 设成默认。** 桌面版、插件、CLI 之后都走 DeepSeek。官方给了一键脚本，会先把你的 `config.toml` 备份到 `~/.codex/backup-deepseek/`，再写入配置和模型目录 `~/.codex/models.json`；再跑一次、选菜单第 9 项可以恢复。
+
+```bash
+# macOS / Linux（命令来自 DeepSeek 官方文档，10 月 11 日核对）
+bash <(curl -fsSL https://cdn.deepseek.com/api-docs/codex-deepseek-setup.sh)
+```
+
+```powershell
+# Windows PowerShell
+irm https://cdn.deepseek.com/api-docs/codex-deepseek-setup.ps1 | iex
+```
+
+> **原来用 ChatGPT 登录的，先看这一条。** 官方配置里有一行 `forced_login_method = "api"`。Codex 读到它，发现你当前是用 ChatGPT 登录的，会直接把登录退掉，并提示 `API key login is required, but ChatGPT is currently being used. Logging out.`。这不是出错，再运行一次就能用 DeepSeek 了。但以后想换回 ChatGPT 套餐，光恢复配置不够，还得重新 `codex login`。
+
+**做法二：只在 CLI 里按需切换，不动原来的登录。** 把 DeepSeek 的设置单独放进一个 profile 文件，要用的时候加 `--profile deepseek`，不加就还是原来的 ChatGPT 账号。
+
+1. 把官方文档「方式二」里的 `models.json` 完整复制下来，存成 `~/.codex/models.json`。它告诉 Codex 这两个模型的上下文长度、能不能看图、有哪些推理档位。
+2. 新建 `~/.codex/deepseek.config.toml`（文件名里的 `deepseek` 就是 profile 的名字）：
+
+   ```toml
+   model = "deepseek-flash"          # 或 deepseek-v4-pro
+   model_provider = "deepseek"
+   web_search = "disabled"           # 官方文档要求：DeepSeek 模型下关掉内置联网搜索
+   model_catalog_json = "~/.codex/models.json"
+
+   [model_providers.deepseek]
+   name = "deepseek"
+   base_url = "https://api.deepseek.com/"
+   wire_api = "responses"
+   env_key = "DEEPSEEK_API_KEY"      # 从环境变量读 key，不把 key 写进文件
+   ```
+
+3. 设好环境变量再启动：
+
+   ```bash
+   export DEEPSEEK_API_KEY="sk-你的key"      # Windows PowerShell：$env:DEEPSEEK_API_KEY="sk-你的key"
+   codex --profile deepseek
+   ```
+
+这份配置比官方的少了 `forced_login_method`，所以不会退掉 ChatGPT 登录。profile 是命令行的参数，桌面版和插件怎么选 profile，官方文档没有写；想在桌面版里用 DeepSeek，按做法一来。
+
+怎么确认生效了：在项目目录里运行 `codex exec --profile deepseek "hi"`，启动信息里有 `model: deepseek-flash` 和 `provider: deepseek` 两行。DeepSeek 文档的说法是，桌面版的模型选择器会显示「自定义」或模型名。
+
+### 接别家，以及 CC Switch、中转站
+
+别家的写法一样，改三处：`[model_providers.名字]` 里的名字（不能用 `openai`、`ollama`、`lmstudio`，这三个是内置的）、`base_url`、`env_key`。Codex 实际请求的地址是 `base_url` 后面直接拼 `/responses`，所以 `base_url` 要不要带 `/v1`，以对方文档给的地址为准。
+
+**CC Switch 是什么。** [farion1231/cc-switch](https://github.com/farion1231/cc-switch) 是一个开源的桌面工具（MIT 协议），用图形界面替你改这些配置文件，在几家供应商之间一键切换。按它 README 的说法，它的「路由」模式会在本机起一个转发服务，在 Chat Completions、Responses 等几种格式之间做转换，所以只支持 Chat Completions 的服务也能经它接到 Codex 上（10 月 11 日，v4.0.8，我们没有实测）。用之前知道两点：它切换时会改写你的 `config.toml`，自己先备份一份；它的 README 里有大量中转站的赞助广告，那不代表这些中转站可靠。
+
+**中转站。** 就是第三方转卖的 API 入口，配置方法同上，一个 `base_url` 加一个 key。区别在风险：你的代码和对话都要经过它的服务器；给你用的是不是你选的那个模型，你没法验证；充进去的钱没有官方保障。公司的代码别走中转。
+
+### 接第三方时的报错
+
+| 你看到的 | 原因 | 怎么办 |
+| --- | --- | --- |
+| `` `wire_api = "chat"` is no longer supported `` | 配置是照旧教程写的，Chat Completions 协议已经删了 | 改成 `wire_api = "responses"`。对方不支持 Responses API 的，直接接不了 |
+| `unexpected status 404 Not Found … url: https://…/responses` | 地址填得不对，或者对方根本没有 `/responses` 这个接口 | 报错最后的 `url` 就是 Codex 实际请求的地址，拿它对照对方文档，看 `base_url` 是多了还是少了 `/v1` |
+| ``Missing environment variable: `DEEPSEEK_API_KEY`.`` | `env_key` 指的环境变量，在启动 Codex 的这个终端里没有 | 先 `export` 再启动；想长期生效，写进 `~/.zshrc` 或 Windows 的用户环境变量 |
+| `API key login is required, but ChatGPT is currently being used. Logging out.` | 配置里有 `forced_login_method = "api"`，Codex 把 ChatGPT 登录退掉了 | 见上面那条提醒。不想被退登录，用做法二 |
+| ``Model metadata for `deepseek-flash` not found. Defaulting to fallback metadata`` | 没有模型目录，Codex 不知道这个模型的上下文长度和能力，按保守的默认值来 | 放好 `models.json`，并在配置里写 `model_catalog_json` |
+| `model_catalog_json path … must contain at least one model` | `models.json` 是空的，或者没复制完整 | 从官方文档重新复制 |
+| `Codex is ignoring 1 unrecognized configuration setting`，下面一行是 `` `preferred_auth_method` is ignored `` | DeepSeek 官方配置里的这一项，新版 Codex 已经不认了 | 不影响使用，删掉这一行就不再提示 |
+| `model_providers contains reserved built-in provider IDs` | 提供方的名字用了内置的 `openai`、`ollama` 或 `lmstudio` | 换个名字，比如 `openai-custom` |
+| ``--profile `xxx` cannot be used while … contains legacy … `[profiles.xxx]` `` | `config.toml` 里还留着旧写法的 `[profiles.xxx]`。0.134.0 起 `--profile` 不再读它 | 把那一段挪到 `~/.codex/xxx.config.toml`，键写在最外层，再删掉旧的 |
+| `401 Unauthorized: Missing bearer or basic authentication in header, url: https://api.openai.com/v1/responses` | 请求没有走到你配的提供方，去了默认的 OpenAI，而你又没登录。常见的是忘了加 `--profile` | 看启动信息里 `provider:` 那一行是不是你配的名字 |
+| 项目里的 `.codex/config.toml` 写了提供方，不生效 | 官方文档：项目级配置里的 `model_provider`、`model_providers` 会被忽略 | 写到用户级的 `~/.codex/config.toml` 或 profile 文件里 |
+| 切换之后，以前的对话不见了 | 没删。DeepSeek 文档的说明是，Codex 把 ChatGPT 账号的对话和第三方 API 的对话分开显示 | 换回原来的配置，重启客户端就回来了 |
+| 桌面版用自己配的提供方，输入框却灰了 | ChatGPT 套餐额度用完后，桌面版把输入框整个禁用了，哪怕模型走的是别家（[#48816](https://github.com/openai/codex/issues/48816)，未修） | 等套餐额度恢复，或者先用 CLI |
+
+这一节的依据：Codex 一侧的行为，包括请求发到哪、带的是哪个 key、每条报错的原文、哪种写法会退掉 ChatGPT 登录，是我们 10 月 11 日用桌面版自带的 Codex 0.162.0-alpha.17.2，在一个隔离的配置目录里对着本机的模拟接口测出来的（`codex exec` 和交互界面都测了，包括后台服务已经在跑的情况），并对照了 0.162.1 的源码。DeepSeek 一侧的说法，包括支持 Responses 格式、模型名、桌面版和插件共用配置，来自它的官方文档。我们没有用真实的 DeepSeek key 跑过完整对话。
+
 ## 常见问题
 
 **Codex 要单独买吗？**
@@ -750,7 +875,7 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 
 ## 投稿一条报错
 
-遇到这页没收的报错，欢迎[开一个 Issue](../../issues/new?template=error-report.md)：贴上报错原文、你用的是桌面版 / CLI / 插件、版本号、系统，以及你怎么解决的（没解决也可以发）。
+遇到这页没收的报错，或者文中的办法你试了不管用，最省事的是到[集中反馈帖](https://github.com/Avarce/codex-china-guide/issues/1)下面留一句；也可以[单独开一个 Issue](../../issues/new?template=error-report.md)。贴上报错原文、你用的是桌面版 / CLI / 插件、版本号、系统，以及你怎么解决的（没解决也可以发）。
 
 贴之前把 `auth.json` 的内容、token、邮箱和手机号删掉。收到后我们核对，补进这页，并记在[更新日志](CHANGELOG.md)里。
 
@@ -764,6 +889,8 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 - ChatGPT Learn：[Changelog](https://learn.chatgpt.com/docs/changelog)（版本和模型的发布日期）
 - GitHub：[openai/codex](https://github.com/openai/codex)，文中引用的 issue 都附了编号链接；各版本改了什么见 [Releases](https://github.com/openai/codex/releases)
 - [OpenAI 状态页](https://status.openai.com)
+- 第三方模型：ChatGPT Learn 的 [Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)（Custom model providers、Profiles）· DeepSeek 官方文档 [接入 Codex](https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/codex) · [CC Switch](https://github.com/farion1231/cc-switch)
+- 安装、更新和卸载的位置：openai/codex 仓库 `rust-v0.162.1` 标签下的 `scripts/install/` 和 `codex-rs/tui/src/update_action.rs`
 
 中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11 日新增的几条提示取自 26.1007.21159；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 11 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
 
