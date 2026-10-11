@@ -1,6 +1,6 @@
 # Codex 桌面版中英界面对照
 
-> 取自 ChatGPT 桌面版（macOS）自带的简体中文界面，英文取自同一版本的原文。2026 年 9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 逐条复核：103 条里 100 条没变，3 条换了译法（Steer、Queue、Work locally），另外补了 7 条 Windows 设置和启动任务的提示。
+> 取自 ChatGPT 桌面版（macOS）自带的简体中文界面，英文取自同一版本的原文。2026 年 9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 逐条复核：103 条里 100 条没变，3 条换了译法（Steer、Queue、Work locally），另外补了 7 条 Windows 设置和启动任务的提示。10 月 11 日按 26.1007.21159 补了 5 条报错提示。
 > 界面文字会随版本变化，以你电脑上显示的为准。发现对不上的，欢迎提 Issue。
 
 桌面版可以切中文：设置 → 常规 → 语言，选「中文（中国）」（默认「自动检测」，跟随系统语言）。设置里没有「语言」、VS Code 和命令行怎么切，见 [README 第 8 节](README.md#8-怎么设置中文)。这张表是给照着英文文档、英文教程、GitHub issue 找按钮的时候用的。
@@ -154,8 +154,13 @@
 
 | 英文 | 中文界面 |
 | --- | --- |
-| Reconnecting… | 正在重新连接… |
+| Reconnecting… | 正在重新连接…（带次数时是「正在重新连接 1/5」） |
 | Server is busy, reconnecting | 服务器繁忙，正在重新连接 |
+| Couldn’t load workspace settings | 无法加载工作空间设置 |
+| Retry to continue chatting | 请重试以继续聊天 |
+| Couldn’t check Lockdown mode | 无法检查锁定模式 |
+| You’re out of usage | 使用额度已用完 |
+| Failed to set goal | 无法设置目标 |
 | You've hit your usage limit. Upgrade your plan to continue, or try again later. | 你已达到使用上限。升级套餐以继续，或稍后重试。 |
 | Your ChatGPT session on this device has expired. Sign in again and try again. | 此设备上的 ChatGPT 会话已过期。请重新登录后重试。 |
 | Our services are not available in your country or region | 我们的服务在你所在的国家或地区不可用 |
