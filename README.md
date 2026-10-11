@@ -674,7 +674,7 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 | 5 小时额度用完 | 等报错里写的时间，一般几小时内就回来。Plus 有 5 小时限制；Pro 目前没有，只算每周额度（官方定价页，10 月 3 日核对） |
 | 每周额度用完 | 等周额度重置；急用就换个消耗低的模型，或者买额外额度 |
 | 当前模型用完了 | 按提示换一个模型开新会话 |
-| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近一张重置卡是北京时间 9 月 30 日凌晨 DevDay 现场发的。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
+| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近一次全体重置是北京时间 10 月 11 日，最近一张重置卡是 10 月 8 日凌晨发的（GPT-6 进普通 Chat 那天）。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
 | 经常用完，影响干活 | 考虑升级。9 月 29 日起 Pro 分三档：Pro 100、Pro 200、Pro 500（$100 / $200 / $500），Codex 额度分别是 Plus 的 5、10、25 倍 |
 
 Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 3 日核对）：
