@@ -65,6 +65,7 @@
 | `Unable to load organization settings`、一直停在 `Starting your task`（正在启动你的任务） | 桌面版 26.924 的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
 | 无法加载工作空间设置、请重试以继续聊天、`Couldn't load workspace settings`，新对话的发送按钮是灰的 | 桌面版 10 月 7 日那一版起的问题，还没修完 | [无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
 | 无法检查锁定模式、`Couldn't check Lockdown mode`，日志里 `cloudflare_challenge` 或 `devicecheck_token_generation_failed` | 同上，桌面版取账号设置的请求失败了 | [无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
+| 无法加载你的账户、请尝试重新加载，或退出登录后重新登录、`We couldn't load your account`，点「重新加载」没用 | 桌面版登录后查不出这个账号的信息。原因不止一种，日志里写着是哪一种 | [无法加载你的账户](#无法加载你的账户we-couldnt-load-your-account) |
 | `helper_unknown_error: setup refresh had errors`、`trusted Node process exited unexpectedly`、日志里 `os error 32` | Windows 沙盒的问题，10 月 7 日那一版开始 | [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
 | `Failed to create unified exec process: No such file or directory (os error 2)` | Windows 桌面版开了 Run agent in WSL | [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
 | `Error submitting message`、`Unable to determine project root for task` | Codex 网页版云端任务的问题，还没修 | [网页版](#网页版unable-to-determine-project-root-for-task) |
@@ -88,11 +89,12 @@
 
 ## 最近两周的已知问题
 
-9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 11 日（第一行是 10 月 12 日加的），10 月新出的排在前面。标着「没修」的，10 月 11 日都回到原 issue 逐条复核过，仍然开着。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
+9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 11 日（前两行是 10 月 12 日加的），10 月新出的排在前面。标着「没修」的，10 月 11 日都回到原 issue 逐条复核过，仍然开着。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
 
 | 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
 | --- | --- | --- | --- |
 | 回复到一半失败：`stream disconnected before completion: An error occurred while processing your request`，带 request ID，重连 5/5 后停下；压缩上下文时是 `Error running remote compact task` | 10 月 9 日起明显变多；Windows、macOS 桌面版 26.1007，VS Code 插件，CLI 0.162 | 没有官方回复，状态页没有对应的事故记录；10 月 12 日相关 issue 都开着（[#52919](https://github.com/openai/codex/issues/52919)、[#52814](https://github.com/openai/codex/issues/52814)、[#53127](https://github.com/openai/codex/issues/53127)） | 见[服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
+| 桌面版登录后停在「无法加载你的账户 / 请尝试重新加载，或退出登录后重新登录」（`We couldn't load your account`），点「重新加载」没用；同一台电脑换个账号可能就正常 | Windows、macOS 桌面版，9 月下旬起陆续有人报；10 月 12 日有读者在 macOS 26.1007 上遇到 | 没有官方回复（[#51548](https://github.com/openai/codex/issues/51548)、[#47969](https://github.com/openai/codex/issues/47969)、[#48571](https://github.com/openai/codex/issues/48571)） | 见[无法加载你的账户](#无法加载你的账户we-couldnt-load-your-account) |
 | 桌面版新对话发不出去：「无法加载工作空间设置 / 请重试以继续聊天」（`Couldn't load workspace settings`），旧对话和网页版正常 | Windows、macOS 桌面版 26.1002 起（10 月 7 日） | 没修。10 月 11 日 Windows 26.1007.21434、macOS 26.1007.21159 上仍有人遇到，至少 15 个 issue，没有官方回复（[#51917](https://github.com/openai/codex/issues/51917)、[#52470](https://github.com/openai/codex/issues/52470)） | 见[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
 | 每条消息都报 `Selected model is at capacity`，换模型没用，周额度几乎没动；会话日志里是 `server_overloaded` | 10 月 9–10 日，发帖的人大多在东八区；桌面版、CLI、网页版都有 | 没有官方回复，状态页这两天也没有对应的事故记录；10 月 11 日相关 issue 都还开着（[#52796](https://github.com/openai/codex/issues/52796)、[#52394](https://github.com/openai/codex/issues/52394)） | 见[模型满载](#模型满载selected-model-is-at-capacity) |
 | Windows 桌面版登录后 10–35 秒自己退出，没有报错窗口 | 桌面版 26.1002.7124.0（10 月 7 日） | 一位用户查到原因并给出办法，帖子已标记为解决（[OpenAI 社区](https://community.openai.com/t/1404464)，10 月 8 日） | 见[登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
@@ -301,6 +303,7 @@ codex --no-daemon              # 或者这一次不用后台服务
 | 更新后双击没反应、只有启动动画、窗口一片空白 | 多半是新版本的问题 | [看下面](#更新后打不开只有启动动画或白屏) |
 | `Unable to load organization settings`，点重试没用 | Windows 桌面版 26.924 的问题，官方还没修 | [看下面](#更新后打不开只有启动动画或白屏) |
 | 能打开，但新对话发不出去：无法加载工作空间设置（`Couldn't load workspace settings`） | 桌面版 10 月 7 日那一版起的问题，还没修完 | [看下面](#无法加载工作空间设置couldnt-load-workspace-settings) |
+| 登录后只有一页「无法加载你的账户」（`We couldn't load your account`），点「重新加载」没用 | 桌面版查不出这个账号的信息，原因不止一种 | [看下面](#无法加载你的账户we-couldnt-load-your-account) |
 | 任务一直停在 `Starting your task`（中文界面：正在启动你的任务） | Linux 桌面版 26.924 的问题，已修 | 更新到最新版 |
 | 能打开，但登录页出不来、一直转圈 | 网络 | [第 4 节](#4-国内网络终端要单独设代理) |
 
@@ -384,6 +387,46 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 6. **退回上一个版本。** Mac 上有人退回 26.930.61225 后恢复（[#52001](https://github.com/openai/codex/issues/52001)），Windows 上有人退回 26.928 后能新建对话（[#51917](https://github.com/openai/codex/issues/51917)）。这只是权宜之计，官方修好后记得升回来。
 
 走代理的用户多留意一点：`cloudflare_challenge` 说明 Cloudflare 对这次请求不放心，要先做人机验证。换一个固定的节点可以试，但别指望一定有用，[#52790](https://github.com/openai/codex/issues/52790)、[#51917](https://github.com/openai/codex/issues/51917) 里都有人换过节点和 IP，没解决。还有一位用户是在应用的内置浏览器里打开了一次 chatgpt.com，等验证页自己过去，再回来点「重试」后恢复的；他自己也说不确定是不是这一步起的作用（[#51691](https://github.com/openai/codex/issues/51691)）。
+
+### 无法加载你的账户（We couldn't load your account）
+
+```text
+无法加载你的账户
+请尝试重新加载，或退出登录后重新登录
+```
+
+英文界面是 `We couldn't load your account` / `Try reloading, or sign out and sign in again`，下面两个按钮是「重新加载」（Reload）和「退出登录」（Sign out）。登录成功以后窗口里只有这一页，点「重新加载」还是它；同一个账号在网页版往往是正常的。[#51548](https://github.com/openai/codex/issues/51548) 标题里写的 `Unable to load account` 是从韩文界面翻回英文的，说的是同一页。
+
+9 月下旬起 openai/codex 里陆续有人报，Windows 和 macOS 都有。10 月 12 日本仓库 [Issue #1](https://github.com/Avarce/codex-china-guide/issues/1) 里有读者在 macOS 26.1007 上遇到：同一台电脑，老账号正常，新账号一登录就是这一页。这一节引用的 6 个 issue 都没有 OpenAI 的人回复。
+
+**这一页是兜底提示，原因不止一种。** 桌面版登录后要先向 chatgpt.com 查一遍：这次登录对应哪个账号，这个账号能不能用。哪一步查不出来，显示的都是这一页（对过 macOS 26.1007.21159 的安装包）。所以先到日志里看卡在哪一步：
+
+```bash
+# macOS
+grep -rh "chatgpt-account-lookup" ~/Library/Logs/com.openai.codex/ | tail -n 5
+```
+
+Windows 的日志在 `%LOCALAPPDATA%\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\Codex\Logs`，搜同一个词。这一行不带 token、邮箱和账号 ID，可以直接贴出来问人。看最后一行的 `failureType=`：
+
+| `failureType=` | 意思 |
+| --- | --- |
+| `account_info_request_failed` | 取账号信息的请求失败了。[#52996](https://github.com/openai/codex/issues/52996)（Windows 26.1007）的日志是这一种，同时有一串 `Workspace routing is unavailable`、`status=432` |
+| `accounts_request_failed` | 取账号列表的请求失败了。[#47969](https://github.com/openai/codex/issues/47969)（macOS）是这一种：`/accounts/check` 返回 500，同一个账号在网页版和 ChatGPT Classic 应用里都正常 |
+| `account_info_account_id_missing` | 登录成功了，但没拿到这次登录对应的账号 ID |
+| `account_info_token_unavailable` | 应用没拿到登录令牌 |
+| `account_ordering_empty`、`current_account_entry_missing`、`current_account_mismatch` | 账号列表是空的，或者列表里找不到、对不上当前登录的账号 |
+| `undefined`，同一行写着 `result=succeeded` | 账号查到了，卡在后面的判断上。安装包里这几种情况显示的也是同一页：账号已停用、这次登录无权访问该账号、工作空间设置取不到、聊天功能对这个账号不可用。日志里不写是哪一种 |
+
+查得最细的一份报告在 [#52112](https://github.com/openai/codex/issues/52112) 和 [#48571](https://github.com/openai/codex/issues/48571)（macOS 26.1002.52244）：报告人解开 `~/.codex/auth.json` 里的令牌，发现里面没有 `chatgpt_account_id`，退出重新登录也拿不到。桌面版因此算不出请求该发到哪里，取账号信息的请求全部在本地失败，日志里是 `Workspace routing is unavailable`、状态码 432。同一个账号、同一台电脑，CLI 是正常的。#52112 在 10 月 10 日被关闭，没有说明修没修。
+
+下面都是 issue 里用户的做法，不是官方方案。按顺序试：
+
+1. **换一个账号登录试试。** 别的账号在同一台电脑上正常，就说明问题不在电脑、网络或安装上，重装、清缓存、换节点可以省了。[#51548](https://github.com/openai/codex/issues/51548) 的报告人重装、重置应用、换网络、重建 `auth.json`、用 CLI 重新登录都试过，没有用。
+2. **在浏览器里用这个账号登录 chatgpt.com。** 网页版正常，就是桌面版这一侧的问题，接着往下看。网页版也登不上，或者提示账号被停用，那是账号本身的事，要找 OpenAI 客服。
+3. **看有没有设过 `CODEX_CLI_PATH`。** 终端里跑 `echo $CODEX_CLI_PATH`（Mac 再跑一次 `launchctl getenv CODEX_CLI_PATH`；Windows PowerShell 是 `$env:CODEX_CLI_PATH`）。有输出，说明桌面版被指到了你自己装的那份 CLI 上，去掉这个环境变量再重启应用。[#46382](https://github.com/openai/codex/issues/46382) 里两位 Windows 用户去掉之后 432 就没了；同一个帖子里也有人去掉之后没变化。
+4. **更新到最新版，完全退出再打开，退出登录再登录。** 省事，但别抱太大希望：#47969 的报告人更新后好了，三天后又坏了。
+5. **先用网页版或 CLI。** #52112 里同一个账号的 CLI 正常，#51548 里 CLI 也能登录成功。
+6. **别急着把 `CODEX_CLI_PATH` 指向旧版。** #48571 里有人把它指到 0.154.0 之后账号能加载了，但用量、额度这些功能都没了。
 
 ## 6. 报错逐条处理
 
@@ -768,7 +811,7 @@ Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务
 | Compact | 压缩 |
 | Usage limits / Credits | 用量限制 / 额度（见上一节，两个都可能叫「额度」） |
 
-完整对照 115 条，按界面区域分组：[UI-GLOSSARY.md](UI-GLOSSARY.md)。中文取自 ChatGPT 桌面版自带的简体中文界面，英文取自同一版本的原文，10 月 3 日对着 26.930 逐条复核过，10 月 11 日按 26.1007 补了 5 条报错提示。
+完整对照 117 条，按界面区域分组：[UI-GLOSSARY.md](UI-GLOSSARY.md)。中文取自 ChatGPT 桌面版自带的简体中文界面，英文取自同一版本的原文，10 月 3 日对着 26.930 逐条复核过，10 月 11–12 日按 26.1007 补了 7 条报错提示。
 
 ## 9. AGENTS.md 中文模板
 
@@ -937,7 +980,7 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 - 第三方模型：ChatGPT Learn 的 [Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)（Custom model providers、Profiles）· DeepSeek 官方文档 [接入 Codex](https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/codex) · [CC Switch](https://github.com/farion1231/cc-switch)
 - 安装、更新和卸载的位置：openai/codex 仓库 `rust-v0.162.1` 标签下的 `scripts/install/` 和 `codex-rs/tui/src/update_action.rs`
 
-中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11 日新增的几条提示取自 26.1007.21159；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 11 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
+中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示取自 26.1007.21159；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 11 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
 
 ## 转载与许可
 

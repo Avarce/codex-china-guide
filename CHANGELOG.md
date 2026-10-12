@@ -7,6 +7,8 @@ Codex 改了安装方式、登录流程、报错或额度规则，这里记一�
 - 新增「服务器处理失败：An error occurred while processing your request」：重连 5 次后显示 `stream disconnected before completion: An error occurred while processing your request`，带一串 request ID。这句是 OpenAI 服务器发回来的，不是网络问题（对过 0.162.1 的源码）。10 月 9–12 日 openai/codex 新开 10 个相关 issue，没有官方回复，状态页没有事故记录。写了用户报告里的规律（跟着会话走、多是图片多的长会话、压缩也会失败）和 6 步处理办法，都注明是用户试出来的。
 - 「断线重连」加一张表：`stream disconnected before completion` 冒号后面的四种写法各是什么原因。原来整节写的「多半是网络问题」只适用于 `error sending request` 这一种，已改。
 - 「按报错找」「最近两周的已知问题」「这几天问得最多的」各加一行。
+- 新增「无法加载你的账户（We couldn't load your account）」：桌面版登录后只有这一页，点「重新加载」没用。来自 [Issue #1](https://github.com/Avarce/codex-china-guide/issues/1) 的读者反馈（macOS 26.1007，同一台电脑老账号正常、新账号不行）。这一页是兜底提示，原因不止一种：写了怎么从日志的 `failureType=` 看卡在哪一步（对过 26.1007.21159 的安装包），以及 openai/codex 里几份报告查到的情况和用户试过的 6 个办法。引用的 issue 都没有官方回复。
+- 上面这条在「按报错找」「最近两周的已知问题」「桌面版打不开」各加一行；中英界面对照补 2 条，共 117 条。
 
 ## 2026-10-11
 
