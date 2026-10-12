@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 11 日**（北京时间）· Codex CLI 0.162.1 · 桌面版 26.1007
+> **最后核对：2026 年 10 月 12 日**（北京时间）· Codex CLI 0.162.1 · 桌面版 26.1007
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -10,8 +10,9 @@
 
 由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 整理维护。我们提供 ChatGPT / Claude 会员充值服务，和 OpenAI 没有隶属关系；这页只讲 Codex 本身，充值相关只放在[最后一节](#国内怎么开通)。
 
-**这几天问得最多的（10 月 11 日）：**
+**这几天问得最多的（10 月 12 日）：**
 
+- 重连 5 次后失败，`stream disconnected before completion: An error occurred while processing your request`，后面带一串 request ID：是服务器那边出错，换节点没用：[看这里](#服务器处理失败an-error-occurred-while-processing-your-request)
 - 桌面版新对话发不出去，提示「无法加载工作空间设置」，还没修：[看这里](#无法加载工作空间设置couldnt-load-workspace-settings)
 - 10 月 9 日起每条消息都是 `Selected model is at capacity`，额度明明还有：[看这里](#模型满载selected-model-is-at-capacity)
 - Windows 上所有命令都跑不了，`setup refresh had errors`，桌面版已修、CLI 没修：[看这里](#windows-沙盒setup-refresh-had-errors-os-error-32)
@@ -39,7 +40,8 @@
 
 | 你看到的 | 多半是 | 看这里 |
 | --- | --- | --- |
-| `stream disconnected before completion`、`Reconnecting... 1/5`、正在重新连接 1/5（重连 5 次后失败）、一直重新连接、服务器繁忙，正在重新连接 | 网络或代理 | [断线重连](#断线重连stream-disconnected-before-completion) |
+| `stream disconnected before completion`、`Reconnecting... 1/5`、正在重新连接 1/5（重连 5 次后失败）、一直重新连接、服务器繁忙，正在重新连接 | 看冒号后面那半句：网络或代理，或者 OpenAI 服务器出错 | [断线重连](#断线重连stream-disconnected-before-completion) |
+| `stream disconnected before completion: An error occurred while processing your request`，后面有 `Please include the request ID`；压缩时是 `Error running remote compact task` | OpenAI 服务器返回的错误，不是你的网络。10 月 9 日起变多，多见于图片多的长会话 | [服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
 | `error sending request for url (https://chatgpt.com/backend-api/codex/...)` | 终端没走代理 | [断线重连](#断线重连stream-disconnected-before-completion) |
 | 浏览器显示登录成功，终端一直在等 | 本机回调被挡 | [2. 登录](#2-登录) |
 | `Token exchange failed` | 登录时网络不通 | [登录失败](#登录失败token-exchange-failed) |
@@ -86,10 +88,11 @@
 
 ## 最近两周的已知问题
 
-9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 11 日，10 月新出的排在前面。标着「没修」的，10 月 11 日都回到原 issue 逐条复核过，仍然开着。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
+9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 11 日（第一行是 10 月 12 日加的），10 月新出的排在前面。标着「没修」的，10 月 11 日都回到原 issue 逐条复核过，仍然开着。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
 
 | 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
 | --- | --- | --- | --- |
+| 回复到一半失败：`stream disconnected before completion: An error occurred while processing your request`，带 request ID，重连 5/5 后停下；压缩上下文时是 `Error running remote compact task` | 10 月 9 日起明显变多；Windows、macOS 桌面版 26.1007，VS Code 插件，CLI 0.162 | 没有官方回复，状态页没有对应的事故记录；10 月 12 日相关 issue 都开着（[#52919](https://github.com/openai/codex/issues/52919)、[#52814](https://github.com/openai/codex/issues/52814)、[#53127](https://github.com/openai/codex/issues/53127)） | 见[服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
 | 桌面版新对话发不出去：「无法加载工作空间设置 / 请重试以继续聊天」（`Couldn't load workspace settings`），旧对话和网页版正常 | Windows、macOS 桌面版 26.1002 起（10 月 7 日） | 没修。10 月 11 日 Windows 26.1007.21434、macOS 26.1007.21159 上仍有人遇到，至少 15 个 issue，没有官方回复（[#51917](https://github.com/openai/codex/issues/51917)、[#52470](https://github.com/openai/codex/issues/52470)） | 见[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
 | 每条消息都报 `Selected model is at capacity`，换模型没用，周额度几乎没动；会话日志里是 `server_overloaded` | 10 月 9–10 日，发帖的人大多在东八区；桌面版、CLI、网页版都有 | 没有官方回复，状态页这两天也没有对应的事故记录；10 月 11 日相关 issue 都还开着（[#52796](https://github.com/openai/codex/issues/52796)、[#52394](https://github.com/openai/codex/issues/52394)） | 见[模型满载](#模型满载selected-model-is-at-capacity) |
 | Windows 桌面版登录后 10–35 秒自己退出，没有报错窗口 | 桌面版 26.1002.7124.0（10 月 7 日） | 一位用户查到原因并给出办法，帖子已标记为解决（[OpenAI 社区](https://community.openai.com/t/1404464)，10 月 8 日） | 见[登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
@@ -391,9 +394,18 @@ stream disconnected before completion: error sending request for url (https://ch
 Reconnecting... 2/5
 ```
 
-中文界面显示「正在重新连接 1/5」，一路数到「5/5」后失败；也可能是「服务器繁忙，正在重新连接」。
+中文界面显示「正在重新连接 1/5」，一路数到「5/5」后失败；也可能是「服务器繁忙，正在重新连接」。Codex 默认重试 5 次，都失败才把报错显示出来。
 
-**多半是网络问题。** openai/codex 的维护者排查过一批这类报告，结论是大多是网络连通性问题：网络不稳、VPN、代理、防火墙；也有网络把 WebSocket 挡了的（[#14209](https://github.com/openai/codex/issues/14209)、[#13245](https://github.com/openai/codex/issues/13245)）。
+`stream disconnected before completion` 只是统称，意思是这一轮回复没能完成。**原因看冒号后面那半句**（对照 Codex 0.162.1 的源码和 issue 里的日志）：
+
+| 冒号后面 | 是什么 | 怎么办 |
+| --- | --- | --- |
+| `error sending request for url (…)` | 请求没能发出去，多半是网络或代理 | 按下面的顺序试 |
+| `An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com …`，多半带一个 request ID | OpenAI 服务器返回的错误。这句话不在 Codex 的代码里，是服务器发回来的 | 换节点没用，见[服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
+| `stream closed before response.completed`、`websocket closed by server before response.completed` | 连接中途被断开，网络、代理、服务器都有可能 | 先按下面的顺序试；只有某个旧会话这样的，看本节最后一段 |
+| `idle timeout waiting for SSE`、`idle timeout waiting for websocket` | 等了太久没收到数据 | 同上 |
+
+**后半句是 `error sending request` 的，多半是网络问题。** openai/codex 的维护者排查过一批这类报告，结论是大多是网络连通性问题：网络不稳、VPN、代理、防火墙；也有网络把 WebSocket 挡了的（[#14209](https://github.com/openai/codex/issues/14209)、[#13245](https://github.com/openai/codex/issues/13245)）。
 
 按顺序试：
 
@@ -408,6 +420,39 @@ Reconnecting... 2/5
 
 - 别在旧会话里硬撑，也别 Fork（Fork 会把历史一起带过去）。新开一个会话，只把旧会话的文字结论贴过去：目标、做完了什么、改了哪些文件、下一步。
 - 平时少让它直接看原始大图，先缩小或裁剪；可以把这条写进 `AGENTS.md`。
+
+### 服务器处理失败：An error occurred while processing your request
+
+```text
+stream disconnected before completion: An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists. Please include the request ID xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx in your message.
+```
+
+中文界面先是「正在重新连接 1/5」数到「5/5」，然后显示上面这段。这段是服务器发回来的原文，中文界面里也是英文。压缩上下文时出现的写法是：
+
+```text
+Error running remote compact task: stream disconnected before completion: An error occurred while processing your request. …
+```
+
+日志里还可能是 `unexpected status 503 Service Unavailable: An error occurred while processing your request.`（[#52380](https://github.com/openai/codex/issues/52380)）。
+
+**这不是你的网络问题。** 冒号后面这句话不在 Codex 的代码里（查过 0.162.1 的源码），是 OpenAI 服务器发回来的，request ID 也是服务器给这次请求的编号。也就是说，请求已经到了 OpenAI，是那边处理失败。几位用户翻过日志：服务器先返回 HTTP 200，1–3 秒后报这个错；会话日志里记的是 `codex_error_info: "other"`，不是满载时的 `server_overloaded`（[#52814](https://github.com/openai/codex/issues/52814)、[#53127](https://github.com/openai/codex/issues/53127)）。
+
+**10 月 9 日起明显变多。** openai/codex 里提到这句原文的 issue，9 月 1 日到 10 月 8 日有 23 个，10 月 9–12 日四天新开了 10 个（10 月 12 日上午统计）。这 10 个都开着，没有官方回复，状态页这几天也没有对应的事故记录。Windows 和 macOS 桌面版 26.1007、VS Code 插件、CLI 0.162 都有；Plus、Pro 都有人遇到。
+
+用户报告里反复出现的几点，都不是官方结论：
+
+- **跟着会话走，不跟着账号和网络走。** 一位用户同一个账号同时开着 5 个长会话：70 分钟里，2 个发了 140 次请求没有一次失败，另外 3 个失败了 60%–75%，而且出问题的是哪几个，一天里还会变（[#52814](https://github.com/openai/codex/issues/52814) 的回复）。也有人同一台电脑、同一个网络，一个会话每条都失败，别的会话正常（[#53249](https://github.com/openai/codex/issues/53249)、[#53167](https://github.com/openai/codex/issues/53167)）。
+- **出问题的多是用了很久、图片多的会话。** 有人量过失败的那次请求：36 MB，其中 16 张图片占了 35 MB（[#52731](https://github.com/openai/codex/issues/52731) 的回复）。另一位的两个会话，请求体一个是 18.8 MB，一个压缩后还有 39–54 MB（[#53127](https://github.com/openai/codex/issues/53127)）。
+- **压缩也会失败**，就是上面 `Error running remote compact task` 那句（[#52919](https://github.com/openai/codex/issues/52919)、[#53203](https://github.com/openai/codex/issues/53203)）。
+
+怎么办。下面都是用户试出来的，不保证有效：
+
+1. **先别换节点、重装、重新登录。** issue 里试过没用的：重启电脑两次（[#52919](https://github.com/openai/codex/issues/52919)）、换手机热点（[#52731](https://github.com/openai/codex/issues/52731)）、更新应用（[#53127](https://github.com/openai/codex/issues/53127)）、调低推理强度（[#52814](https://github.com/openai/codex/issues/52814)）。
+2. **新开一个会话，发一句很短的话。** 能正常回复，说明账号和网络没问题，问题在旧会话。
+3. **旧会话先试一次 `/compact`。** 有人压缩成功后，同一个会话的下一条就正常了，历史里的图片数据从 35 MB 降到 0.25 MB（[#52731](https://github.com/openai/codex/issues/52731) 的回复，10 月 11 日）。他自己也说这只是恢复了一次，不能证明以后不再出现。压缩本身也报错的，别反复试，走下一步。
+4. **换新会话接着做。** 只把文字结论贴过去：目标、做完了什么、改了哪些文件、下一步。别 Fork，Fork 会把历史一起带过去。新会话用久了、图片攒多了，断线还会再来（[#51889](https://github.com/openai/codex/issues/51889) 的回复），少让它一次看很多截图或整页的渲染图。
+5. **记下 request ID 和出错时间。** 在 Codex 里输入 `/feedback` 上传日志，或者带着 request ID 到 [help.openai.com](https://help.openai.com) 找客服。这是报错里官方自己写的途径，客服要靠这个编号查。
+6. **新会话里连一句短话都失败的，不是上面这种情况。** 先看[模型满载](#模型满载selected-model-is-at-capacity)，到会话日志里搜 `server_overloaded`。9 月还有一位用户统计过：同一台电脑、同一个网络，换一个账号，失败率差了几倍（[#45925](https://github.com/openai/codex/issues/45925)，没有官方回复）。
 
 ### 登录失败：Token exchange failed
 
