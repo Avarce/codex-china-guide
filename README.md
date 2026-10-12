@@ -403,10 +403,10 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 
 ```bash
 # macOS
-grep -rh "chatgpt-account-lookup" ~/Library/Logs/com.openai.codex/ | tail -n 5
+grep -rh "chatgpt-account-lookup" ~/Library/Logs/com.openai.codex/ | sort | tail -n 5
 ```
 
-Windows 的日志在 `%LOCALAPPDATA%\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\Codex\Logs`，搜同一个词。这一行不带 token、邮箱和账号 ID，可以直接贴出来问人。看最后一行的 `failureType=`：
+Windows 的日志在 `%LOCALAPPDATA%\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\Codex\Logs`，搜同一个词。这一行不带 token、邮箱和账号 ID，可以直接贴出来问人。行首是 UTC 时间，加 8 小时是北京时间；找到出问题那次登录对应的一行，看 `failureType=`：
 
 | `failureType=` | 意思 |
 | --- | --- |
@@ -415,7 +415,16 @@ Windows 的日志在 `%LOCALAPPDATA%\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCa
 | `account_info_account_id_missing` | 登录成功了，但没拿到这次登录对应的账号 ID |
 | `account_info_token_unavailable` | 应用没拿到登录令牌 |
 | `account_ordering_empty`、`current_account_entry_missing`、`current_account_mismatch` | 账号列表是空的，或者列表里找不到、对不上当前登录的账号 |
-| `undefined`，同一行写着 `result=succeeded` | 账号查到了，卡在后面的判断上。安装包里这几种情况显示的也是同一页：账号已停用、这次登录无权访问该账号、工作空间设置取不到、聊天功能对这个账号不可用。日志里不写是哪一种 |
+| `undefined`，同一行写着 `result=succeeded` | 账号查到了，卡在下一步：应用判断这个账号能不能用聊天和 Work。安装包里这一步不放行的情况有：应用里记着的当前账号和这次登录的不是同一个、没取到这个账号的套餐、账号已停用、这次登录无权访问该账号、工作空间设置取不到。这一行不写是哪一种。[Issue #1](https://github.com/Avarce/codex-china-guide/issues/1) 的读者就是这一行：这两天新注册的 Plus 账号，网页版正常，同一台 Mac 上老账号也正常，具体原因还在查 |
+
+`failureType=` 看不出问题的，再看当天有哪些请求失败了。下面这条只输出接口路径和状态码，同样不带账号信息：
+
+```bash
+# macOS，统计今天（UTC 日期）失败的请求
+grep -rh "sa_server_request_failed" ~/Library/Logs/com.openai.codex/ | grep "^$(date -u +%F)" | sed -nE 's/.*routePattern=([^ ]+) status=([^ ]+).*/\1 \2/p' | sort | uniq -c | sort -rn | head
+```
+
+正常使用时这里也会有零星几条 500，不用管。要看的是 `/accounts/check/{version}`、`/settings/user`、`/me` 这几个取账号信息的接口有没有成片失败，以及状态码是不是 401、403、432。
 
 查得最细的一份报告在 [#52112](https://github.com/openai/codex/issues/52112) 和 [#48571](https://github.com/openai/codex/issues/48571)（macOS 26.1002.52244）：报告人解开 `~/.codex/auth.json` 里的令牌，发现里面没有 `chatgpt_account_id`，退出重新登录也拿不到。桌面版因此算不出请求该发到哪里，取账号信息的请求全部在本地失败，日志里是 `Workspace routing is unavailable`、状态码 432。同一个账号、同一台电脑，CLI 是正常的。#52112 在 10 月 10 日被关闭，没有说明修没修。
 
