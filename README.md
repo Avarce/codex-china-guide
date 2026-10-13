@@ -522,7 +522,7 @@ localhost 拒绝了我们的连接请求。
 ERR_CONNECTION_REFUSED
 ```
 
-英文浏览器里是 `This page isn’t working` / `localhost didn’t send any data.`，或 `This site can’t be reached` / `localhost refused to connect.`。CLI 0.158.0（9 月 28 日）起，回调地址里的 `localhost` 换成了 `127.0.0.1`，报错里的 `localhost` 也跟着变成 `127.0.0.1`，是同一回事。
+英文浏览器里是 `This page isn’t working` / `localhost didn’t send any data.`，或 `This site can’t be reached` / `localhost refused to connect.`。CLI 0.158.0（9 月 28 日）起，回调地址里的 `localhost` 换成了 `127.0.0.1`，报错里的 `localhost` 也跟着变成 `127.0.0.1`，是同一回事。10 月 13 日查到的情况：Cursor 的插件市场给的还是 9 月 11 日的 26.5908.31748，自带 CLI 0.154，所以 Cursor 里报错写的是 `localhost`；VS Code 市场的 26.51007.21434 自带 0.162，写的是 `127.0.0.1`。
 
 邮箱、验证码、选工作空间都过了，点最后一个「继续」，浏览器跳到 `localhost:1455`（新版是 `127.0.0.1:1455`），出现上面这一页。**账号这一段没有问题**，卡的是最后一步：「通过 ChatGPT 登录」登录完，浏览器要把凭证送到 `http://localhost:1455/auth/callback`，由正在等登录的那个 Codex 接收。`localhost` 和 `127.0.0.1` 都指浏览器所在的这台电脑。Codex 不在这台电脑上，或者 1455 端口上是别的程序，就接不到。
 
@@ -559,7 +559,7 @@ ERR_CONNECTION_REFUSED
 - 转发端口，前提是你自己电脑上的 1455 没被占。VS Code 连着远程时，命令面板里选 `Forward a Port`，填 `1455`，再登录（[讨论 #4650](https://github.com/openai/codex/discussions/4650) 里一位用户确认可行）。用命令行的，官方的写法是先在自己电脑上运行 `ssh -L 1455:localhost:1455 <用户>@<主机>`，再在这个 SSH 会话里运行 `codex login`。
 - 在有浏览器的电脑上登录好，把 `~/.codex/auth.json` 复制到远程机器的同一位置。这个文件等于账号钥匙。#8158 里的反馈不一：两位用户把 Windows 上的 `auth.json` 复制进 WSL 后正常；另两位复制到远程服务器后能登录，但提问之后一直停在思考。
 
-这一节的依据（10 月 13 日核对）：浏览器报错的中英文取自 Chromium 源码；回调地址、备用端口 1457、设备码页面的地址和 15 分钟有效期，取自 openai/codex `rust-v0.162.1` 的 `codex-rs/login/src/server.rs` 和 `device_code_auth.rs`；插件登录页和设备码对话框的中英文、选了设备码后会自己打开浏览器，取自 VS Code 插件 26.51007.21434 的安装包；链接保护对话框的原文、各按钮的行为和默认信任的域名，取自 Cursor 3.24.12 和 VS Code 1.140 的安装包，中文取自 VS Code 简体中文语言包；远程环境用设备码、转发端口、复制 `auth.json` 三条见官方的 [Authentication](https://learn.chatgpt.com/docs/auth)。我们没有自己在远程环境里复现这两种报错。
+这一节的依据（10 月 13 日核对）：浏览器报错的中英文取自 Chromium 源码；回调地址、备用端口 1457、设备码页面的地址和 15 分钟有效期，取自 openai/codex `rust-v0.162.1` 的 `codex-rs/login/src/server.rs` 和 `device_code_auth.rs`；插件登录页和设备码对话框的中英文、选了设备码后会自己打开浏览器，取自 VS Code 插件 26.51007.21434 的安装包，Cursor 市场上的 26.5908.31748 逐字相同；链接保护对话框的原文、各按钮的行为和默认信任的域名，取自 Cursor 3.24.12 和 VS Code 1.140 的安装包，中文取自 VS Code 简体中文语言包；远程环境用设备码、转发端口、复制 `auth.json` 三条见官方的 [Authentication](https://learn.chatgpt.com/docs/auth)。我们没有自己在远程环境里复现这两种报错。
 
 ### 登录失败：Token exchange failed
 
