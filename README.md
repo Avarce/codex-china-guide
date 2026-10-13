@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 12 日**（北京时间）· Codex CLI 0.162.1 · 桌面版 26.1007
+> **最后核对：2026 年 10 月 13 日**（北京时间）· Codex CLI 0.162.1 · 桌面版 26.1007
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -44,6 +44,8 @@
 | `stream disconnected before completion: An error occurred while processing your request`，后面有 `Please include the request ID`；压缩时是 `Error running remote compact task` | OpenAI 服务器返回的错误，不是你的网络。10 月 9 日起变多，多见于图片多的长会话 | [服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
 | `error sending request for url (https://chatgpt.com/backend-api/codex/...)` | 终端没走代理 | [断线重连](#断线重连stream-disconnected-before-completion) |
 | 浏览器显示登录成功，终端一直在等 | 本机回调被挡 | [2. 登录](#2-登录) |
+| 登录完浏览器跳到 `localhost`（新版是 `127.0.0.1`）：该网页无法正常运作、localhost 未发送任何数据、`ERR_EMPTY_RESPONSE`；或 localhost 拒绝了我们的连接请求、`ERR_CONNECTION_REFUSED` | Codex 不在这台电脑上（VS Code、Cursor 连着 SSH、WSL），或 1455 端口上是别的程序 | [登录后跳到 localhost](#登录后跳到-localhost-打不开err_empty_response) |
+| 设备码登录时 Cursor 弹出 `Do you want Cursor to open the external website?`、`Configure Trusted Domains`（是否要 Cursor 打开外部网站） | 编辑器的链接保护，不是报错 | [登录后跳到 localhost](#登录后跳到-localhost-打不开err_empty_response) |
 | `Token exchange failed` | 登录时网络不通 | [登录失败](#登录失败token-exchange-failed) |
 | `refresh token was already used`、此设备上的 ChatGPT 会话已过期 | 登录凭证失效 | [登录过期](#登录过期refresh-token-was-already-used) |
 | `Verify your phone number`、`Phone number required` | 手机号验证 | [3. 要验证手机号](#3-要验证手机号) |
@@ -207,11 +209,13 @@ where codex        # Windows
 - **Sign in with ChatGPT**（中文界面：通过 ChatGPT 登录）：用你 ChatGPT 套餐里的 Codex 额度。大多数人选这个。
 - **API Key**：按 API 用量另外计费，不走套餐额度；Codex 云端任务必须用 ChatGPT 登录。
 
-登录会打开浏览器，你登录完，浏览器再把凭证交回本机的 Codex（默认走 `localhost:1455`）。**浏览器显示成功、终端却一直在等**，通常是这个本机回调被网络设置挡住了，或者你是在远程服务器上装的。这时改用设备码登录：
+登录会打开浏览器，你登录完，浏览器再把凭证交回本机的 Codex（默认走 `localhost:1455`）。**浏览器显示成功、终端却一直在等**，或者**登录完浏览器跳到 localhost、显示打不开**，通常是这个本机回调被网络设置挡住了，或者 Codex 不在这台电脑上（装在远程服务器上，或 VS Code、Cursor 连着 SSH）。这时改用设备码登录：
 
-1. 先在 ChatGPT 网页版的安全设置里打开设备码登录（Device code），不开这一步会失败。
-2. 运行 `codex login --device-auth`，或在登录界面选 Sign in with Device Code。
-3. 打开它给的链接，登录后输入一次性代码。
+1. 先在 ChatGPT 网页版的安全设置（`chatgpt.com/settings/security`）里打开 `Enable device code sign-in for Codex, Excel, PowerPoint, and Word`（中文界面：为 Codex、Excel、PowerPoint 和 Word 启用设备代码登录），不开这一步会失败。
+2. 运行 `codex login --device-auth`，或在登录界面选 Sign in with Device Code。VS Code、Cursor 插件是在登录页点 `More options`（更多登录选项）→ `Use device code`（使用设备码）。
+3. 打开它给的链接，先登录，登录后输入一次性代码。
+
+怎么认自己是不是远程环境、每一步容易卡在哪，见[登录后跳到 localhost 打不开](#登录后跳到-localhost-打不开err_empty_response)。
 
 ```bash
 codex login status          # 看当前用哪种方式登录
@@ -505,6 +509,57 @@ Error running remote compact task: stream disconnected before completion: An err
 4. **换新会话接着做。** 只把文字结论贴过去：目标、做完了什么、改了哪些文件、下一步。别 Fork，Fork 会把历史一起带过去。新会话用久了、图片攒多了，断线还会再来（[#51889](https://github.com/openai/codex/issues/51889) 的回复），少让它一次看很多截图或整页的渲染图。
 5. **记下 request ID 和出错时间。** 在 Codex 里输入 `/feedback` 上传日志，或者带着 request ID 到 [help.openai.com](https://help.openai.com) 找客服。这是报错里官方自己写的途径，客服要靠这个编号查。
 6. **新会话里连一句短话都失败的，不是上面这种情况。** 先看[模型满载](#模型满载selected-model-is-at-capacity)，到会话日志里搜 `server_overloaded`。9 月还有一位用户统计过：同一台电脑、同一个网络，换一个账号，失败率差了几倍（[#45925](https://github.com/openai/codex/issues/45925)，没有官方回复）。
+
+### 登录后跳到 localhost 打不开：ERR_EMPTY_RESPONSE
+
+```text
+该网页无法正常运作
+localhost 未发送任何数据。
+ERR_EMPTY_RESPONSE
+
+无法访问此网站
+localhost 拒绝了我们的连接请求。
+ERR_CONNECTION_REFUSED
+```
+
+英文浏览器里是 `This page isn’t working` / `localhost didn’t send any data.`，或 `This site can’t be reached` / `localhost refused to connect.`。CLI 0.158.0（9 月 28 日）起，回调地址里的 `localhost` 换成了 `127.0.0.1`，报错里的 `localhost` 也跟着变成 `127.0.0.1`，是同一回事。
+
+邮箱、验证码、选工作空间都过了，点最后一个「继续」，浏览器跳到 `localhost:1455`（新版是 `127.0.0.1:1455`），出现上面这一页。**账号这一段没有问题**，卡的是最后一步：「通过 ChatGPT 登录」登录完，浏览器要把凭证送到 `http://localhost:1455/auth/callback`，由正在等登录的那个 Codex 接收。`localhost` 和 `127.0.0.1` 都指浏览器所在的这台电脑。Codex 不在这台电脑上，或者 1455 端口上是别的程序，就接不到。
+
+先认自己是哪种情况：
+
+| 情况 | 怎么认 | 怎么办 |
+| --- | --- | --- |
+| 编辑器连着远程：Remote SSH、WSL、容器、Codespaces | 窗口标题里带 `[SSH: 主机名]` 这样的字样，左下角状态栏也会显示连着哪台主机 | 插件和 Codex 跑在远程那台机器上，等回调的也是它，浏览器却在你自己的电脑上（[#4265](https://github.com/openai/codex/issues/4265)、[#6403](https://github.com/openai/codex/issues/6403)）。用下面的设备码登录，这是官方文档给远程环境的首选办法 |
+| 这台电脑的 1455 端口上是别的程序 | 同时开着桌面版、另一个 VS Code 或 Cursor 窗口、终端里的 `codex` | 把别的都关掉再登录。[#22048](https://github.com/openai/codex/issues/22048) 的发帖人是连着远程登录时，自己电脑的 1455 被另一个 VS Code 窗口或 Codex 占着，回调被别的进程收走，或者直接失败。旧版本这时命令行报 `Port 127.0.0.1:1455 is already in use`，[#3927](https://github.com/openai/codex/issues/3927) 里三位用户关掉开着 Codex 的 VS Code 或 Cursor 后解决。现在的版本会先请占着端口的那个 Codex 登录退出，不行就改用备用端口 1457 |
+| Windows 上插件设成了在 WSL 里运行 | 设置里 `chatgpt.runCodexInWindowsSubsystemForLinux` 是开的（现在默认是关的）；浏览器等很久后显示 `localhost took too long to respond`（localhost 的响应时间过长） | [#12263](https://github.com/openai/codex/issues/12263) 发帖人的可用配置：把它和 `remote.openBrowserInRemote` 都设成 `false`，重启 VS Code |
+
+查 1455 被谁占着：macOS、Linux 用 `lsof -i :1455`，Windows 用 `netstat -ano | findstr :1455`。
+
+两种报错的区别：`ERR_CONNECTION_REFUSED` 是连接被拒绝，通常是这台电脑的 1455 端口上没有程序在等；`ERR_EMPTY_RESPONSE` 是对方接了连接，没发任何数据就断开了。后一种在用户报告里出现在走 SSH 隧道的时候（[#2798](https://github.com/openai/codex/issues/2798) 的回复，没有官方解释）。两种的处理办法一样。
+
+**用设备码登录，不经过 localhost：**
+
+1. 浏览器打开 `chatgpt.com/settings/security`，往下找到 `Enable device code sign-in for Codex, Excel, PowerPoint, and Word`（中文界面：为 Codex、Excel、PowerPoint 和 Word 启用设备代码登录），打开。要在你用来登录 Codex 的那个账号里开；Business 这类工作空间由管理员在工作空间权限里开。
+2. VS Code、Cursor 插件：登录页点 `More options`（更多登录选项）→ `Use device code`（使用设备码）。命令行：`codex login --device-auth`。
+3. 出现一个对话框，写着 `To use a device code to log in, click the open browser button and paste the code below.`（如需使用设备码登录，请点击“打开浏览器”按钮，并粘贴下方验证码。），下面是 `Device code`（设备码）和一串代码。插件会自己打开浏览器，没打开就点 `Open browser`（打开浏览器）。
+4. **浏览器先出现登录页是正常的，不是又失败了。** 命令行里的原话是先登录、再输入代码。登录有套餐的那个账号，然后把代码粘贴进去。代码 15 分钟内有效。
+5. 回到编辑器或终端，等它自己变成已登录。
+
+这几步里容易卡住的地方。我们帮人处理过一例，是 Cursor 连着 SSH 远程，前两条都遇到了：
+
+- **Cursor 弹出 `Do you want Cursor to open the external website?`**（装了中文语言包是「是否要 Cursor 打开外部网站?」）。这是编辑器的链接保护，不是报错：Cursor 默认信任的域名里没有 `auth.openai.com`。点 `Open`（打开）就行。点 `Configure Trusted Domains`（配置受信任的域），再选 `Trust https://auth.openai.com`（信任 …），以后不再问，这一次也会打开。点 `Copy`（复制）或直接关掉对话框，网页不会打开。VS Code 1.140 默认信任这个域名，不会弹。
+- **设备码登录本身不经过 localhost。** 我们处理的那一例里，点了 `Open browser`、登录之后，浏览器还是跳到了上面那一页，原因没有查实。可以这样试：关掉之前登录留下的标签页，回编辑器点 `Cancel`（取消）重新取一次代码，然后在浏览器地址栏直接打开 `https://auth.openai.com/codex/device`，登录后粘贴代码。还是跳走，就换无痕窗口打开这个地址。
+- 代码过期了，点 `Cancel`（取消）再选一次设备码，会换一串新的。
+- 设备码是 Codex 所在的那台机器去申请的。远程服务器在国内的，服务器自己也要能连上 OpenAI（见[第 4 节](#4-国内网络终端要单独设代理)）；[#8158](https://github.com/openai/codex/issues/8158) 里有人在远程服务器上得到的是 `device code request failed with status 403 Forbidden`。
+- **代码别发给任何人。** 那个开关下面写着设备码可能被钓鱼；命令行里的提示是：这次登录不是你自己在 Codex 里发起的，就取消。
+
+想在远程环境里照常用浏览器登录的，还有两个办法，都是官方文档列的备用办法：
+
+- 转发端口，前提是你自己电脑上的 1455 没被占。VS Code 连着远程时，命令面板里选 `Forward a Port`，填 `1455`，再登录（[讨论 #4650](https://github.com/openai/codex/discussions/4650) 里一位用户确认可行）。用命令行的，官方的写法是先在自己电脑上运行 `ssh -L 1455:localhost:1455 <用户>@<主机>`，再在这个 SSH 会话里运行 `codex login`。
+- 在有浏览器的电脑上登录好，把 `~/.codex/auth.json` 复制到远程机器的同一位置。这个文件等于账号钥匙。#8158 里的反馈不一：两位用户把 Windows 上的 `auth.json` 复制进 WSL 后正常；另两位复制到远程服务器后能登录，但提问之后一直停在思考。
+
+这一节的依据（10 月 13 日核对）：浏览器报错的中英文取自 Chromium 源码；回调地址、备用端口 1457、设备码页面的地址和 15 分钟有效期，取自 openai/codex `rust-v0.162.1` 的 `codex-rs/login/src/server.rs` 和 `device_code_auth.rs`；插件登录页和设备码对话框的中英文、选了设备码后会自己打开浏览器，取自 VS Code 插件 26.51007.21434 的安装包；链接保护对话框的原文、各按钮的行为和默认信任的域名，取自 Cursor 3.24.12 和 VS Code 1.140 的安装包，中文取自 VS Code 简体中文语言包；远程环境用设备码、转发端口、复制 `auth.json` 三条见官方的 [Authentication](https://learn.chatgpt.com/docs/auth)。我们没有自己在远程环境里复现这两种报错。
 
 ### 登录失败：Token exchange failed
 

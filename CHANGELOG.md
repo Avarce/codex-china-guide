@@ -2,6 +2,13 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-10-13
+
+- 新增「登录后跳到 localhost 打不开：ERR_EMPTY_RESPONSE」：邮箱、验证码、工作空间都过了，最后浏览器显示「localhost 未发送任何数据」或「localhost 拒绝了我们的连接请求」（CLI 0.158.0 起是 `127.0.0.1`）。来自我们处理的一例（Cursor 连着 SSH 远程）。写了怎么认三种情况（编辑器连着远程、本机 1455 上是别的程序、Windows 插件跑在 WSL 里），以及设备码登录的 5 步和 5 个容易卡住的地方：Cursor 弹出的 `Do you want Cursor to open the external website?` 是链接保护不是报错，浏览器先出现登录页是正常的。那一例里设备码登录后浏览器仍跳到 localhost，原因没有查实，写了可以试的办法并注明。
+- 文字和行为对过源码和安装包：Chromium（浏览器报错的中英文）、openai/codex `rust-v0.162.1`（回调地址、备用端口 1457、设备码页面地址、15 分钟有效期）、VS Code 插件 26.51007.21434（`More options` → `Use device code`，中文「更多登录选项」→「使用设备码」）、Cursor 3.24.12 和 VS Code 1.140（链接保护对话框；Cursor 默认不信任 `auth.openai.com`，VS Code 信任）。
+- 「2. 登录」的设备码三步写具体：开关的中英文全名、插件里的入口、先登录再输代码。
+- 「按报错找」加两行。
+
 ## 2026-10-12
 
 - 新增「服务器处理失败：An error occurred while processing your request」：重连 5 次后显示 `stream disconnected before completion: An error occurred while processing your request`，带一串 request ID。这句是 OpenAI 服务器发回来的，不是网络问题（对过 0.162.1 的源码）。10 月 9–12 日 openai/codex 新开 10 个相关 issue，没有官方回复，状态页没有事故记录。写了用户报告里的规律（跟着会话走、多是图片多的长会话、压缩也会失败）和 6 步处理办法，都注明是用户试出来的。
