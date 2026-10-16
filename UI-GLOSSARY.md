@@ -1,6 +1,6 @@
 # Codex 桌面版中英界面对照
 
-> 取自 ChatGPT 桌面版（macOS）自带的简体中文界面，英文取自同一版本的原文。2026 年 9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 逐条复核：103 条里 100 条没变，3 条换了译法（Steer、Queue、Work locally），另外补了 7 条 Windows 设置和启动任务的提示。10 月 11 日按 26.1007.21159 补了 5 条报错提示，10 月 12 日又补 2 条。
+> 取自 ChatGPT 桌面版（macOS）自带的简体中文界面，英文取自同一版本的原文。2026 年 9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 逐条复核：103 条里 100 条没变，3 条换了译法（Steer、Queue、Work locally），另外补了 7 条 Windows 设置和启动任务的提示。10 月 11 日按 26.1007.21159 补了 5 条报错提示，10 月 12 日又补 2 条，10 月 16 日按同一版补了 12 条（运行状态、权限、远程控制、恢复对话）。
 > 界面文字会随版本变化，以你电脑上显示的为准。发现对不上的，欢迎提 Issue。
 
 桌面版可以切中文：设置 → 常规 → 语言，选「中文（中国）」（默认「自动检测」，跟随系统语言）。设置里没有「语言」、VS Code 和命令行怎么切，见 [README 第 8 节](README.md#8-怎么设置中文)。这张表是给照着英文文档、英文教程、GitHub issue 找按钮的时候用的。
@@ -23,6 +23,7 @@
 | Add new project | 添加新项目 |
 | Archive chat | 归档聊天 |
 | Archived chats | 已归档的聊天 |
+| Permanently delete | 永久删除 |
 | Pin | 置顶 |
 | Search | 搜索 |
 | Continue in a new chat | 在新聊天中继续 |
@@ -58,6 +59,9 @@
 | Steer | 引导（26.915 及更早：调整方向） |
 | Queue | 排队（26.915 及更早：加入队列） |
 | Stop | 停止 |
+| Thinking | 正在思考 |
+| Working for {时间} | 已处理 {时间} |
+| Running command for {时间} | 命令已运行 {时间} |
 | Continue | 继续 |
 | Retry | 重试 |
 | Compact this chat's context | 压缩此聊天的上下文 |
@@ -78,7 +82,12 @@
 | Allow once | 允许一次 |
 | Always allow | 始终允许 |
 | Sandbox | 沙盒 |
+| Sandbox settings | 沙盒设置 |
+| Workspace write | 工作空间写入 |
 | Allow network access | 允许网络访问 |
+| Awaiting approval | 等待批准 |
+| Disabled by requirements.toml | 已被 requirements.toml 禁用 |
+| Managed | 由组织管理 |
 
 ## 审查改动与 Git
 
@@ -174,5 +183,8 @@
 | Setup timed out | 设置超时（错误码 `setup_timeout`） |
 | Retry setup | 重新设置 |
 | Continue without administrator access | 在没有管理员访问权限的情况下继续 |
+| Couldn’t enable remote control. Try again | 无法启用远程控制。请重试 |
+| Couldn’t update remote control availability | 无法更新远程控制状态 |
+| Failed to resume chat | 恢复对话失败 |
 
 这些提示怎么处理，见 [README 的报错速查](README.md#按报错找)。

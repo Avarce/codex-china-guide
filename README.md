@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 15 日**（北京时间）· Codex CLI 0.162.1 · 桌面版 26.1007
+> **最后核对：2026 年 10 月 16 日**（北京时间）· Codex CLI 0.163.0 · 桌面版 26.1007
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -10,12 +10,12 @@
 
 由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 整理维护。我们提供 ChatGPT / Claude 会员充值服务，和 OpenAI 没有隶属关系；这页只讲 Codex 本身，充值相关只放在[最后一节](#国内怎么开通)。
 
-**这几天问得最多的（10 月 15 日）：**
+**这几天问得最多的（10 月 16 日）：**
 
 - 重连 5 次后失败，`stream disconnected before completion: An error occurred while processing your request`，后面带一串 request ID：是服务器那边出错，换节点没用：[看这里](#服务器处理失败an-error-occurred-while-processing-your-request)
 - 桌面版新对话发不出去，提示「无法加载工作空间设置」，还没修：[看这里](#无法加载工作空间设置couldnt-load-workspace-settings)
 - 每条消息都是 `Selected model is at capacity`，额度明明还有：10 月 9–10 日、12–14 日各来了一波，13 日、14 日状态页也挂了故障：[看这里](#模型满载selected-model-is-at-capacity)
-- Windows 上所有命令都跑不了，`setup refresh had errors`，桌面版已修、CLI 没修：[看这里](#windows-沙盒setup-refresh-had-errors-os-error-32)
+- Windows 上所有命令都跑不了，`setup refresh had errors`：桌面版已修；CLI 10 月 16 日出了 0.163.0，带上了修复，当天有一位用户确认好了：[看这里](#windows-沙盒setup-refresh-had-errors-os-error-32)
 - GPT-5.5 已在 10 月 14 日下线，设置里还写着 `gpt-5.5` 的会报模型不支持，要改：[看这里](#模型不支持model-is-not-supported)
 
 ## 目录
@@ -43,6 +43,7 @@
 | `stream disconnected before completion`、`Reconnecting... 1/5`、正在重新连接 1/5（重连 5 次后失败）、一直重新连接、服务器繁忙，正在重新连接 | 看冒号后面那半句：网络或代理，或者 OpenAI 服务器出错 | [断线重连](#断线重连stream-disconnected-before-completion) |
 | `stream disconnected before completion: An error occurred while processing your request`，后面有 `Please include the request ID`；压缩时是 `Error running remote compact task` | OpenAI 服务器返回的错误，不是你的网络。10 月 9 日起变多，多见于图片多的长会话 | [服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
 | `error sending request for url (https://chatgpt.com/backend-api/codex/...)` | 终端没走代理 | [断线重连](#断线重连stream-disconnected-before-completion) |
+| 一直「正在思考」（Thinking）、「已处理 …」（Working for …）不结束；CLI 停在 `Working (… • esc to interrupt)` | 在等你批准、某条命令没退出、任务本身慢，或者连接断了 | [一直正在思考](#一直正在思考卡住不动thinking) |
 | 浏览器显示登录成功，终端一直在等 | 本机回调被挡 | [2. 登录](#2-登录) |
 | 登录完浏览器跳到 `localhost`（新版是 `127.0.0.1`）：该网页无法正常运作、localhost 未发送任何数据、`ERR_EMPTY_RESPONSE`；或 localhost 拒绝了我们的连接请求、`ERR_CONNECTION_REFUSED` | Codex 不在这台电脑上（VS Code、Cursor 连着 SSH、WSL），或 1455 端口上是别的程序 | [登录后跳到 localhost](#登录后跳到-localhost-打不开err_empty_response) |
 | 设备码登录时 Cursor 弹出 `Do you want Cursor to open the external website?`、`Configure Trusted Domains`（是否要 Cursor 打开外部网站） | 编辑器的链接保护，不是报错 | [登录后跳到 localhost](#登录后跳到-localhost-打不开err_empty_response) |
@@ -61,7 +62,11 @@
 | `ran out of room in the model's context window` | 这个会话的上下文满了 | [上下文满了](#上下文满了ran-out-of-room-in-the-models-context-window) |
 | 证书错误、`certificate` | 公司网络或抓包软件 | [证书错误](#证书错误公司网络抓包软件) |
 | `You've hit your usage limit`、你已达到使用上限 | 额度用完 | [7. 额度用完了](#7-额度用完了) |
-| Windows 设置未完成（旧版本写的是「Windows 安装未完成」）、设置无法完成、`helper_failed`、完成 Windows 设置以继续 | Windows 沙盒没装好 | [Windows 设置未完成](#windows-设置未完成helper_failed) |
+| Windows 设置未完成（旧版本写的是「Windows 安装未完成」）、设置无法完成、`helper_failed`、完成 Windows 设置以继续、设置智能体沙盒以继续（`Set up Agent sandbox to continue`） | Windows 沙盒没装好 | [Windows 设置未完成](#windows-设置未完成helper_failed) |
+| 命令连不上网，`npm install`、`pip install` 失败；改项目外的文件要批准 | 沙盒默认不让命令联网，这是正常的 | [权限](#权限不能联网写不了文件完全访问权限是灰的) |
+| 完全访问权限是灰的：已被 requirements.toml 禁用（`Disabled by requirements.toml`）、由组织管理、沙盒模式受此次安装的限制 | 管理员策略，本机设置改不动 | [权限](#权限不能联网写不了文件完全访问权限是灰的) |
+| 无法启用远程控制。请重试、请确保仅有一个 ChatGPT 实例在运行、无法更新远程控制状态（`Couldn’t enable remote control`、`Couldn’t update remote control availability`） | 手机连电脑的远程控制打不开 | [远程控制](#远程控制无法启用远程控制couldnt-enable-remote-control) |
+| 恢复对话失败、此任务正在其他位置运行；归档是什么意思、归档的对话在哪里、怎么删除对话 | — | [常见问题](#常见问题) |
 | 已在另一个应用中打开 | 这个会话在别处开着 | [5. 桌面版打不开](#5-桌面版打不开) |
 | 更新后打不开、只有启动动画、窗口空白 | 多半是新版本的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
 | `Unable to load organization settings`、一直停在 `Starting your task`（正在启动你的任务） | 桌面版 26.924 的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
@@ -91,20 +96,20 @@
 
 ## 最近两周的已知问题
 
-9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 15 日，10 月新出的排在前面。标着「没修」的，10 月 15 日都回到原 issue 逐条复核过，仍然开着。桌面版这几天又出了一版 26.1007.71326，表里写着 26.1007 的问题，有几条在这一版上仍有人遇到，下面注明了。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
+9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 15 日，10 月新出的排在前面。标着「没修」的，10 月 15 日都回到原 issue 逐条复核过，仍然开着。桌面版这几天又出了一版 26.1007.71326，表里写着 26.1007 的问题，有几条在这一版上仍有人遇到，下面注明了；10 月 16 日又出了 26.1013.31256，WSL 那一条有用户确认在这一版上修好了。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
 
 | 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
 | --- | --- | --- | --- |
 | 回复到一半失败：`stream disconnected before completion: An error occurred while processing your request`，带 request ID，重连 5/5 后停下；压缩上下文时是 `Error running remote compact task` | 10 月 9 日起明显变多；Windows、macOS 桌面版 26.1007，VS Code 插件，CLI 0.162 | 没有官方回复，状态页没有对应的事故记录；10 月 12 日相关 issue 都开着（[#52919](https://github.com/openai/codex/issues/52919)、[#52814](https://github.com/openai/codex/issues/52814)、[#53127](https://github.com/openai/codex/issues/53127)） | 见[服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
 | 桌面版登录后停在「无法加载你的账户 / 请尝试重新加载，或退出登录后重新登录」（`We couldn't load your account`），点「重新加载」没用；同一台电脑换个账号可能就正常 | Windows、macOS 桌面版，9 月下旬起陆续有人报；10 月 12 日有读者在 macOS 26.1007 上遇到 | 没有官方回复（[#51548](https://github.com/openai/codex/issues/51548)、[#47969](https://github.com/openai/codex/issues/47969)、[#48571](https://github.com/openai/codex/issues/48571)） | 见[无法加载你的账户](#无法加载你的账户we-couldnt-load-your-account) |
-| 桌面版新对话发不出去：「无法加载工作空间设置 / 请重试以继续聊天」（`Couldn't load workspace settings`），旧对话和网页版正常 | Windows、macOS 桌面版 26.1002 起（10 月 7 日） | 没修。10 月 11 日 Windows 26.1007.21434、macOS 26.1007.21159 上仍有人遇到，10 月 12–14 日 macOS 上有人在新版 26.1007.71326 上仍遇到（虚拟机），Windows 上有人 10 月 14 日更新到最新版后仍遇到，至少 15 个 issue，没有官方回复（[#51917](https://github.com/openai/codex/issues/51917)、[#52470](https://github.com/openai/codex/issues/52470)、[#51667](https://github.com/openai/codex/issues/51667)） | 见[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
+| 桌面版新对话发不出去：「无法加载工作空间设置 / 请重试以继续聊天」（`Couldn't load workspace settings`），旧对话和网页版正常 | Windows、macOS 桌面版 26.1002 起（10 月 7 日） | 没修。10 月 11 日 Windows 26.1007.21434、macOS 26.1007.21159 上仍有人遇到，10 月 12–14 日 macOS 上有人在新版 26.1007.71326 上仍遇到（虚拟机），Windows 上有人 10 月 14 日更新到最新版后仍遇到，10 月 16 日 macOS 虚拟机上有人在 26.1013.31256 上仍遇到，至少 15 个 issue，没有官方回复（[#51917](https://github.com/openai/codex/issues/51917)、[#52470](https://github.com/openai/codex/issues/52470)、[#51667](https://github.com/openai/codex/issues/51667)） | 见[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
 | 每条消息都报 `Selected model is at capacity`，换模型没用，周额度几乎没动；会话日志里是 `server_overloaded` | 10 月 9–10 日一波，10 月 12–14 日又一波，发帖的人大多在东八区；桌面版、CLI、网页版都有 | 9–10 日、12 日状态页都没有记录；13 日、14 日状态页记了两次 Codex 性能下降，都已标记解决（见[模型满载](#模型满载selected-model-is-at-capacity)）。相关 issue 都还开着，没有官方回复（[#52796](https://github.com/openai/codex/issues/52796)、[#52394](https://github.com/openai/codex/issues/52394)、[#53559](https://github.com/openai/codex/issues/53559)） | 见[模型满载](#模型满载selected-model-is-at-capacity) |
 | Windows 桌面版登录后 10–35 秒自己退出，没有报错窗口 | 桌面版 26.1002.7124.0（10 月 7 日） | 一位用户查到原因并给出办法，帖子已标记为解决（[OpenAI 社区](https://community.openai.com/t/1404464)，10 月 8 日） | 见[登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
 | CLI 启动就退出：`account/read failed during TUI bootstrap … workspace routing discovery failed (code -32603)` | CLI 0.162.0，走本地代理 | 发帖人确认重启后台服务后解决（[OpenAI 社区](https://community.openai.com/t/1404666)，10 月 9 日） | `codex app-server daemon restart`，见[后台服务报错](#后台服务daemon报错) |
 | 重置卡到了到期那天，没到晚上就不见了 | 所有版本 | **官方答复**（OpenAI_Support，10 月 6 日，[OpenAI 社区](https://community.openai.com/t/1403334)）：每张卡有具体的到期时间，过期不能恢复 | 网页版 Settings → Usage 里，把鼠标悬停在到期日期上能看到具体时间和时区。没到时间就消失的，找客服查 |
 | GitHub 上 `@codex review` 被拒：`You have reached your Codex usage limits for code reviews`，Usage 页面的周额度却还有 | 9 月 29 日起有人反馈 | 没有官方回复（[OpenAI 社区](https://community.openai.com/t/1402074)）。代码审查的用量是单独算的 | 帖子里用户的办法：账号里有 credits 的，在 Code review 设置里打开 use credits。这个办法不是都管用：10 月 9 日有人开着这个设置、credits 余额也是正的，照样被拒（[#52549](https://github.com/openai/codex/issues/52549)） |
-| Windows 上所有命令都在执行前失败：`helper_unknown_error: setup refresh had errors`，日志里是 `os error 32` | Windows 桌面版 26.1002（10 月 7 日）；CLI 0.162.0、0.162.1 | 桌面版：10 月 9–10 日多位用户确认 26.1007.21434 **已修**（[#51601](https://github.com/openai/codex/issues/51601)，120 条回复）。CLI：10 月 10 日仍有人在 0.162.1 上复现（[#51634](https://github.com/openai/codex/issues/51634)） | 桌面版更新到 26.1007.21434；CLI 见 [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
-| Windows 桌面版开了 Run agent in WSL，每条命令都是 `Failed to create unified exec process: No such file or directory (os error 2)` | 桌面版 26.928 起 | 10 月 12 日 OpenAI 的人回复「会修」并关闭了 issue，但 10 月 14 日有人在新版 26.1007.71326 上仍遇到（[#49731](https://github.com/openai/codex/issues/49731)、[#54063](https://github.com/openai/codex/issues/54063)）。10 月 10 日一位用户查到了原因 | 先更新到最新版；还报的，用户给了挂载目录的办法，见 [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
+| Windows 上所有命令都在执行前失败：`helper_unknown_error: setup refresh had errors`，日志里是 `os error 32` | Windows 桌面版 26.1002（10 月 7 日）；CLI 0.162.0、0.162.1 | 桌面版：10 月 9–10 日多位用户确认 26.1007.21434 **已修**（[#51601](https://github.com/openai/codex/issues/51601)，120 条回复）。CLI：0.162.1 上仍有人复现（[#51634](https://github.com/openai/codex/issues/51634)）；北京时间 10 月 16 日发布的 0.163.0 带上了修复（[#51822](https://github.com/openai/codex/pull/51822)），当天有一位用户确认好了（[#51590](https://github.com/openai/codex/issues/51590)） | 桌面版更新到 26.1007.21434；CLI 先 `codex update` 到 0.163.0，见 [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
+| Windows 桌面版开了 Run agent in WSL，每条命令都是 `Failed to create unified exec process: No such file or directory (os error 2)` | 桌面版 26.928 起 | 10 月 12 日 OpenAI 的人回复「会修」并关闭了 issue，但 10 月 14 日有人在新版 26.1007.71326 上仍遇到（[#49731](https://github.com/openai/codex/issues/49731)、[#54063](https://github.com/openai/codex/issues/54063)）。10 月 16 日一位用户确认 **26.1013.31256** 修好了，重启后也正常（[#49731](https://github.com/openai/codex/issues/49731)，对应的修复是 [#53412](https://github.com/openai/codex/pull/53412)） | 先更新到 26.1013.31256；还报的，用户给了挂载目录的办法，见 [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
 | Codex 网页版第一条消息发不出去：`Unable to determine project root for task` | 9 月 30 日起，云端环境 | 没修，还没有官方回复（[#49497](https://github.com/openai/codex/issues/49497)） | 见[网页版](#网页版unable-to-determine-project-root-for-task) |
 | 会话突然断开：`Server is draining; retry after reconnecting`，恢复时提示 `Background server has incompatible feature settings` | 后台服务自动更新的时候 | 没修（[#51763](https://github.com/openai/codex/issues/51763)，10 月 7 日） | 按提示重启后台服务，见[后台服务报错](#后台服务daemon报错) |
 | VS Code 插件语音输入显示 `Dictation stopped`，日志里 `/transcribe` 返回 `HTTP 403 Forbidden` | 插件 26.917.62051 起 | **已修**：OpenAI 的人 10 月 14 日回复，已在服务器端修好，不用更新插件（[#49351](https://github.com/openai/codex/issues/49351)） | 重新加载窗口再试。修好之前用户用的办法是在 VS Code 用户设置里加 `"http.electronFetch": true`，现在不需要了 |
@@ -146,7 +151,7 @@ winget install --id 9PLM9XGG6VKS -s msstore
 CLI 选一种装法就行。官方安装脚本要从 chatgpt.com 下载，国内经常卡住，**用 npm 国内镜像最省事**（需要 Node.js 16+）：
 
 ```bash
-# npm 国内镜像（10 月 11 日核对：镜像版本和 npm 官方一致，都是 0.162.1；Windows 上 0.162 有沙盒问题，见「Windows 沙盒」一节）
+# npm 国内镜像（10 月 16 日核对：镜像版本和 npm 官方一致，都是 0.163.0；Windows 上 0.161–0.162 有沙盒问题，见「Windows 沙盒」一节）
 npm install -g @openai/codex --registry=https://registry.npmmirror.com
 
 # 官方安装脚本（macOS / Linux）
@@ -510,6 +515,31 @@ Error running remote compact task: stream disconnected before completion: An err
 5. **记下 request ID 和出错时间。** 在 Codex 里输入 `/feedback` 上传日志，或者带着 request ID 到 [help.openai.com](https://help.openai.com) 找客服。这是报错里官方自己写的途径，客服要靠这个编号查。
 6. **新会话里连一句短话都失败的，不是上面这种情况。** 先看[模型满载](#模型满载selected-model-is-at-capacity)，到会话日志里搜 `server_overloaded`。9 月还有一位用户统计过：同一台电脑、同一个网络，换一个账号，失败率差了几倍（[#45925](https://github.com/openai/codex/issues/45925)，没有官方回复）。
 
+### 一直正在思考、卡住不动：Thinking
+
+桌面版一直显示「正在思考」（Thinking），或者「已处理 …」（Working for …）后面的时间一直往上跳；CLI 停在这一行：
+
+```text
+Working (12m 30s • esc to interrupt)
+```
+
+「卡住」有好几种，处理办法不一样，先对一下是哪一种：
+
+| 你看到的 | 多半是 | 怎么办 |
+| --- | --- | --- |
+| 侧边栏里这个聊天写着「等待批准」（Awaiting approval），或者对话里有一张等你点的卡片 | 它在等你批准一条命令，没有卡住 | 点进去批准或拒绝。官方排查「卡住」的第一步就是看它是不是在等批准 |
+| 最后一步是「命令已运行 …」（Running command for …），时间一直在涨 | 那条命令自己没退出：`npm run dev` 这类开发服务器、会一直跑下去的进程，或者在等你输入的脚本 | 停掉这一轮，让它把这类命令放到后台跑，或者加上超时。CLI 0.163.0 修了其中一种：命令本身已经结束，它带起的子进程还占着输出，这一轮就一直不结束（[#52652](https://github.com/openai/codex/pull/52652)） |
+| 时间在涨，隔一阵就多出一步 | 任务大或者推理强度高，模型就是在想 | 可以等，也可以停下来把任务拆小。有 Plus 用户说，同类任务在 GPT-6 Sol 上要 40 分钟以上（[#47656](https://github.com/openai/codex/issues/47656)，用户报告） |
+| 很久没有任何新内容，最后跳成「正在重新连接 1/5」 | 连接断了 | 见[断线重连](#断线重连stream-disconnected-before-completion)；终端里跑 `codex doctor`，看 `websocket` 那一行 |
+| 结果已经出来了，界面还显示在跑，下一条发不出去或者一直排队 | 界面状态没更新，这一轮其实已经结束 | VS Code 插件：命令面板运行 `Developer: Restart Extension Host` 或 `Developer: Reload Window`（[#50084](https://github.com/openai/codex/issues/50084)，用户报告）。桌面版：等别的聊天跑完，重启应用 |
+
+处理顺序。前三步是官方 [Troubleshooting](https://learn.chatgpt.com/docs/reference/troubleshooting) 写的：
+
+1. 看它是不是在等你批准。
+2. 打开内置终端，跑一个简单命令，比如 `git status`，看终端本身有没有卡住。
+3. 停掉这一轮（桌面版点「停止」，CLI 按 Esc），新开一个聊天，用范围更小、更具体的要求重来。
+4. 停不下来的：10 月 14 日有 Windows 用户报告，一个聊天显示 `Working for 5h 23m 7s`，却找不到停止按钮（[#53838](https://github.com/openai/codex/issues/53838)，没有官方回复）。这时只能退出应用再打开。
+
 ### 登录后跳到 localhost 打不开：ERR_EMPTY_RESPONSE
 
 ```text
@@ -692,6 +722,52 @@ codex features disable daemon_auto_start   # 以后都不自动启动
 
 最后一条是 issue 里用户的做法（[#48195](https://github.com/openai/codex/issues/48195)），维护者在排查时用的是对应的 `codex features enable daemon_auto_start`。关掉以后，「CLI 退出后任务继续在后台跑」这类依赖后台服务的功能就没有了。
 
+### 权限：不能联网、写不了文件、完全访问权限是灰的
+
+桌面版、CLI、插件在你电脑上跑命令时，默认都在沙盒（sandbox，也有人叫沙箱）里：能读文件、能改当前项目里的文件、能跑普通命令，**但命令默认不能联网**；要改项目外面的文件、要联网，会先停下来问你（官方文档 [Sandbox](https://learn.chatgpt.com/docs/sandboxing)、[Agent approvals & security](https://learn.chatgpt.com/docs/agent-approvals-security)）。所以下面几种多半不是坏了：
+
+- `npm install`、`pip install`、`git clone`、`curl` 失败，或者它停下来问要不要允许网络访问。
+- 它能搜网页，跑的命令却连不上网。网页搜索和命令联网是两个开关，官方文档写明可以只开网页搜索、不给命令联网。
+- 改 `~/.zshrc` 这类项目外的文件时，停下来等你批准。
+- Mac 上弹窗问能不能访问「桌面」「下载」「音乐」这些文件夹。这是 macOS 自己的权限提示，官方 Troubleshooting 里有这一条。
+
+权限设置在哪：桌面版是输入框下面的权限菜单（请求批准、帮我批准、完全访问权限），默认值在 设置 → 配置 里；CLI 里输入 `/permissions` 切换，`/status` 的 Permissions 那一行能看到现在是什么权限。
+
+**想让命令能联网，又不想开完全访问。** 这样沙盒的其他限制都还在：
+
+- 桌面版：设置 → 配置（Configuration）→ 打开「允许网络访问」（Allow network access）。它的说明是「当沙盒设为工作空间写入时允许网络访问」，所以同一页的「沙盒设置」要是「工作空间写入」（Workspace write）。提示「此项目使用内联沙盒表。请直接编辑 config.toml 修改网络访问权限」的，按下一条改文件。
+- 配置文件 `~/.codex/config.toml`（Windows 是 `%USERPROFILE%\.codex\config.toml`）里加上：
+
+```toml
+[sandbox_workspace_write]
+network_access = true
+```
+
+- CLI 只想这一次能联网：`codex -c 'sandbox_workspace_write.network_access=true'`。
+
+新的权限配置（`default_permissions` 加 `[permissions.名字]`，官方标着 Beta）和上面这套写法不能混用：配置里出现了 `sandbox_mode`，就按上面这套走；用新写法的，联网写在那个配置的 `[permissions.名字.network]` 下面，`enabled = true`（官方 [Permissions](https://learn.chatgpt.com/docs/permissions)）。
+
+**写不了文件。** 权限是「只读」（Read only）时什么都改不了，换回「请求批准」（Ask for approval）。要改项目外面的某个目录，每次都会问你；常用的目录可以加进可写目录，路径写完整的：
+
+```toml
+[sandbox_workspace_write]
+writable_roots = ["/Users/你的用户名/other-project"]
+```
+
+Windows 的路径用单引号，免得反斜杠要转义：`writable_roots = ['D:\code\other-project']`。`network_access` 和 `writable_roots` 都要写在同一个 `[sandbox_workspace_write]` 下面，这个表头在文件里只能出现一次，写两遍 Codex 会读不了配置。官方更推荐另开一个项目或 worktree，而不是把可写范围越放越大（Sandbox 文档）。
+
+**完全访问权限是灰的，写着「已被 requirements.toml 禁用」**（`Disabled by requirements.toml`）。这是管理员策略，本机的 `config.toml` 改不动它；官方的说法是组织或设备策略可以限制这些选项，本地设置覆盖不了（Troubleshooting 里「Approve for me is missing or disabled」一条）。策略可能来自（官方 [Managed configuration](https://learn.chatgpt.com/docs/enterprise/managed-configuration)）：
+
+- 这台电脑上的 `/etc/codex/requirements.toml`（macOS、Linux）或 `%ProgramData%\OpenAI\Codex\requirements.toml`（Windows）；
+- Business、Enterprise 工作空间的管理员下发的策略；
+- 公司 Mac 上的 MDM 描述文件。
+
+用的是公司或别人的工作空间，找工作空间管理员。自己的电脑、个人账号也是灰的，看看上面那个文件在不在、是谁放的，它要管理员权限才能改。「由组织管理」（Managed）、「该值由管理员策略管理」、「沙盒模式受此次安装的限制」是同一类。写的是「已在 config.toml 中禁用」（Disabled in config.toml）的不一样，是你自己的配置文件挡住了。
+
+**完全访问要不要开。** 完全访问（Full access）就是不用沙盒、也不再问你（`sandbox_mode = "danger-full-access"` 加 `approval_policy = "never"`），文件和网络的边界都没有了，官方说只在你确实想给它这么大权限时用。只是想让命令联网，开上面的「允许网络访问」就够了。
+
+Windows 上发送按钮提示「设置智能体沙盒以继续」（Set up Agent sandbox to continue）的，是 Windows 沙盒还没装好，见 [Windows 设置未完成](#windows-设置未完成helper_failed)。
+
 ### Windows 沙盒：setup refresh had errors (os error 32)
 
 ```text
@@ -704,7 +780,7 @@ trusted Node process exited unexpectedly
 | 你用的是 | 现在的状态 | 怎么办 |
 | --- | --- | --- |
 | Windows 桌面版 | 10 月 9–10 日多位用户确认 **26.1007.21434** 已修。这是「关于」里显示的版本号，Microsoft Store 里的包版本写的是 26.1007.2314.0，是同一版 | 在 Microsoft Store 更新后重启。10 月 10 日还在报这个错的，看版本大多停在 26.1002。更新之前，有人退回 26.930.61225 能用 |
-| 单独安装的 CLI（npm） | 0.161.0、0.162.0、0.162.1 都有人复现，10 月 10 日还没修（[#51634](https://github.com/openai/codex/issues/51634)） | 报告的人在同一台机器上用 0.160.1 正常，可以先装回去 |
+| 单独安装的 CLI（npm） | 0.161.0、0.162.0、0.162.1 都有人复现（[#51634](https://github.com/openai/codex/issues/51634)）。北京时间 10 月 16 日发布的 **0.163.0** 带上了修复：修沙盒权限时，只在确实要改的时候、用更小的访问权限去打开文件，正在运行的 `node_repl.exe` 就不会再被占用冲突挡住（[#51822](https://github.com/openai/codex/pull/51822)；0.162.1 里没有这个改动）。当天有一位用户确认 0.163.0 上不再报这个错，不过他用浏览器控制时还有 `trusted Node process exited unexpectedly`，他判断是另一个问题（[#51590](https://github.com/openai/codex/issues/51590)） | 先 `codex update` 到 0.163.0。还报的，报告的人在同一台机器上用 0.160.1 正常，可以先装回去 |
 
 ```bash
 npm install -g @openai/codex@0.160.1 --registry=https://registry.npmmirror.com
@@ -712,7 +788,7 @@ npm install -g @openai/codex@0.160.1 --registry=https://registry.npmmirror.com
 
 不想降级的，issue 里还有两个用户自己试出来的办法：
 
-- **换成不需要管理员权限的沙盒。** 在 `%USERPROFILE%\.codex\config.toml` 里，把 `[windows]` 下面的 `sandbox = "elevated"` 改成 `sandbox = "unelevated"`，保存后完全退出再打开 Codex。[#52488](https://github.com/openai/codex/issues/52488)、[#51601](https://github.com/openai/codex/issues/51601) 里好几个人这样恢复了。它的隔离比默认的弱一些（见 [Windows 设置未完成](#windows-设置未完成helper_failed)的第 3 步），官方修好后改回来。
+- **换成不需要管理员权限的沙盒。** 在 `%USERPROFILE%\.codex\config.toml` 里，把 `[windows]` 下面的 `sandbox = "elevated"` 改成 `sandbox = "unelevated"`，保存后完全退出再打开 Codex。[#52488](https://github.com/openai/codex/issues/52488)、[#51601](https://github.com/openai/codex/issues/51601) 里好几个人这样恢复了；也有人说不管用，[#51590](https://github.com/openai/codex/issues/51590) 里 10 月 8 日一位改了照样报错，另一位绕过去之后又被另一个检查 `cannot enforce split writable root sets` 挡住。它的隔离比默认的弱一些（见 [Windows 设置未完成](#windows-设置未完成helper_failed)的第 3 步），官方修好后改回来。
 - **只用 CLI 的。** 占着文件的 `node_repl.exe`，是桌面版写进 `config.toml` 的 `[mcp_servers.node_repl]` 带起来的。10 月 11 日有人退出桌面版后把这几段注释掉，CLI 0.162.1 就能跑命令了；要改哪几行见[他的回复](https://github.com/openai/codex/issues/52179#issuecomment-6107852303)。桌面版下次启动多半会把它们加回来。
 
 issue 里有人提醒：别为了这个去手动改文件夹权限，退回旧版或者等更新更稳。
@@ -742,7 +818,7 @@ issue 里有人提醒：别为了这个去手动改文件夹权限，退回旧�
 Failed to create unified exec process: No such file or directory (os error 2)
 ```
 
-Windows 桌面版打开 Run agent in WSL（配置里是 `runCodexInWindowsSubsystemForLinux = true`）之后，每条命令都报这个错。从 9 月 30 日的 26.928 开始，10 月 11 日还有人在 26.1007.21434 上遇到（[#49731](https://github.com/openai/codex/issues/49731)）。10 月 12 日 OpenAI 的人在 issue 里回复「会修」并关闭了它，但 10 月 14 日有人在新版 26.1007.71326 上仍遇到，另开了 [#54063](https://github.com/openai/codex/issues/54063)。所以先更新到最新版试；还报的，再用下面的办法。10 月 10 日一位用户查到了原因：WSL 里的 Codex 和 Windows 这边的 Codex 共用同一个 `.codex` 目录，临时文件都放在 `tmp/arg0`（WSL 里看是 `/mnt/c/Users/<用户名>/.codex/tmp/arg0`）。两边启动时都会清掉里面「没人在用」的目录，可 Linux 和 Windows 的文件锁互相看不见，后启动的一方就把对方正在用的删了，`codex-linux-sandbox` 跟着没了。所以常见的情况是刚打开还能用，过一会儿所有命令都失败。
+Windows 桌面版打开 Run agent in WSL（配置里是 `runCodexInWindowsSubsystemForLinux = true`）之后，每条命令都报这个错。从 9 月 30 日的 26.928 开始，10 月 11 日还有人在 26.1007.21434 上遇到（[#49731](https://github.com/openai/codex/issues/49731)）。10 月 12 日 OpenAI 的人在 issue 里回复「会修」并关闭了它，但 10 月 14 日有人在新版 26.1007.71326 上仍遇到，另开了 [#54063](https://github.com/openai/codex/issues/54063)。10 月 16 日有一位用户确认新版 **26.1013.31256** 修好了：命令和文件操作都正常，重启 WSL 和 Windows 之后也正常，临时目录换成了 `tmp/arg0-linux`，和官方的修复 [#53412](https://github.com/openai/codex/pull/53412)（按系统分开存放这些临时目录）对得上（[#49731](https://github.com/openai/codex/issues/49731)）。所以先更新到 26.1013.31256 试；还报的，再用下面的办法。10 月 10 日一位用户查到了原因：WSL 里的 Codex 和 Windows 这边的 Codex 共用同一个 `.codex` 目录，临时文件都放在 `tmp/arg0`（WSL 里看是 `/mnt/c/Users/<用户名>/.codex/tmp/arg0`）。两边启动时都会清掉里面「没人在用」的目录，可 Linux 和 Windows 的文件锁互相看不见，后启动的一方就把对方正在用的删了，`codex-linux-sandbox` 跟着没了。所以常见的情况是刚打开还能用，过一会儿所有命令都失败。
 
 两个办法：
 
@@ -786,6 +862,33 @@ CLI 0.157.0 起默认用全屏界面：Codex 自己接管整个终端窗口，�
 3. 换一个终端，比如 Ghostty、Kitty，它们没有这个限制。
 
 全屏模式的官方介绍：[Codex CLI goes fullscreen](https://github.com/openai/codex/discussions/49129)。
+
+### 远程控制：无法启用远程控制（Couldn't enable remote control）
+
+```text
+无法启用远程控制。请重试
+无法启用远程控制。请确保仅有一个 ChatGPT 实例在运行
+无法更新远程控制状态
+无法开始设备配对
+```
+
+英文界面依次是 `Couldn’t enable remote control. Try again`、`Could not enable remote control`、`Couldn’t update remote control availability`、`Couldn’t start device pairing`（第二句中文界面多了半句）。用手机上 ChatGPT 的 Codex（旧版叫 Remote）控制电脑，要先在电脑的桌面版里打开：设置 → 连接（Connections）→「允许发现并控制此设备」，有的版本写「允许连接」。打不开，就是上面这几句。
+
+先按官方 [Remote connections](https://learn.chatgpt.com/docs/remote-connections) 的排查顺序：
+
+1. 电脑和手机登录的是同一个 ChatGPT 账号、**同一个工作空间**，两边的 App 都更新到最新。
+2. 打开开关、点「添加」之后报错的：重启电脑上的 ChatGPT 桌面版再试。
+3. 用的是 Business、Enterprise 工作空间：要管理员先开通 Remote Control。
+4. 退出过登录的：退出登录会关掉远程控制，配对记录还在，重新登录后把开关再打开一次。
+5. 6 月 8 日以后没用过的旧连接：两边都更新，再重新配对。
+
+下面是用户在 openai/codex 里查到的几种情况，都没有官方回复：
+
+- **只开了一个 ChatGPT，还是提示「请确保仅有一个实例在运行」。** 日志里是 `409 Conflict` 和 `Remote app server already online`，意思是服务器认为这台电脑已经有一个 Codex 在线（[#51071](https://github.com/openai/codex/issues/51071)）。有用户查到，占着的是另外装的 CLI 的后台服务：确认 CLI 里没有在跑的任务后执行 `codex app-server daemon stop`，手机就连上了（[#52675](https://github.com/openai/codex/issues/52675)）。也有人停了后台服务、重新配对都没用（[#52099](https://github.com/openai/codex/issues/52099)）。这条命令会停掉 CLI 的后台服务，CLI 里正在跑的任务会被打断。
+- **Mac 是用「迁移助理」从旧 Mac 整机搬过来的。** 两台 Mac 的 `~/.codex/installation_id` 一模一样，服务器当成同一台机器，同样报 409（[#36295](https://github.com/openai/codex/issues/36295)，几位用户复现过）。issue 里用户的修法要改 `~/.codex` 里的身份文件，不是官方办法；真要动，先把整个 `~/.codex` 备份一份。
+- **用的是系统代理，没开 TUN。** 有用户查到，桌面版的后台服务连远程控制时不走系统代理，日志里一直是 `failed to lookup address information`（[#52393](https://github.com/openai/codex/issues/52393)），和[第 4 节](#4-国内网络终端要单独设代理)说的 CLI 默认不读系统代理是一回事。照这个原因，打开代理软件的 TUN 模式应该能绕过去，这一点我们没有实测。
+
+手机上一直回到 `Authorize this phone` 的，见[最近两周的已知问题](#最近两周的已知问题)的最后一行。
 
 ### 上下文满了：ran out of room in the model's context window
 
@@ -1014,6 +1117,27 @@ irm https://cdn.deepseek.com/api-docs/codex-deepseek-setup.ps1 | iex
 **日志在哪？**
 Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.codex/sessions`。发给别人前先看一眼，别把 token 带出去。
 
+**归档是什么意思？归档的对话在哪里、怎么恢复、怎么删除？**
+归档不是删除：聊天从侧边栏里拿走，内容还在，随时能取消归档。归档的聊天要先取消归档才能接着聊，界面上会提示「此聊天已归档。要继续，请先取消归档。」
+
+- **怎么归档**：在侧边栏里右键这个聊天，选「归档」（Archive）；或者在这个聊天的输入框里输入 `/archive`；快捷键 Cmd + Shift + A（Windows 是 Ctrl + Shift + A）。
+- **归档的在哪、怎么恢复**：设置 →「已归档的聊天」（Archived chats），在那里取消归档，聊天会回到侧边栏原来的位置（官方 Troubleshooting）。侧边栏里找不到某个聊天，也先来这里看。
+- **怎么删除**：桌面版在 Codex 模式下，侧边栏里右键一个聊天，菜单里有「永久删除」（Permanently delete）。点了会先弹确认框「要删除任务？」（`Delete task?`），说明是「这将永久删除该任务及其子智能体任务。此操作无法撤销。」不确定以后还要不要的，用归档就好。10 月 16 日在 macOS 桌面版 26.1007.21159 上实际看过：Codex 模式下，右键菜单最底下是「归档」和「永久删除」；切到 ChatGPT 模式，同一个菜单里只有归档，没有删除。安装包里还能看到有几种聊天不显示这一项，具体是哪几种没有查清。CLI 里也能删：
+
+```bash
+codex archive <会话 ID 或会话名>     # 归档
+codex unarchive <会话 ID 或会话名>   # 取消归档
+codex delete <会话 ID 或会话名>      # 永久删除，删之前会让你确认
+```
+
+会话 ID 在 CLI 里输入 `/status`，看 Session 那一行。`codex delete --force` 不再确认，但只认会话 ID，不认会话名。会话记录在 `~/.codex/sessions`，归档的在 `~/.codex/archived_sessions`。
+
+**打开旧聊天，提示「恢复对话失败」？**
+后面会跟着具体原因（英文界面是 `Failed to resume chat`）。常见的两种，提示里已经写了怎么办：
+
+- 「此任务正在其他位置运行。请先在那里关闭会话，然后在此处重试。」（`This task is active elsewhere. Close it there, then retry here.`）同一个聊天在别处开着：另一个窗口、CLI，或者手机远程。关掉那边再试，和[第 5 节](#5-桌面版打不开)的「已在另一个应用中打开」是一类。
+- 「ChatGPT 无法加载 config.toml，因此此对话串无法继续。请修复 …」：配置文件写错了，提示里有文件位置和出错的地方。改好保存后，重新打开这个聊天。
+
 **开了两步验证（2FA），还要验证手机号吗？**
 要。OpenAI 帮助中心写明，邮箱和验证器 App 都代替不了 Codex 的手机验证。
 
@@ -1037,6 +1161,7 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 
 - ChatGPT Learn：[Authentication](https://learn.chatgpt.com/docs/auth) · [Troubleshooting](https://learn.chatgpt.com/docs/reference/troubleshooting) · [Environment variables](https://learn.chatgpt.com/docs/config-file/environment-variables) · [Configuration Reference](https://learn.chatgpt.com/docs/config-file/config-reference)
 - ChatGPT Learn：[Windows sandbox](https://learn.chatgpt.com/docs/windows/windows-sandbox) · [Settings](https://learn.chatgpt.com/docs/reference/settings) · [Codex IDE extension](https://learn.chatgpt.com/docs/codex/ide)
+- ChatGPT Learn：[Sandbox](https://learn.chatgpt.com/docs/sandboxing) · [Agent approvals & security](https://learn.chatgpt.com/docs/agent-approvals-security) · [Permissions](https://learn.chatgpt.com/docs/permissions) · [Managed configuration](https://learn.chatgpt.com/docs/enterprise/managed-configuration) · [Remote connections](https://learn.chatgpt.com/docs/remote-connections)
 - ChatGPT Learn：[Codex CLI](https://learn.chatgpt.com/docs/codex/cli) · [ChatGPT desktop app](https://learn.chatgpt.com/docs/app) · [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) · [Pricing](https://learn.chatgpt.com/docs/pricing) · [Models](https://learn.chatgpt.com/docs/models)
 - OpenAI Help Center：[What does phone verification look like?](https://help.openai.com/en/articles/8983040-what-does-phone-verification-look-like) · [哪些号码不能用](https://help.openai.com/en/articles/8983024) · [WhatsApp 验证支持的国家](https://help.openai.com/en/articles/8983038-which-countries-do-you-support-for-whatsapp-phone-verification) · [不支持改号](https://help.openai.com/en/articles/9135134-how-to-change-the-phone-number-associated-with-your-account) · [支持的国家和地区](https://help.openai.com/en/articles/7947663-chatgpt-supported-countries)
 - OpenAI Help Center：[Troubleshooting Model Feature Access Issues](https://help.openai.com/en/articles/10258669-troubleshooting-model-feature-access-issues) · [How banked Codex resets work](https://help.openai.com/en/articles/20001498-how-banked-codex-resets-work)
@@ -1046,7 +1171,7 @@ Mac 桌面版日志在 `~/Library/Logs/com.openai.codex/`；会话记录在 `~/.
 - 第三方模型：ChatGPT Learn 的 [Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)（Custom model providers、Profiles）· DeepSeek 官方文档 [接入 Codex](https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/codex) · [CC Switch](https://github.com/farion1231/cc-switch)
 - 安装、更新和卸载的位置：openai/codex 仓库 `rust-v0.162.1` 标签下的 `scripts/install/` 和 `codex-rs/tui/src/update_action.rs`
 
-中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示取自 26.1007.21159；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 15 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
+中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示、10 月 16 日新增的权限、远程控制、恢复对话和「正在思考」几处文字取自 26.1007.21159；`codex archive` / `unarchive` / `delete`、`codex app-server daemon stop` 对照了它自带的 Codex（0.162.0-alpha.17.2）的帮助输出和 0.163.0 的源码；CLI 卡住时的 `Working (… • esc to interrupt)` 取自 0.163.0 的源码；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 15 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
 
 ## 转载与许可
 
