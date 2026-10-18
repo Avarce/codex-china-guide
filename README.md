@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 16 日**（北京时间）· Codex CLI 0.163.0 · 桌面版 26.1007
+> **最后核对：2026 年 10 月 18 日**（北京时间）· Codex CLI 0.163.0 · 桌面版 26.1013
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -10,7 +10,7 @@
 
 **要用完整 Codex，得先有 Plus 或 Pro：国内怎么开**
 
-Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GPT-6.1 Sol、Astra 和 CLI 要 Plus 起步，额度经常用完再上 Pro。没有海外卡，可以微信付款，由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 充值到你自己的 ChatGPT 账号，不需要密码：
+Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GPT-6.1 Sol、Astra 和 CLI 要 Plus 起步，额度经常用完再上 Pro。没有海外卡，可以微信付款，由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 充值到你自己的 ChatGPT 账号：
 
 | 套餐 | 微信付款 | 官方价 | Codex 额度 |
 |---|---|---|---|
@@ -20,13 +20,13 @@ Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GP
 
 想自己用礼品卡订阅，或者先比一比几种办法，见文末[国内怎么开通](#国内怎么开通)。
 
-**这几天问得最多的（10 月 16 日）：**
+**这几天问得最多的（10 月 18 日）：**
 
-- 重连 5 次后失败，`stream disconnected before completion: An error occurred while processing your request`，后面带一串 request ID：是服务器那边出错，换节点没用：[看这里](#服务器处理失败an-error-occurred-while-processing-your-request)
-- 桌面版新对话发不出去，提示「无法加载工作空间设置」，还没修：[看这里](#无法加载工作空间设置couldnt-load-workspace-settings)
-- 每条消息都是 `Selected model is at capacity`，额度明明还有：10 月 9–10 日、12–14 日各来了一波，13 日、14 日状态页也挂了故障：[看这里](#模型满载selected-model-is-at-capacity)
-- Windows 上所有命令都跑不了，`setup refresh had errors`：桌面版已修；CLI 10 月 16 日出了 0.163.0，带上了修复，当天有一位用户确认好了：[看这里](#windows-沙盒setup-refresh-had-errors-os-error-32)
-- GPT-5.5 已在 10 月 14 日下线，设置里还写着 `gpt-5.5` 的会报模型不支持，要改：[看这里](#模型不支持model-is-not-supported)
+- 周额度几十秒内掉了一大截：北京时间 10 月 17 日凌晨起好几个人报，没有官方回复；10 月 18 日凌晨有一次全体重置，额度已经刷满：[看这里](#7-额度用完了)
+- 桌面版新对话发不出去，提示「无法加载工作空间设置」：10 月 17 日的新版 26.1013.40934 上仍有人遇到；有 Windows 用户发现是从出口 IP 变了那一刻开始的：[看这里](#无法加载工作空间设置couldnt-load-workspace-settings)
+- 每条消息都是 `Selected model is at capacity`：10 月 15 日官方说加了算力，之后反馈少了很多；现在还所有模型一直报的，更要查是不是账号被限：[看这里](#模型满载selected-model-is-at-capacity)
+- 刚升级了套餐，Codex 还说模型不支持：登录凭证里可能还记着旧套餐，退出登录再登录：[看这里](#模型不支持model-is-not-supported)
+- 更新后弹 `Unable to load organization settings`：先看 `config.toml` 里有没有 `approval_policy = "untrusted"`，这个值已经不支持了，删掉就好：[看这里](#更新后打不开只有启动动画或白屏)
 
 ## 目录
 
@@ -61,8 +61,11 @@ Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GP
 | `refresh token was already used`、此设备上的 ChatGPT 会话已过期 | 登录凭证失效 | [登录过期](#登录过期refresh-token-was-already-used) |
 | `Verify your phone number`、`Phone number required` | 手机号验证 | [3. 要验证手机号](#3-要验证手机号) |
 | `unsupported_country_region_territory`、我们的服务在你所在的国家或地区不可用 | 节点所在地区 | [地区不支持](#地区不支持unsupported_country_region_territory) |
-| `Selected model is at capacity`，会话日志里是 `server_overloaded` | 服务器满载（10 月 9–10 日、12–14 日各有一波），或账号被临时限制 | [模型满载](#模型满载selected-model-is-at-capacity) |
-| `The '...' model is not supported when using Codex with a ChatGPT account` | 模型名写错、旧设置或还没开放 | [模型不支持](#模型不支持model-is-not-supported) |
+| `Selected model is at capacity`，会话日志里是 `server_overloaded`，有时带 `503` | 服务器满载（10 月 9–10 日、12–14 日各有一波，15 日官方加了算力），或账号被临时限制 | [模型满载](#模型满载selected-model-is-at-capacity) |
+| `The '...' model is not supported when using Codex with a ChatGPT account`（`status: 400`） | 模型名写错、旧设置、还没开放；刚升级套餐的，登录凭证里还是旧套餐 | [模型不支持](#模型不支持model-is-not-supported) |
+| 只写着状态码：`400 Bad Request`、`403 Forbidden`、`404`、`500`、`502`、`503` | 每个码对应的情况不一样 | [按状态码查](#按状态码查400403404429500502503) |
+| `approval_policy = "untrusted" is no longer supported; remove this setting`，或更新后一打开就是 `Unable to load organization settings` | `config.toml` 里还留着已经废弃的设置 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
+| 周额度几十秒内从七八成掉到一成甚至 0 | 10 月 17 日凌晨（北京时间）好几个人报，还没有官方说法 | [7. 额度用完了](#7-额度用完了) |
 | `exceeded retry limit, last status: 429 Too Many Requests` | 官方故障或请求太多 | [429](#请求太多429-too-many-requests) |
 | `unexpected status 401 Unauthorized`、`Incorrect API key provided: sk-svcac…` | 官方故障，或登录失效 | [401](#登录失效或官方故障401-unauthorized) |
 | `start the Windows daemon from a non-elevated terminal`、`host Job Object prevents daemon detachment` | 0.157 起新增的后台服务 | [后台服务报错](#后台服务daemon报错) |
@@ -80,7 +83,7 @@ Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GP
 | 已在另一个应用中打开 | 这个会话在别处开着 | [5. 桌面版打不开](#5-桌面版打不开) |
 | 更新后打不开、只有启动动画、窗口空白 | 多半是新版本的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
 | `Unable to load organization settings`、一直停在 `Starting your task`（正在启动你的任务） | 桌面版 26.924 的问题 | [更新后打不开](#更新后打不开只有启动动画或白屏) |
-| 无法加载工作空间设置、请重试以继续聊天、`Couldn't load workspace settings`，新对话的发送按钮是灰的 | 桌面版 10 月 7 日那一版起的问题，还没修完 | [无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
+| 无法加载工作空间设置、请重试以继续聊天、`Couldn't load workspace settings`，新对话的发送按钮是灰的 | 桌面版 10 月 7 日那一版起的问题，到 26.1013 还没修完 | [无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
 | 无法检查锁定模式、`Couldn't check Lockdown mode`，日志里 `cloudflare_challenge` 或 `devicecheck_token_generation_failed` | 同上，桌面版取账号设置的请求失败了 | [无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
 | 无法加载你的账户、请尝试重新加载，或退出登录后重新登录、`We couldn't load your account`，点「重新加载」没用 | 桌面版登录后查不出这个账号的信息。原因不止一种，日志里写着是哪一种 | [无法加载你的账户](#无法加载你的账户we-couldnt-load-your-account) |
 | `helper_unknown_error: setup refresh had errors`、`trusted Node process exited unexpectedly`、日志里 `os error 32` | Windows 沙盒的问题，10 月 7 日那一版开始 | [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
@@ -106,41 +109,48 @@ Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GP
 
 ## 最近两周的已知问题
 
-9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多的问题，状态核对到 10 月 15 日，10 月新出的排在前面。标着「没修」的，10 月 15 日都回到原 issue 逐条复核过，仍然开着。桌面版这几天又出了一版 26.1007.71326，表里写着 26.1007 的问题，有几条在这一版上仍有人遇到，下面注明了；10 月 16 日又出了 26.1013.31256，WSL 那一条有用户确认在这一版上修好了。先看你的问题是不是已经修了，升级就能解决的不用再折腾。
+9 月 25 日的 CLI 0.157.0 改动很大：默认启动一个后台服务（daemon），界面改成全屏。9 月 24 日到 10 月 3 日，openai/codex 新开的 issue 里有 280 个提到 daemon。下面是 9 月 24 日以来反馈最多、现在还没完全解决或者刚修好的问题，状态核对到 10 月 18 日，新出的排在前面。桌面版这几天连着出了 26.1013.31256（10 月 16 日）和 26.1013.40934（macOS 上写着 10 月 17 日发布），表里注明了哪些问题在新版上修好了、哪些还在。先看你的问题是不是已经修了，升级就能解决的不用再折腾。9 月下旬那批已经修好或已经过去的问题，收在表下面。
 
 | 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
 | --- | --- | --- | --- |
+| 周额度几十秒内掉了一大截：77% 变 10%、58% 变 0%，重置时间没变 | 北京时间 10 月 17 日凌晨起，Windows、Linux 桌面版都有 | 没有官方回复，相关 issue 有几十条留言（[#54677](https://github.com/openai/codex/issues/54677)、[#54718](https://github.com/openai/codex/issues/54718)）；一位用户的已标记关闭（[#54767](https://github.com/openai/codex/issues/54767)）。10 月 18 日 05:12 Tibo 做了一次全体重置，额度刷满了 | 先看 Usage 页面现在的额度；觉得被多扣了，用 `/feedback` 提交并记下反馈 ID，再找 OpenAI 客服，见[第 7 节](#7-额度用完了) |
 | 回复到一半失败：`stream disconnected before completion: An error occurred while processing your request`，带 request ID，重连 5/5 后停下；压缩上下文时是 `Error running remote compact task` | 10 月 9 日起明显变多；Windows、macOS 桌面版 26.1007，VS Code 插件，CLI 0.162 | 没有官方回复，状态页没有对应的事故记录；10 月 12 日相关 issue 都开着（[#52919](https://github.com/openai/codex/issues/52919)、[#52814](https://github.com/openai/codex/issues/52814)、[#53127](https://github.com/openai/codex/issues/53127)） | 见[服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request) |
 | 桌面版登录后停在「无法加载你的账户 / 请尝试重新加载，或退出登录后重新登录」（`We couldn't load your account`），点「重新加载」没用；同一台电脑换个账号可能就正常 | Windows、macOS 桌面版，9 月下旬起陆续有人报；10 月 12 日有读者在 macOS 26.1007 上遇到 | 没有官方回复（[#51548](https://github.com/openai/codex/issues/51548)、[#47969](https://github.com/openai/codex/issues/47969)、[#48571](https://github.com/openai/codex/issues/48571)） | 见[无法加载你的账户](#无法加载你的账户we-couldnt-load-your-account) |
-| 桌面版新对话发不出去：「无法加载工作空间设置 / 请重试以继续聊天」（`Couldn't load workspace settings`），旧对话和网页版正常 | Windows、macOS 桌面版 26.1002 起（10 月 7 日） | 没修。10 月 11 日 Windows 26.1007.21434、macOS 26.1007.21159 上仍有人遇到，10 月 12–14 日 macOS 上有人在新版 26.1007.71326 上仍遇到（虚拟机），Windows 上有人 10 月 14 日更新到最新版后仍遇到，10 月 16 日 macOS 虚拟机上有人在 26.1013.31256 上仍遇到，至少 15 个 issue，没有官方回复（[#51917](https://github.com/openai/codex/issues/51917)、[#52470](https://github.com/openai/codex/issues/52470)、[#51667](https://github.com/openai/codex/issues/51667)） | 见[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
-| 每条消息都报 `Selected model is at capacity`，换模型没用，周额度几乎没动；会话日志里是 `server_overloaded` | 10 月 9–10 日一波，10 月 12–14 日又一波，发帖的人大多在东八区；桌面版、CLI、网页版都有 | 9–10 日、12 日状态页都没有记录；13 日、14 日状态页记了两次 Codex 性能下降，都已标记解决（见[模型满载](#模型满载selected-model-is-at-capacity)）。相关 issue 都还开着，没有官方回复（[#52796](https://github.com/openai/codex/issues/52796)、[#52394](https://github.com/openai/codex/issues/52394)、[#53559](https://github.com/openai/codex/issues/53559)） | 见[模型满载](#模型满载selected-model-is-at-capacity) |
-| Windows 桌面版登录后 10–35 秒自己退出，没有报错窗口 | 桌面版 26.1002.7124.0（10 月 7 日） | 一位用户查到原因并给出办法，帖子已标记为解决（[OpenAI 社区](https://community.openai.com/t/1404464)，10 月 8 日） | 见[登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
-| CLI 启动就退出：`account/read failed during TUI bootstrap … workspace routing discovery failed (code -32603)` | CLI 0.162.0，走本地代理 | 发帖人确认重启后台服务后解决（[OpenAI 社区](https://community.openai.com/t/1404666)，10 月 9 日） | `codex app-server daemon restart`，见[后台服务报错](#后台服务daemon报错) |
-| 重置卡到了到期那天，没到晚上就不见了 | 所有版本 | **官方答复**（OpenAI_Support，10 月 6 日，[OpenAI 社区](https://community.openai.com/t/1403334)）：每张卡有具体的到期时间，过期不能恢复 | 网页版 Settings → Usage 里，把鼠标悬停在到期日期上能看到具体时间和时区。没到时间就消失的，找客服查 |
+| 桌面版新对话发不出去：「无法加载工作空间设置 / 请重试以继续聊天」（`Couldn't load workspace settings`），旧对话和网页版正常 | Windows、macOS 桌面版 26.1002 起（10 月 7 日） | 没修。10 月 11 日 Windows 26.1007.21434、macOS 26.1007.21159 上仍有人遇到，10 月 12–14 日 macOS 上有人在新版 26.1007.71326 上仍遇到（虚拟机），Windows 上有人 10 月 14 日更新到最新版后仍遇到，10 月 16 日 macOS 虚拟机上有人在 26.1013.31256 上仍遇到，10 月 17–18 日 macOS（实体机和虚拟机都有）在 26.1013.40934 上仍遇到，至少 15 个 issue，没有官方回复（[#51917](https://github.com/openai/codex/issues/51917)、[#52470](https://github.com/openai/codex/issues/52470)、[#51667](https://github.com/openai/codex/issues/51667)） | 见[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
+| 每条消息都报 `Selected model is at capacity`，换模型没用，周额度几乎没动；会话日志里是 `server_overloaded` | 10 月 9–10 日一波，10 月 12–14 日又一波，发帖的人大多在东八区；桌面版、CLI、网页版都有 | 9–10 日、12 日状态页都没有记录；13 日、14 日状态页记了两次 Codex 性能下降，都已标记解决。**10 月 15 日 Codex 负责人 Tibo 说已经上了一批改动、加了算力，这个报错会大幅减少，碰上了也会自己接着跑**；之后每天新开的相关 issue 从 13 日的 18 个降到 17 日的 0 个。相关 issue 都还开着，issue 里没有官方回复（[#52796](https://github.com/openai/codex/issues/52796)、[#52394](https://github.com/openai/codex/issues/52394)、[#53559](https://github.com/openai/codex/issues/53559)） | 见[模型满载](#模型满载selected-model-is-at-capacity) |
 | GitHub 上 `@codex review` 被拒：`You have reached your Codex usage limits for code reviews`，Usage 页面的周额度却还有 | 9 月 29 日起有人反馈 | 没有官方回复（[OpenAI 社区](https://community.openai.com/t/1402074)）。代码审查的用量是单独算的 | 帖子里用户的办法：账号里有 credits 的，在 Code review 设置里打开 use credits。这个办法不是都管用：10 月 9 日有人开着这个设置、credits 余额也是正的，照样被拒（[#52549](https://github.com/openai/codex/issues/52549)） |
-| Windows 上所有命令都在执行前失败：`helper_unknown_error: setup refresh had errors`，日志里是 `os error 32` | Windows 桌面版 26.1002（10 月 7 日）；CLI 0.162.0、0.162.1 | 桌面版：10 月 9–10 日多位用户确认 26.1007.21434 **已修**（[#51601](https://github.com/openai/codex/issues/51601)，120 条回复）。CLI：0.162.1 上仍有人复现（[#51634](https://github.com/openai/codex/issues/51634)）；北京时间 10 月 16 日发布的 0.163.0 带上了修复（[#51822](https://github.com/openai/codex/pull/51822)），当天有一位用户确认好了（[#51590](https://github.com/openai/codex/issues/51590)） | 桌面版更新到 26.1007.21434；CLI 先 `codex update` 到 0.163.0，见 [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
+| Windows 上所有命令都在执行前失败：`helper_unknown_error: setup refresh had errors`，日志里是 `os error 32` | Windows 桌面版 26.1002（10 月 7 日）；CLI 0.162.0、0.162.1 | 桌面版：10 月 9–10 日多位用户确认 26.1007.21434 **已修**（[#51601](https://github.com/openai/codex/issues/51601)，120 条回复）。CLI：0.162.1 上仍有人复现（[#51634](https://github.com/openai/codex/issues/51634)）；北京时间 10 月 16 日发布的 0.163.0 带上了修复（[#51822](https://github.com/openai/codex/pull/51822)），**当天先后有两位用户确认好了**（[#51590](https://github.com/openai/codex/issues/51590)）。其中一位说内置浏览器控制还会报 `trusted Node process exited unexpectedly`，那是另一个问题 | 桌面版更新到 26.1007.21434；CLI 先 `codex update` 到 0.163.0，见 [Windows 沙盒](#windows-沙盒setup-refresh-had-errors-os-error-32) |
 | Windows 桌面版开了 Run agent in WSL，每条命令都是 `Failed to create unified exec process: No such file or directory (os error 2)` | 桌面版 26.928 起 | 10 月 12 日 OpenAI 的人回复「会修」并关闭了 issue，但 10 月 14 日有人在新版 26.1007.71326 上仍遇到（[#49731](https://github.com/openai/codex/issues/49731)、[#54063](https://github.com/openai/codex/issues/54063)）。10 月 16 日一位用户确认 **26.1013.31256** 修好了，重启后也正常（[#49731](https://github.com/openai/codex/issues/49731)，对应的修复是 [#53412](https://github.com/openai/codex/pull/53412)） | 先更新到 26.1013.31256；还报的，用户给了挂载目录的办法，见 [WSL](#wslfailed-to-create-unified-exec-process-os-error-2) |
 | Codex 网页版第一条消息发不出去：`Unable to determine project root for task` | 9 月 30 日起，云端环境 | 没修，还没有官方回复（[#49497](https://github.com/openai/codex/issues/49497)） | 见[网页版](#网页版unable-to-determine-project-root-for-task) |
 | 会话突然断开：`Server is draining; retry after reconnecting`，恢复时提示 `Background server has incompatible feature settings` | 后台服务自动更新的时候 | 没修（[#51763](https://github.com/openai/codex/issues/51763)，10 月 7 日） | 按提示重启后台服务，见[后台服务报错](#后台服务daemon报错) |
-| VS Code 插件语音输入显示 `Dictation stopped`，日志里 `/transcribe` 返回 `HTTP 403 Forbidden` | 插件 26.917.62051 起 | **已修**：OpenAI 的人 10 月 14 日回复，已在服务器端修好，不用更新插件（[#49351](https://github.com/openai/codex/issues/49351)） | 重新加载窗口再试。修好之前用户用的办法是在 VS Code 用户设置里加 `"http.electronFetch": true`，现在不需要了 |
-| Linux 桌面版更新后命令都跑不了，沙盒报 `mountinfo path is not absolute` | Linux 桌面版 26.917.51856 起（9 月 22 日） | issue 9 月 24 日关闭，但到 9 月 28 日仍有人说新版还有；10 月 4 日有用户确认 26.930.41038 正常（[#47345](https://github.com/openai/codex/issues/47345)，51 条回复） | 更新到 26.930 以上；更新前只能退回旧版，旧版没有 GPT-6 Sol |
-| Tibo 说重置已全部到账，自己的额度却没变 | 10 月 2 日那次全体重置 | 没有官方回复（[#50451](https://github.com/openai/codex/issues/50451)）。Pro 500、Business 都有人反馈，Tibo 当晚说 Pro 500 已补上 | 先刷新 Usage 页面、确认账号和工作区；过一两天还没有，找 OpenAI 客服并附 Usage 截图 |
 | 套餐额度用完后，桌面版输入框直接变灰发不出去，即使模型走的是自己配置的 provider | 桌面版 26.924 起 | 没修（[#48816](https://github.com/openai/codex/issues/48816)，另有 [#48650](https://github.com/openai/codex/issues/48650)、[#48369](https://github.com/openai/codex/issues/48369)） | 等套餐额度恢复，或等官方修复 |
 | 内置浏览器或浏览器控制用不了，报 `untrusted-process-ancestry` | macOS，9 月 27 日起 | 没修（[#48786](https://github.com/openai/codex/issues/48786)、[#49301](https://github.com/openai/codex/issues/49301)）；10 月 10 日 [LINUX DO](https://linux.do/t/topic/3002787) 上也有人问，没有人给出办法 | 暂时没有办法，等修复 |
 | dot 建不了本地任务，提示 `not attached to an active Aeon`，或者在已保存的项目里没法接着做 | Pro 的 dots，9 月 30 日起 | 没修（[#51730](https://github.com/openai/codex/issues/51730)、[#49729](https://github.com/openai/codex/issues/49729)） | 先在 Codex 里自己建任务 |
+| `start the Windows daemon from a non-elevated terminal` | CLI 0.157.0 起，Windows 管理员终端 | 没修，10 月 7 日还有人在问（[#48043](https://github.com/openai/codex/issues/48043)） | 用普通（非管理员）终端打开，或者 `codex --no-daemon`。报的是 `failed to open daemon process` 的，见[后台服务报错](#后台服务daemon报错) |
+| Windows 桌面版 `Unable to load organization settings`，或更新后一直转圈 | 桌面版 26.924 起 | 没修，10 月 6 日有人在 26.930.6422.0 上仍复现（[#48324](https://github.com/openai/codex/issues/48324)、[#48463](https://github.com/openai/codex/issues/48463)）。10 月 15 日有用户查到自己的原因：日志里是 `approval_policy = "untrusted" is no longer supported`，从 `config.toml` 删掉这一行就好了 | 先查 `config.toml`，见[更新后打不开](#更新后打不开只有启动动画或白屏) |
+| Mac 桌面版白屏 | 桌面版 26.915 | 没修，issue 到 10 月 18 日还开着，没有官方回复（[#46641](https://github.com/openai/codex/issues/46641)） | 同上 |
+| 安卓手机连电脑（Codex Remote），一直回到 `Authorize this phone` | ChatGPT 安卓版 1.2026.265 | 没确认修好：10 月 4 日有人说安卓新版已经好了，也有人更新后还是不行（[#48774](https://github.com/openai/codex/issues/48774)、[#48555](https://github.com/openai/codex/issues/48555)） | 先把安卓版 ChatGPT 更新到最新试试。#48555 是电脑端换过 ChatGPT 账号之后出现的 |
+
+<details>
+<summary>9 月下旬的旧问题（大多已修好，点开看）</summary>
+
+| 现象 | 出在哪个版本 | 现在的状态 | 怎么办 |
+| --- | --- | --- | --- |
+| Windows 桌面版登录后 10–35 秒自己退出，没有报错窗口 | 桌面版 26.1002.7124.0（10 月 7 日） | 一位用户查到原因并给出办法，帖子已标记为解决（[OpenAI 社区](https://community.openai.com/t/1404464)，10 月 8 日） | 见[登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
+| CLI 启动就退出：`account/read failed during TUI bootstrap … workspace routing discovery failed (code -32603)` | CLI 0.162.0，走本地代理 | 发帖人确认重启后台服务后解决（[OpenAI 社区](https://community.openai.com/t/1404666)，10 月 9 日） | `codex app-server daemon restart`，见[后台服务报错](#后台服务daemon报错) |
+| 重置卡到了到期那天，没到晚上就不见了 | 所有版本 | **官方答复**（OpenAI_Support，10 月 6 日，[OpenAI 社区](https://community.openai.com/t/1403334)）：每张卡有具体的到期时间，过期不能恢复 | 网页版 Settings → Usage 里，把鼠标悬停在到期日期上能看到具体时间和时区。没到时间就消失的，找客服查 |
+| VS Code 插件语音输入显示 `Dictation stopped`，日志里 `/transcribe` 返回 `HTTP 403 Forbidden` | 插件 26.917.62051 起 | **已修**：OpenAI 的人 10 月 14 日回复，已在服务器端修好，不用更新插件（[#49351](https://github.com/openai/codex/issues/49351)） | 重新加载窗口再试。修好之前用户用的办法是在 VS Code 用户设置里加 `"http.electronFetch": true`，现在不需要了 |
+| Linux 桌面版更新后命令都跑不了，沙盒报 `mountinfo path is not absolute` | Linux 桌面版 26.917.51856 起（9 月 22 日） | issue 9 月 24 日关闭，但到 9 月 28 日仍有人说新版还有；10 月 4 日有用户确认 26.930.41038 正常（[#47345](https://github.com/openai/codex/issues/47345)，51 条回复） | 更新到 26.930 以上；更新前只能退回旧版，旧版没有 GPT-6 Sol |
+| Tibo 说重置已全部到账，自己的额度却没变 | 10 月 2 日那次全体重置 | 没有官方回复（[#50451](https://github.com/openai/codex/issues/50451)）。Pro 500、Business 都有人反馈，Tibo 当晚说 Pro 500 已补上 | 先刷新 Usage 页面、确认账号和工作区；过一两天还没有，找 OpenAI 客服并附 Usage 截图 |
 | Windows 上每发一次请求，终端窗口就闪几下 | CLI 0.157.0 起 | **已修**，0.159.2（[#48074](https://github.com/openai/codex/issues/48074)，这段时间反馈最多的一条） | `codex update`；升级后还闪，在会话里输入 `/daemon` 把后台服务也更新 |
 | `host Job Object prevents daemon detachment`，CLI 启动不了 | CLI 0.157.0，Windows | **已修**，0.157.1（[#48016](https://github.com/openai/codex/issues/48016)） | `codex update` |
-| `start the Windows daemon from a non-elevated terminal` | CLI 0.157.0 起，Windows 管理员终端 | 没修，10 月 7 日还有人在问（[#48043](https://github.com/openai/codex/issues/48043)） | 用普通（非管理员）终端打开，或者 `codex --no-daemon`。报的是 `failed to open daemon process` 的，见[后台服务报错](#后台服务daemon报错) |
 | `401 Unauthorized: Incorrect API key provided: sk-svcac…`，明明是用 ChatGPT 登录的 | 所有版本 | 官方故障，北京时间 9 月 26 日 06:58–07:54，**已恢复**（[#48237](https://github.com/openai/codex/issues/48237)） | 不用重新登录，见 [401](#登录失效或官方故障401-unauthorized) |
 | Mac 自带终端里 Cmd + C 复制不了 | CLI 0.157.0 起 | 官方不改，是 Terminal.app 的限制（[#48122](https://github.com/openai/codex/issues/48122)） | 见[复制不了文字](#终端里复制不了文字) |
 | VS Code 插件按回车后消息没了，Codex 也不回；日志里是 `Failed to release queued message send lock`、`"undefined" is not valid JSON` | 插件 26.928.31416（10 月 1 日更新） | **已修**，10 月 8 日有用户确认新版正常，issue 已关闭（[#49988](https://github.com/openai/codex/issues/49988)）。另一个「上一轮结束后新消息一直排队」的问题还开着（[#50118](https://github.com/openai/codex/issues/50118)） | 更新插件；还卡住就重启 VS Code |
 | VS Code 插件的模型列表里没有 GPT-6.1 Sol | 插件 26.917.62051（自带的 CLI 太旧） | 10 月 1 日已关闭（[#49464](https://github.com/openai/codex/issues/49464)） | 新版插件自带 CLI 0.159.2，有这个模型，但有上一行的问题；留在旧版的，可以按 issue 里的办法把 `chatgpt.cliExecutable` 指向自己装的新版 CLI |
 | Linux 桌面版任务一直停在 `Starting your task` | 桌面版 26.924 | **已修**，官方 9 月 29 日回复更新即可（[#48189](https://github.com/openai/codex/issues/48189)） | 更新到最新版 |
-| Windows 桌面版 `Unable to load organization settings`，或更新后一直转圈 | 桌面版 26.924 | 没修，10 月 6 日有人在 26.930.6422.0 上仍复现（[#48324](https://github.com/openai/codex/issues/48324)、[#48463](https://github.com/openai/codex/issues/48463)） | 见[更新后打不开](#更新后打不开只有启动动画或白屏) |
-| Mac 桌面版白屏 | 桌面版 26.915 | 没修，9 月 20 日以后 issue 没有新进展（[#46641](https://github.com/openai/codex/issues/46641)） | 同上 |
-| 安卓手机连电脑（Codex Remote），一直回到 `Authorize this phone` | ChatGPT 安卓版 1.2026.265 | 没确认修好：10 月 4 日有人说安卓新版已经好了，也有人更新后还是不行（[#48774](https://github.com/openai/codex/issues/48774)、[#48555](https://github.com/openai/codex/issues/48555)） | 先把安卓版 ChatGPT 更新到最新试试。#48555 是电脑端换过 ChatGPT 账号之后出现的 |
 
-还有一件有日期的事：**GPT-5.5 已在 10 月 14 日从 ChatGPT 和 Codex 下线**，设置或脚本里还写着 `gpt-5.5` 的会报模型不支持，要改成别的模型，见[模型不支持](#模型不支持model-is-not-supported)。
+</details>
 
 ## 1. 安装
 
@@ -332,6 +342,13 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 
 官方文档列的常见原因：弹出「用户账户控制」时点了「否」；电脑不允许创建本地用户和组、不允许改防火墙；公司的管理策略挡住了其中一步。
 
+要管理员授权的是老的那种沙盒（`elevated`）。官方 Windows 沙盒文档现在推荐一种新的 MXC 沙盒：用 Windows 自带的进程隔离，**不需要管理员授权**，也不用建额外的 Windows 账号和防火墙规则；桌面版在支持它的电脑上会自动用，单独装的 CLI 可以在 `config.toml` 里加上下面两行打开。电脑不支持的，还是走老的设置流程。
+
+```toml
+[features]
+prefer_mxc = true
+```
+
 按顺序试：
 
 1. 点「重新设置」（英文 Retry setup），弹出「用户账户控制」时点「是」。
@@ -362,10 +379,18 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 
 - 8 月 26 日，Windows 版更新到 26.820 后不少人打不开，报 `Unable to locate Codex CLI`，官方回复正在加急修（[#40752](https://github.com/openai/codex/issues/40752)、[#40700](https://github.com/openai/codex/issues/40700)）。
 - 6 月的 26.609 版也出现过更新后打不开，官方按高优先级处理，已经修复（[#27979](https://github.com/openai/codex/issues/27979)）。
-- 9 月的 26.915 版，Mac 上有白屏报告，issue 到 10 月 3 日还开着（[#46641](https://github.com/openai/codex/issues/46641)）。
+- 9 月的 26.915 版，Mac 上有白屏报告，issue 到 10 月 18 日还开着（[#46641](https://github.com/openai/codex/issues/46641)）。
 - 9 月 25 日前后的 26.924 版：Linux 上任务一直停在 `Starting your task`，官方 9 月 29 日回复已修复，更新即可（[#48189](https://github.com/openai/codex/issues/48189)）。Windows 上有人一打开 Codex 就弹 `Unable to load organization settings`（[#48324](https://github.com/openai/codex/issues/48324)），也有人更新后一直转圈（[#48463](https://github.com/openai/codex/issues/48463)、[#48333](https://github.com/openai/codex/issues/48333)），这几条官方还没回复。
 
-按顺序试：
+**先排除一个最好改的原因：旧配置。** 不少老教程让你在 `~/.codex/config.toml`（Windows 是 `%USERPROFILE%\.codex\config.toml`）里写 `approval_policy = "untrusted"`。官方配置文档现在写明这个值已经不支持，新版本读到它会报：
+
+```text
+approval_policy = "untrusted" is no longer supported; remove this setting
+```
+
+桌面版里你可能只看到 `Unable to load organization settings`，或者一直转圈。[#48324](https://github.com/openai/codex/issues/48324) 里 10 月 15 日有用户就是删掉这一行后好的。打开 `config.toml`，删掉 `approval_policy = "untrusted"`；想让 Codex 跑命令前先问你，改成 `approval_policy = "on-request"`（`on-failure` 也已经不推荐了）。保存后完全退出再打开。项目设置里的 `trust_level = "untrusted"` 是另一回事，官方说仍然支持，不用删。
+
+还不行，按顺序试：
 
 1. 彻底退出再打开：Windows 在任务管理器里结束 ChatGPT（旧版叫 Codex）的进程，后台残留的 `codex.exe` 也一起结束（#48333 的报告人就是结束它之后才进去的）；Mac 按 Cmd + Q。
 2. 重启电脑。
@@ -384,7 +409,7 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 
 英文界面是 `Couldn't load workspace settings` / `Retry to continue chatting`。新建对话时输入框上方出现这条提示，发送按钮是灰的，点「重试」没用；已有的对话还能接着发，同一个账号在网页版也正常。有时一起出现的还有「无法检查锁定模式」（`Couldn't check Lockdown mode`）。
 
-10 月 7 日桌面版更新之后开始出现。到 10 月 11 日，openai/codex 里至少有 15 个 issue 在报，都没有官方回复；Windows 26.1007.21434、macOS 26.1007.21159 这两个最新版上仍有人遇到。
+10 月 7 日桌面版更新之后开始出现。openai/codex 里至少有 15 个 issue 在报，到 10 月 18 日都没有官方回复。新版也没修好：10 月 17–18 日 macOS 上有人在 26.1013.40934 上仍遇到，实体机、虚拟机都有，其中一位日志里不是 Cloudflare 的 403，而是 HTTP 503（[#51917](https://github.com/openai/codex/issues/51917)、[#51667](https://github.com/openai/codex/issues/51667)）。
 
 **不是你的工作空间或项目设置坏了。** 桌面版新建对话前，要先向 chatgpt.com 取一次账号设置（日志里是 `/settings/user`、`/accounts/check`），这一步失败就不让发消息。个人账号也会遇到，和有没有加入团队工作空间没关系。用户从日志里查到三种情况：
 
@@ -405,7 +430,7 @@ Windows 版的 Codex 要在你电脑上改代码、跑命令，先得建一个�
 5. **先用网页版或 CLI。** 发帖的人大多提到同一个账号在网页版正常，CLI 也不受影响（[#52342](https://github.com/openai/codex/issues/52342)）。
 6. **退回上一个版本。** Mac 上有人退回 26.930.61225 后恢复（[#52001](https://github.com/openai/codex/issues/52001)），Windows 上有人退回 26.928 后能新建对话（[#51917](https://github.com/openai/codex/issues/51917)）。这只是权宜之计，官方修好后记得升回来。
 
-走代理的用户多留意一点：`cloudflare_challenge` 说明 Cloudflare 对这次请求不放心，要先做人机验证。换一个固定的节点可以试，但别指望一定有用，[#52790](https://github.com/openai/codex/issues/52790)、[#51917](https://github.com/openai/codex/issues/51917) 里都有人换过节点和 IP，没解决。还有一位用户是在应用的内置浏览器里打开了一次 chatgpt.com，等验证页自己过去，再回来点「重试」后恢复的；他自己也说不确定是不是这一步起的作用（[#51691](https://github.com/openai/codex/issues/51691)）。
+走代理的用户多留意一点：`cloudflare_challenge` 说明 Cloudflare 对这次请求不放心，要先做人机验证。10 月 16 日有 Windows 用户对着日志发现，拦截正好是从他的出口 IP 变了那一刻开始的，后来什么都没改又自己好了（[#51917](https://github.com/openai/codex/issues/51917)）。所以开着代理的，别来回切节点，固定一个等一等。换节点本身不一定有用，[#52790](https://github.com/openai/codex/issues/52790)、[#51917](https://github.com/openai/codex/issues/51917) 里都有人换过节点和 IP，没解决。还有一位用户是在应用的内置浏览器里打开了一次 chatgpt.com，等验证页自己过去，再回来点「重试」后恢复的；他自己也说不确定是不是这一步起的作用（[#51691](https://github.com/openai/codex/issues/51691)）。
 
 ### 无法加载你的账户（We couldn't load your account）
 
@@ -457,6 +482,20 @@ grep -rh "sa_server_request_failed" ~/Library/Logs/com.openai.codex/ | grep "^$(
 6. **别急着把 `CODEX_CLI_PATH` 指向旧版。** #48571 里有人把它指到 0.154.0 之后账号能加载了，但用量、额度这些功能都没了。
 
 ## 6. 报错逐条处理
+
+### 按状态码查：400、403、404、429、500、502、503
+
+报错里只看得到一个数字的，先按这张表对一下。同一个数字在不同情况下意思不一样，以冒号后面的那句话为准。
+
+| 状态码 | 在 Codex 里多半是 | 看这里 |
+| --- | --- | --- |
+| `400 Bad Request` | 后面跟着 `model is not supported when using Codex with a ChatGPT account`：模型名、旧设置或套餐的问题。只有 `{"detail":"Bad Request"}`，而且只在某一个很长的旧会话里出现、别的会话正常：这个会话的历史太大（图片多），新开一个会话 | [模型不支持](#模型不支持model-is-not-supported)、[断线重连](#断线重连stream-disconnected-before-completion) |
+| `401 Unauthorized` | 本机登录失效；带 `Incorrect API key provided: sk-svcac…` 的是官方故障 | [401](#登录失效或官方故障401-unauthorized) |
+| `403 Forbidden` | 带 `unsupported_country_region_territory`：节点所在地区不支持。日志里是 `cloudflare_challenge`：请求被 Cloudflare 的人机验证拦下了，桌面版会表现为「无法加载工作空间设置」 | [地区不支持](#地区不支持unsupported_country_region_territory)、[无法加载工作空间设置](#无法加载工作空间设置couldnt-load-workspace-settings) |
+| `404 Not Found` | 接 DeepSeek 或第三方 API 时地址填错，或者对方不支持 Responses 协议 | [接第三方时的报错](#接第三方时的报错) |
+| `429 Too Many Requests` | 官方故障，或者额度快用完、同时开的会话太多 | [429](#请求太多429-too-many-requests) |
+| `500`、`502` | 用 ChatGPT 账号登录的，多半是 OpenAI 服务器那边出错；接了第三方 API 或中转站的，多半是对方的服务器或线路有问题 | [服务器处理失败](#服务器处理失败an-error-occurred-while-processing-your-request)、[接第三方时的报错](#接第三方时的报错) |
+| `503 Service Unavailable` | 服务器满载，常和 `Selected model is at capacity` 一起出现 | [模型满载](#模型满载selected-model-is-at-capacity) |
 
 ### 断线重连：stream disconnected before completion
 
@@ -653,6 +692,8 @@ Selected model is at capacity. Please try a different model.
 
 **10 月 12–14 日又一波。** 10 月 12 日、13 日 openai/codex 每天又新开十几个相关 issue，Pro 账号、macOS 和 Windows 都有。有 Windows 用户贴出请求返回的数据：周额度还剩 94%，7 个模型全报这一句（[#53559](https://github.com/openai/codex/issues/53559)）；也有人说换了模型照样报（[#53591](https://github.com/openai/codex/issues/53591)），换模型这一招这次不太管用。12 日状态页仍然没有记录；13 日、14 日有了：北京时间 13 日 16:10 起记为 GPT-6.1 Sol 在 Codex 和 Work 里性能下降，17:30 前后开始缓解，14 日 0:36 标记解决（[事故记录](https://status.openai.com/incidents/01M4T4ZCM54D3ZPTQXRSWFG0XS)）；14 日 15:05–17:53 又记了一次 Codex 和 Work 报错增多（[事故记录](https://status.openai.com/incidents/01M4WKPE1EY48ZB4RZJ80YH7ES)）。状态页挂着故障的时候，只能等它恢复。
 
+**10 月 15 日官方出手了。** 北京时间当晚 11 点 11 分，Codex 负责人 Tibo 在 X 上说，他们上了一批改动、又加了算力，这句报错会大幅减少；真碰上了，Codex 也会过一会儿自己接着跑，不再一直卡住（[原帖](https://x.com/thsottiaux/status/2110750421367287996)）。之后确实少了很多：openai/codex 每天新开、标题或正文里有 at capacity 的 issue，13 日 18 个，14 日 9 个，15 日、16 日各 3 个，17 日没有。所以现在碰上了，看到它在重试就先别手动打断；修复之后还是所有模型一直报、一连几天都这样，更要考虑是不是账号被限。
+
 想确认自己是不是这种情况，到会话日志里搜 `server_overloaded`。日志在 `~/.codex/sessions`，Windows 是 `%USERPROFILE%\.codex\sessions`：
 
 ```bash
@@ -672,13 +713,14 @@ grep -rl "server_overloaded" ~/.codex/sessions | tail -5
 The 'gpt-6-astra' model is not supported when using Codex with a ChatGPT account.
 ```
 
-常见原因有三种：
+常见原因有四种：
 
 - **模型名写错了。** 命令行里要写完整 ID。官方 Models 页现在推荐的三个是 `gpt-6-astra`、`gpt-6.1-sol`、`gpt-6-luna`，另外 `gpt-6-sol` 和 GPT-5.6 的三款也还能选（10 月 3 日核对）。写 `--model astra` 这种简称，CLI 能启动，发消息时才报这个错（[#46410](https://github.com/openai/codex/issues/46410)）。
 - **旧设置还指着下线的模型。** `~/.codex/config.toml` 里的 `model = "..."`、脚本、定时任务写死了旧模型。**GPT-5.5 在 2026 年 10 月 14 日从 ChatGPT 和 Codex 下线**，API 不受影响。官方 Models 页给的替换：Plus、Pro、Business、Enterprise、Edu 改成 `gpt-6-sol`，Free 和 Go 改成 `gpt-6-luna`。
 - **新模型还在分批开放，或者你的套餐、客户端没有。** GPT-6.1 Sol 9 月 29 日发布，官方写的是能不能用取决于套餐、客户端和工作区设置；CLI 是 0.159.1 才把它加进自带的模型列表的，旧版本先升级。9 月有好几个 Pro 账号反映 Astra、Sol 被拒，官方 issue 到 10 月 3 日还开着（[#46304](https://github.com/openai/codex/issues/46304)、[#47333](https://github.com/openai/codex/issues/47333)）。
+- **刚升级或换了套餐，登录凭证里还是旧套餐。** 10 月 11 日有用户在苹果 App Store 里换了套餐，之后 Codex 拿到的登录凭证里套餐一栏写的是免费版，所有模型都报这句，等到这个凭证过期、换了新的才恢复（[#53020](https://github.com/openai/codex/issues/53020)，还开着，另有人说遇到同样的情况）。刚充值或升级就报这个错的，先退出登录再重新登录（CLI 是 `codex logout` 再 `codex login`），让它重新拿一次凭证。
 
-处理：在会话里输入 `/model`，从列表里选一个；删掉 config.toml 里写死的 `model`；把 Codex 升级到最新。列表里选了还报错，多半是开放范围的问题，用 `/feedback` 反馈后等。
+处理：在会话里输入 `/model`，从列表里选一个；删掉 config.toml 里写死的 `model`；把 Codex 升级到最新。这个报错的完整返回里是 `"status":400` 和 `invalid_request_error`，按状态码搜到这里的也是这一种。列表里选了还报错，多半是开放范围的问题，用 `/feedback` 反馈后等。
 
 ### 请求太多：429 Too Many Requests
 
@@ -938,13 +980,13 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 
 | 情况 | 怎么办 |
 | --- | --- |
-| 5 小时额度用完 | 等报错里写的时间，一般几小时内就回来。Plus 有 5 小时限制；Pro 目前没有，只算每周额度（官方定价页，10 月 15 日核对） |
+| 5 小时额度用完 | 等报错里写的时间，一般几小时内就回来。Plus 有 5 小时限制；Pro 目前没有，只算每周额度（官方定价页，10 月 18 日核对） |
 | 每周额度用完 | 等周额度重置；急用就换个消耗低的模型，或者买额外额度 |
 | 当前模型用完了 | 按提示换一个模型开新会话 |
-| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近一次全体重置是北京时间 10 月 13 日，最近一张重置卡是 10 月 8 日凌晨发的（GPT-6 进普通 Chat 那天）。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
+| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近一次全体重置是北京时间 10 月 18 日早上 5 点多，最近一张重置卡是 10 月 8 日凌晨发的（GPT-6 进普通 Chat 那天）。重置卡有具体的到期时间，过期不能恢复：网页版 Settings → Usage 里把鼠标停在到期日期上，能看到具体时间和时区（OpenAI_Support 10 月 6 日在[官方社区](https://community.openai.com/t/1403334)的答复）。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
 | 经常用完，影响干活 | 考虑升级。9 月 29 日起 Pro 分三档：Pro 100、Pro 200、Pro 500（$100 / $200 / $500），Codex 额度分别是 Plus 的 5、10、25 倍 |
 
-Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 15 日核对）：
+Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 18 日核对）：
 
 | 模型 | Plus 每 5 小时 |
 | --- | --- |
@@ -956,6 +998,10 @@ Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务
 这是估算，不是固定次数，任务越大越耗，另外还有每周上限。同一份额度，用 Sol 能跑的条数大约是 Astra 的 3 倍，日常写代码先用 GPT-6.1 Sol，难活再换 Astra。
 
 > 中文界面里有个容易看混的地方：**「额度」有两种意思。**「每周使用限额」「5 小时使用限额」是套餐自带、会自动恢复的；「添加额度」「额度余额」对应英文的 credits，是用完后另外花钱买的点数。官方说明 Plus 和 Pro 用完限额后可以买 credits 继续用，不一定要升级。
+
+**周额度突然掉了一大截。** 北京时间 10 月 17 日凌晨起，openai/codex 里好几个人报周额度几十秒内大幅下降：一位从 77% 掉到 10%，用了 38 秒，本地日志里这段时间只多了 38 万 token，九成多是缓存；另一位 8 秒内从 58% 掉到 0%（[#54677](https://github.com/openai/codex/issues/54677)、[#54718](https://github.com/openai/codex/issues/54718)），到 10 月 18 日都没有官方回复。北京时间 10 月 18 日 05:12，Tibo 做了一次全体重置，额度已经刷满。觉得自己被多扣了：截下 Usage 页面，在 Codex 里输入 `/feedback` 提交并记下反馈 ID，再找 OpenAI 客服。
+
+10 月 17 日 Tibo 还说，Codex 和 Work 的实际可用量提高了：子 agent 之间复用上下文、上下文缓存留得更久、请求路由改进让缓存命中更多；具体能多用多少，他没说（[原帖](https://x.com/thsottiaux/status/2111244596131111253)）。
 
 会员到期变回 Free 再重新订阅，周额度不会刷新。[LINUX DO](https://linux.do/t/topic/2995861) 上有人试过：Plus 到期时周额度还剩 82%，马上重新订阅，还是 82%。这是一位用户的情况，仅供参考。
 
@@ -1148,6 +1194,12 @@ codex delete <会话 ID 或会话名>      # 永久删除，删之前会让你�
 - 「此任务正在其他位置运行。请先在那里关闭会话，然后在此处重试。」（`This task is active elsewhere. Close it there, then retry here.`）同一个聊天在别处开着：另一个窗口、CLI，或者手机远程。关掉那边再试，和[第 5 节](#5-桌面版打不开)的「已在另一个应用中打开」是一类。
 - 「ChatGPT 无法加载 config.toml，因此此对话串无法继续。请修复 …」：配置文件写错了，提示里有文件位置和出错的地方。改好保存后，重新打开这个聊天。
 
+**Codex 能用中国手机号验证吗？**
+一般不行。OpenAI 帮助中心的支持名单里没有中国大陆、香港、澳门，验证码也只发短信（12 个国家可以用 WhatsApp）。号码绑定后不能更换，要用一个以后还收得到短信的境外号码，见[第 3 节](#3-要验证手机号)。
+
+**Codex 为什么这么慢？**
+常见几种：选的模型和推理档太重（Astra 和高推理档本来就更慢，日常写代码用 GPT-6.1 Sol 的中等推理一般就够）；服务器正忙，10 月 9–14 日就有几波满载，那几天又慢又报错；会话很长，上下文越大越慢，可以新开一个会话或者 `/compact`。想要快，官方有 Fast 模式：CLI 里输入 `/fast` 打开，GPT-6.1 Sol、Astra、GPT-6 Sol、Luna 都支持，代价是按标准速度的 2.5 倍扣套餐额度；更快的 Ultrafast 只有 Pro 500 和部分企业版有（官方 [Speed](https://learn.chatgpt.com/docs/agent-configuration/speed) 文档，10 月 18 日核对）。
+
 **开了两步验证（2FA），还要验证手机号吗？**
 要。OpenAI 帮助中心写明，邮箱和验证器 App 都代替不了 Codex 的手机验证。
 
@@ -1157,7 +1209,7 @@ codex delete <会话 ID 或会话名>      # 永久删除，删之前会让你�
 
 1. **自己用礼品卡订阅**：见我们的两篇实测教程：[ChatGPT Plus 国内充值 / Apple 礼品卡实测](https://github.com/Avarce/chatgpt-plus-china-guide)、[OpenAI Gift Card 购买与兑换](https://github.com/Avarce/openai-gift-card-guide)。
 2. **先把几种方法比一遍**：[没有海外信用卡怎么开通 ChatGPT Plus：5 种方法对比](https://aonir.com/guides/chatgpt-plus-without-foreign-card/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_no_card)。
-3. **微信充值到本人账号**：AONIR 提供 [ChatGPT Plus ¥168 / 月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_plus)、[ChatGPT Pro 5× ¥730 / 月](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_5x)（官方的 Pro 100），5 倍还不够的有 [Pro 10× ¥1350 / 月](https://aonir.com/chatgpt-pro/?plan=20x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_10x)（官方的 Pro 200，联系客服充值）。都是充到你自己的账号，不需要密码，Codex 额度跟着套餐走。
+3. **微信充值到本人账号**：AONIR 提供 [ChatGPT Plus ¥168 / 月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_plus)、[ChatGPT Pro 5× ¥730 / 月](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_5x)（官方的 Pro 100），5 倍还不够的有 [Pro 10× ¥1350 / 月](https://aonir.com/chatgpt-pro/?plan=20x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_10x)（官方的 Pro 200，联系客服充值）。都是充到你自己的账号，Codex 额度跟着套餐走。
 
 有海外卡的，直接在官方订阅最划算。
 
@@ -1181,7 +1233,7 @@ codex delete <会话 ID 或会话名>      # 永久删除，删之前会让你�
 - 第三方模型：ChatGPT Learn 的 [Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced)（Custom model providers、Profiles）· DeepSeek 官方文档 [接入 Codex](https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/codex) · [CC Switch](https://github.com/farion1231/cc-switch)
 - 安装、更新和卸载的位置：openai/codex 仓库 `rust-v0.162.1` 标签下的 `scripts/install/` 和 `codex-rs/tui/src/update_action.rs`
 
-中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示、10 月 16 日新增的权限、远程控制、恢复对话和「正在思考」几处文字取自 26.1007.21159；`codex archive` / `unarchive` / `delete`、`codex app-server daemon stop` 对照了它自带的 Codex（0.162.0-alpha.17.2）的帮助输出和 0.163.0 的源码；CLI 卡住时的 `Working (… • esc to interrupt)` 取自 0.163.0 的源码；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 15 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
+中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示、10 月 16 日新增的权限、远程控制、恢复对话和「正在思考」几处文字取自 26.1007.21159；`codex archive` / `unarchive` / `delete`、`codex app-server daemon stop` 对照了它自带的 Codex（0.162.0-alpha.17.2）的帮助输出和 0.163.0 的源码；CLI 卡住时的 `Working (… • esc to interrupt)` 取自 0.163.0 的源码；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。「最近两周的已知问题」里的状态，取自各 issue 在 10 月 18 日的开关状态和 OpenAI 员工的回复，官方事故以状态页的记录为准；标了「用户报告」「社区办法」的没有经过官方确认。
 
 ## 转载与许可
 
