@@ -8,7 +8,17 @@
 
 国内用 Codex，卡住的地方基本就那几处：装不上、打不开、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。想接 DeepSeek 这类第三方 API 的，直接看[第 10 节](#10-接入-deepseek-和第三方-api)。
 
-由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 整理维护。我们提供 ChatGPT / Claude 会员充值服务，和 OpenAI 没有隶属关系；这页只讲 Codex 本身，充值相关只放在[最后一节](#国内怎么开通)。
+**要用完整 Codex，得先有 Plus 或 Pro：国内怎么开**
+
+Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GPT-6.1 Sol、Astra 和 CLI 要 Plus 起步，额度经常用完再上 Pro。没有海外卡，可以微信付款，由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 充值到你自己的 ChatGPT 账号，不需要密码：
+
+| 套餐 | 微信付款 | 官方价 | Codex 额度 |
+|---|---|---|---|
+| [ChatGPT Plus](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_plus) | **¥168 / 月** | $20 | 基准，每 5 小时和每周各有上限 |
+| [ChatGPT Pro 5×](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_5x) | **¥730 / 月** | Pro 100，$100 | Plus 的 5 倍，没有 5 小时限制 |
+| [ChatGPT Pro 10×](https://aonir.com/chatgpt-pro/?plan=20x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_10x) | **¥1350 / 月**，客服开通（账号需是免费版） | Pro 200，$200 | Plus 的 10 倍，没有 5 小时限制 |
+
+想自己用礼品卡订阅，或者先比一比几种办法，见文末[国内怎么开通](#国内怎么开通)。
 
 **这几天问得最多的（10 月 16 日）：**
 
