@@ -1066,6 +1066,8 @@ Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务
 codex --ask-for-approval never "总结一下你当前加载了哪些说明"
 ```
 
+想让 Codex 按一套固定做法干活，比如先问清需求、测试先行、画架构图、做 PPT，装 skill 比全写进 `AGENTS.md` 合适：`AGENTS.md` 每次都整份读，skill 平时只带一句说明，用到才读正文。值得装哪些、怎么确认装上了、装多了有什么影响，见我们另一个仓库 [Codex Skills 中文精选](https://github.com/Avarce/codex-skills-cn)。
+
 ## 10. 接入 DeepSeek 和第三方 API
 
 Codex 不是只能用 ChatGPT 账号。在配置文件里加一个「模型提供方」（model provider），就能改用别家的 API：用那一家的 key，按那一家的价格付费，不走 ChatGPT 套餐的额度。CLI、桌面版、VS Code 插件读的是同一份配置：`~/.codex/config.toml`，Windows 是 `%USERPROFILE%\.codex\config.toml`。
