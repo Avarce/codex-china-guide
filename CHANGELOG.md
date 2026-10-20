@@ -2,6 +2,28 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-10-21
+
+- 周额度骤降有了官方说法：10 月 21 日凌晨 Tibo 说约 4 万个账号用的额度上限和所选套餐对不上，已修正，会逐个联系并补 credits。发帖人贴出的邮件「Correcting your usage limit」：从 Pro 200 换到更便宜的套餐后一直按旧额度算，修正时把这周已用的量按新上限重算；补 $500（12,500 credits，2027-01-20 到期），周额度没有退回。
+- `Selected model is at capacity` 10 月 19 日起又一波（20 日新开 19 个 issue），状态页没有记录，没有官方回复；有用户发现只有 `codex resume` 的旧会话报，新会话正常。
+- 新增 `rejected: blocked by policy`：开着完全访问时被标记的命令直接被拒，OpenAI 的人回复改成「帮我批准」（`/permissions` → Approve for me）。同一节补「自动审核超时」「命令被自动审核拒绝」和 `/approve`。
+- 新增：只用 API Key 时桌面版 `Error submitting message` / `Work browser access requires an authenticated account`，把 `conversationDetailMode` 改回 `STEPS_COMMANDS`（用户办法，三人确认）。
+- 新增「插件和 MCP 连不上」：`OAuth state not found` 改到网页版连接；MCP 启动超时（默认 30 秒）用 `startup_timeout_sec` 放宽。
+- 新增：Windows 登录 `os error 10013` / 1457 被占却没有程序：端口被 Windows 保留，用设备码登录或临时停 WinNAT。登录页 `Sign-in could not be completed`、`State mismatch`。
+- 新增：`402 Payment Required` / `deactivated_workspace`（Team 席位到期后登录还指着旧工作空间，Windows 桌面版可能卡在启动画面）。
+- 第 4 节加「办法三」：`~/.codex/.env` 写代理（CLI 会读）；桌面版 `workspace routing discovery timed out` 要设 Windows 用户变量；`timed out` 一类报错的去处。
+- 第 8 节新增「选了中文，界面还是英文」（启动时连不上 OpenAI 就回落英文）和「Windows 上中文乱码」（GBK；PowerShell 7 + `chcp 65001`，或系统 UTF-8）。
+- Windows：CLI 的「无法设置管理员沙盒」原文；`prefer_mxc` 导致 `HRESULT = 0x80070020` 的提醒；Agent 设在 WSL 时 `Unable to load organization settings`（改回 Windows）；中文用户名有进程没窗口；`CODEX_CLI_PATH` 指着旧版时的 `os error 32`；Microsoft Store 下载不了。
+- Codex 网页版在 Safari、iPad 上 `Can't find variable: DisposableStack`。
+- 后台服务：OpenAI 的人确认 CLI 新、后台服务旧会导致 Windows 弹窗口，`/daemon` → Install latest public stable。
+- 「无法加载工作空间设置」：Windows 26.1013.40934 上也有了，二十多个 issue；改正一处：日志是 503 的那位用的是 26.1007.71326，不是 26.1013.40934。
+- 远程控制：Windows 上有一条长连接不认系统代理和 `HTTP_PROXY`，开 TUN 更省事；别开 `respect_system_proxy`。
+- 常见问题：桌面版字号怎么调；`/feedback` 报「未能验证反馈权限」；`codex exec` 报 `Not inside a trusted directory`（`git init` 或 `--skip-git-repo-check`）。
+- 补上中文界面的「无法加载组织设置 / 应用已暂停，等待安全加载组织设置后才能恢复」；WSL 模式下换了 Wi-Fi 被当成「公用网络」、防火墙拦住 WSL 到代理端口的连接，改回「专用网络」（LINUX DO 上用户查到的）。
+- 新增：换中转站后旧会话 `invalid_encrypted_content`（推理内容只有原来那一家能解）；`command failed; retry without sandbox?` 是批准提示，不是报错。
+- 页首的开通方式从四行价格表改成一行文字，链接和价格不变。
+- 「最近两周的已知问题」：新增 8 行，9 月下旬到现在没有进展的 9 行收进表下面的折叠区；第 7 节 Pro 倍数改为「约为」，最近一次重置改为 10 月 20 日。
+
 ## 2026-10-18
 
 - 新增「按状态码查」：400、401、403、404、429、500/502、503 各自在 Codex 里多半是什么情况，链到对应的小节。核对过的：模型不支持的完整返回是 `"status":400`；地区不支持是 403 加 `unsupported_country_region_territory`；at capacity 常带 503。
