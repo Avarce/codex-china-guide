@@ -15,8 +15,9 @@ Free 和 Go 只能在桌面版用 GPT-5.6 Terra、GPT-6 Luna，额度很少；GP
 | 套餐 | 微信付款 | 官方价 | Codex 额度 |
 |---|---|---|---|
 | [ChatGPT Plus](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_plus) | **¥168 / 月** | $20 | 基准，每 5 小时和每周各有上限 |
-| [ChatGPT Pro 5×](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_5x) | **¥730 / 月** | Pro 100，$100 | Plus 的 5 倍，没有 5 小时限制 |
-| [ChatGPT Pro 10×](https://aonir.com/chatgpt-pro/?plan=20x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_10x) | **¥1350 / 月**，客服开通（账号需是免费版） | Pro 200，$200 | Plus 的 10 倍，没有 5 小时限制 |
+| [ChatGPT Pro 100（5×）](https://aonir.com/chatgpt-pro/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_5x) | **¥730 / 月** | Pro 100，$100 | 约为 Plus 的 5 倍 |
+| [ChatGPT Pro 200（10×）](https://aonir.com/chatgpt-pro-10x/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_10x) | **¥1400 / 月** | Pro 200，$200 | 约为 Plus 的 10 倍 |
+| [ChatGPT Pro 500](https://aonir.com/chatgpt-pro-500/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_500) | **¥3500 / 月**，客服开通 | Pro 500，$500 | 约为 Plus 的 25 倍 |
 
 想自己用礼品卡订阅，或者先比一比几种办法，见文末[国内怎么开通](#国内怎么开通)。
 
@@ -1211,7 +1212,7 @@ codex delete <会话 ID 或会话名>      # 永久删除，删之前会让你�
 
 1. **自己用礼品卡订阅**：见我们的两篇实测教程：[ChatGPT Plus 国内充值 / Apple 礼品卡实测](https://github.com/Avarce/chatgpt-plus-china-guide)、[OpenAI Gift Card 购买与兑换](https://github.com/Avarce/openai-gift-card-guide)。
 2. **先把几种方法比一遍**：[没有海外信用卡怎么开通 ChatGPT Plus：5 种方法对比](https://aonir.com/guides/chatgpt-plus-without-foreign-card/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_no_card)。
-3. **微信充值到本人账号**：AONIR 提供 [ChatGPT Plus ¥168 / 月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_plus)、[ChatGPT Pro 5× ¥730 / 月](https://aonir.com/chatgpt-pro/?plan=5x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_5x)（官方的 Pro 100），5 倍还不够的有 [Pro 10× ¥1350 / 月](https://aonir.com/chatgpt-pro/?plan=20x&utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_10x)（官方的 Pro 200，联系客服充值）。都是充到你自己的账号，Codex 额度跟着套餐走。
+3. **微信充值到本人账号**：AONIR 提供 [ChatGPT Plus ¥168 / 月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_plus)、[ChatGPT Pro 100（5×）¥730 / 月](https://aonir.com/chatgpt-pro/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_5x)、[Pro 200（10×）¥1400 / 月](https://aonir.com/chatgpt-pro-10x/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_10x)，都能微信自助充值；全天高强度用的还有 [Pro 500 ¥3500 / 月](https://aonir.com/chatgpt-pro-500/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=cta_pro_500)（客服开通）。都是充到你自己的账号，Codex 额度跟着套餐走。
 
 有海外卡的，直接在官方订阅最划算。
 
