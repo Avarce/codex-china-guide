@@ -2,6 +2,19 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-10-24
+
+- 版本：CLI 0.164.0 正式版 10 月 23 日发布（npm 国内镜像、Homebrew 都已跟上）；桌面版 10 月 21–22 日连推 26.1016.51333、61520、62342，24 日起有人收到 26.1021.22027。
+- 新增「启动聊天时出错 / Cannot serialize value: (couldn't stringify value)」：26.1016.51333 只在「工作树」模式新建对话时出错，26.1016.61520 起已修；更新不了先切「本地模式」。
+- 新增「官方安装脚本 404」：`chatgpt.com/codex/install.sh` 10 月 23–24 日断断续续 404，`codex update` 失败了还显示更新成功。改用 GitHub Releases 上的同一份脚本（逐字节核对过）或 npm 镜像。
+- 新增「重置机会用不了：你当前的用量暂时无需重置」：OpenAI 帮助中心写明至少一项用量剩余不到 80% 才能用；各套餐补哪几项、在哪用（含 CLI `/usage`）、「允许助手使用用量重置次数」、全体重置和重置卡的关系、客服不补；付费的「购买即时重置」会改每周刷新时间。第 7 节补上 10 月 23 日、24 日两次重置。
+- `Selected model is at capacity`：21–23 日每天还有 18–29 个新 issue，没有官方回复；状态页 22 日记了印度、日本、韩国用户报错增多；用户对照数据：同一账号同一分钟桌面版全失败、CLI 七成能过，原始返回是 HTTP 200 里的 `server_is_overloaded`。
+- 新增：Windows「无法遍历该路径，因为它包含不受信任的装入点」（开着阿里云盘，或应用装在 C 盘以外）；Mac 磁盘被崩溃报告目录吃掉几十上百 GB（`Crashpad/pending`）；Computer Use、应用内浏览器不可用时按官方文档查的三件事；桌面版本身卡顿时看 `syspolicyd` / `trustd`。
+- 补上中文界面的「提交消息时出错」（`Error submitting message`）：「提交消息时出错 + Work browser access requires an authenticated account」在 Bing 上 3 个月有 293 次展示，以前只收了英文。
+- Windows 每次更新后打不开：任务管理器里再结束 `codex-windows-sandbox-service.exe`（一位用户的办法，他的安装日志里新版本因为有程序没关而装不上）。
+- `Work browser access requires an authenticated account`：用 CC Switch 的把「直连」换成「路由」也行（两位用户确认）；路由模式下日志里的 `websocket_not_supported` 是 CC Switch 有意回的 426，能回复就不用管。CC Switch 换了 ChatGPT 账号 CLI 不生效：`--no-daemon`；`--disable tui_app_server` 早已无效。
+- 已知问题表：新增 4 行（启动聊天时出错、安装脚本 404、重置门槛、Windows 自定义权限里的 `deny` 规则导致 MXC 启动失败）；更新 `/codex/models` 404（报告人说约 10 小时后自己好了）、Safari `DisposableStack`（issue 被标成已完成，未见用户确认）、「无法加载工作空间设置」（26.1016.61520 上有好有坏）、`0x80070020`（26.1016 上仍有）。
+
 ## 2026-10-21
 
 - 周额度骤降有了官方说法：10 月 21 日凌晨 Tibo 说约 4 万个账号用的额度上限和所选套餐对不上，已修正，会逐个联系并补 credits。发帖人贴出的邮件「Correcting your usage limit」：从 Pro 200 换到更便宜的套餐后一直按旧额度算，修正时把这周已用的量按新上限重算；补 $500（12,500 credits，2027-01-20 到期），周额度没有退回。
