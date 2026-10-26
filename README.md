@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 26 日**（北京时间）· Codex CLI 0.164.0 · 桌面版 26.1021 · VS Code 插件 26.1021
+> **最后核对：2026 年 10 月 27 日**（北京时间）· Codex CLI 0.164.0 · 桌面版 26.1021 · VS Code 插件 26.1021
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -8,7 +8,7 @@
 
 国内用 Codex，卡住的地方基本就那几处：装不上、打不开、登录跳不回来、要验证手机号、终端连不上、用着用着断线、额度用完。这页按「你看到的报错」来排，每条写清楚多半是什么原因、按什么顺序处理，并附上官方文档或 openai/codex 仓库里维护者回复的出处，可以自己点进去核对。想接 DeepSeek 这类第三方 API 的，直接看[第 10 节](#10-接入-deepseek-和第三方-api)。
 
-**各套餐能用的 Codex 不一样。** Free 和 Go 额度少，官方写的是在桌面版里用 GPT-5.6 Terra、GPT-6 Luna；GPT-6.1 Sol、Astra 和网页版的云端任务要 Plus 或 Pro。没有海外卡，可以微信付款，由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 充值到你自己的 ChatGPT 账号：[Plus ¥168/月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_plus) · [Pro 100（5×）¥730/月](https://aonir.com/chatgpt-pro/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_5x) · [Pro 200（10×）¥1400/月](https://aonir.com/chatgpt-pro-10x/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_10x) · [Pro 500 ¥3500/月](https://aonir.com/chatgpt-pro-500/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_500)（客服开通）。想自己用礼品卡订阅，或者先比较几种办法，见文末[国内怎么开通](#国内怎么开通)。
+**各套餐能用的 Codex 不一样。** Free 和 Go 额度少，官方写的是在桌面版里用 GPT-5.6 Terra、GPT-6 Luna；GPT-6.1 Sol、GPT-6.1 Terra、Astra 和网页版的云端任务要 Plus 或 Pro。没有海外卡，可以微信付款，由 [AONIR](https://aonir.com/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=brand_home) 充值到你自己的 ChatGPT 账号：[Plus ¥168/月](https://aonir.com/chatgpt-plus/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_plus) · [Pro 100（5×）¥730/月](https://aonir.com/chatgpt-pro/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_5x) · [Pro 200（10×）¥1400/月](https://aonir.com/chatgpt-pro-10x/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_10x) · [Pro 500 ¥3500/月](https://aonir.com/chatgpt-pro-500/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=top_pro_500)（客服开通）。想自己用礼品卡订阅，或者先比较几种办法，见文末[国内怎么开通](#国内怎么开通)。
 
 **这几天问得最多的（10 月 26 日）：**
 
@@ -896,7 +896,7 @@ The 'gpt-6-astra' model is not supported when using Codex with a ChatGPT account
 
 常见原因有四种：
 
-- **模型名写错了。** 命令行里要写完整 ID。官方 Models 页现在推荐的三个是 `gpt-6-astra`、`gpt-6.1-sol`、`gpt-6-luna`，另外 `gpt-6-sol` 和 GPT-5.6 的三款也还能选（10 月 3 日核对）。写 `--model astra` 这种简称，CLI 能启动，发消息时才报这个错（[#46410](https://github.com/openai/codex/issues/46410)）。
+- **模型名写错了。** 命令行里要写完整 ID。官方 Models 页现在推荐的是 `gpt-6-astra`、`gpt-6.1-sol`、`gpt-6.1-terra`（10 月 26 日新出）、`gpt-6-luna`，另外 `gpt-6-sol` 和 GPT-5.6 的三款也还能选（10 月 26 日核对）。`gpt-6.1-terra` 要 CLI 0.159.0 以上。写 `--model astra` 这种简称，CLI 能启动，发消息时才报这个错（[#46410](https://github.com/openai/codex/issues/46410)）。
 - **旧设置还指着下线的模型。** `~/.codex/config.toml` 里的 `model = "..."`、脚本、定时任务写死了旧模型。**GPT-5.5 在 2026 年 10 月 14 日从 ChatGPT 和 Codex 下线**，API 不受影响。官方 Models 页给的替换：Plus、Pro、Business、Enterprise、Edu 改成 `gpt-6-sol`，Free 和 Go 改成 `gpt-6-luna`。
 - **新模型还在分批开放，或者你的套餐、客户端没有。** GPT-6.1 Sol 9 月 29 日发布，官方写的是能不能用取决于套餐、客户端和工作区设置；CLI 是 0.159.1 才把它加进自带的模型列表的，旧版本先升级。9 月有好几个 Pro 账号反映 Astra、Sol 被拒，官方 issue 到 10 月 3 日还开着（[#46304](https://github.com/openai/codex/issues/46304)、[#47333](https://github.com/openai/codex/issues/47333)）。
 - **刚升级或换了套餐，登录凭证里还是旧套餐。** 10 月 11 日有用户在苹果 App Store 里换了套餐，之后 Codex 拿到的登录凭证里套餐一栏写的是免费版，所有模型都报这句，等到这个凭证过期、换了新的才恢复（[#53020](https://github.com/openai/codex/issues/53020)，还开着，另有人说遇到同样的情况）。刚充值或升级就报这个错的，先退出登录再重新登录（CLI 是 `codex logout` 再 `codex login`），让它重新拿一次凭证。
@@ -1220,16 +1220,17 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 | 手上有重置机会 | 中文界面叫「使用已储备的重置机会」，点「使用重置」。至少有一项用量剩余不到 80% 才用得了，见下面的[重置机会用不了](#重置机会用不了你当前的用量暂时无需重置)。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近几乎隔一两天一次：最近一次是北京时间 10 月 26 日 13:21，他说「今天是重置」，没说几点到（[原帖](https://x.com/thsottiaux/status/2114588174249071102)）；25 日 11:39 宣布、14:06 说已经全部到账（[宣布](https://x.com/thsottiaux/status/2114200152701575656)、[到账](https://x.com/thsottiaux/status/2114237083652882932)）；再往前是 22 日、23 日接连宣布的两次，都说「明天太平洋时间上午 10 点前」到，也就是北京时间 23 日、24 日凌晨 1 点前后（原帖：[22 日](https://x.com/thsottiaux/status/2113162277688070445)、[23 日](https://x.com/thsottiaux/status/2113492187770175603)），以及 10 月 20 日 14:33（[原帖](https://x.com/thsottiaux/status/2112432076767289678)）；最近一张重置卡是 10 月 8 日凌晨发的（GPT-6 进普通 Chat 那天）。重置卡有具体的到期时间，过期不能恢复：网页版 Settings → Usage 里把鼠标停在到期日期上，能看到具体时间和时区（OpenAI_Support 10 月 6 日在[官方社区](https://community.openai.com/t/1403334)的答复）。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
 | 经常用完，影响干活 | 考虑升级。9 月 29 日起 Pro 分三档：Pro 100、Pro 200、Pro 500（$100 / $200 / $500），Codex 额度分别约为 Plus 的 5、10、25 倍 |
 
-Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 18 日核对）：
+Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 26 日核对）：
 
 | 模型 | Plus 每 5 小时 |
 | --- | --- |
 | GPT-6 Astra | 5–45 条 |
 | GPT-6.1 Sol | 15–160 条 |
+| GPT-6.1 Terra（10 月 26 日新出） | 35–285 条 |
 | GPT-6 Sol | 15–150 条 |
 | GPT-6 Luna | 350–3,000 条 |
 
-这是估算，不是固定次数，任务越大越耗，另外还有每周上限。同一份额度，用 Sol 能跑的条数大约是 Astra 的 3 倍，日常写代码先用 GPT-6.1 Sol，难活再换 Astra。
+这是估算，不是固定次数，任务越大越耗，另外还有每周上限。同一份额度，用 Sol 能跑的条数大约是 Astra 的 3 倍，Terra 的估算条数又比 Sol 多。日常写代码先用 GPT-6.1 Sol，难活再换 Astra；看截图、操作网页和桌面应用、写文案，可以试 GPT-6.1 Terra（官方的定位是快、省，擅长看图、操作电脑和写作，普通对话里没有，Free 和 Go 不包括）。
 
 > 中文界面里有个容易看混的地方：**「额度」有两种意思。**「每周使用限额」「5 小时使用限额」是套餐自带、会自动恢复的；「添加额度」「额度余额」对应英文的 credits，是用完后另外花钱买的点数。官方说明 Plus 和 Pro 用完限额后可以买 credits 继续用，不一定要升级。
 
