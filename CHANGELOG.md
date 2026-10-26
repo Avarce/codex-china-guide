@@ -2,6 +2,19 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-10-26
+
+- 版本：桌面版 24 日起大多是 26.1021.31345（build 21828，Windows 商店包 26.1021.3705.0）；26.1021.22027 既是 23 日前后的一版桌面版，也是 VS Code 插件 24 日自动更新到的版本，别弄混。CLI 还是 0.164.0。
+- 新增「VS Code 插件打不开：Codex could not start」：插件 26.1021.22027 之后侧边栏只有 `Codex could not start`、日志 `renderer_ready_timeout`，至少 16 个 issue，没有官方回复。退回 26.1007.21434 并关掉自动更新（十几位用户确认），其次退回 VS Code 1.142.0，或把 Codex 视图挪个位置。
+- 新增「被标记为网络安全风险」：「此聊天已被标记为可能存在网络安全风险」「正在进一步审慎考虑此请求」「此内容无法显示」是网络安全检查拦下或放慢了这次请求，这一条本身不是封号；官方 Cyber safety 文档说正常操作也可能触发，误判用 `/feedback`。CLI 的 `Your account was flagged for potentially high-risk cyber activity` 是一句写死的提示，模型名是旧的。
+- 429：10 月 25 日起周额度还剩八九成也一直 `429 Too Many Requests`，多是 GPT-6.1 Sol；用户抓到的原始返回是 `turn_rate_limit_exceeded` / `Codex is at capacity`，和「模型满载」是一类。`Selected model is at capacity` 本身 24 日起少了。
+- 「无法加载组织设置」：Windows 26.1021 上新出的一种，原因是旧的 `CODEX_CLI_PATH` 用户环境变量（三位用户确认，删掉后重启）。
+- 官方安装脚本 404：OpenAI 26 日关掉 issue，说是临时的路由问题，已恢复。
+- Windows 自定义权限导致 MXC 缺 `SYSTEMROOT`：不只是 `deny` 规则，桌面版里所有自定义权限配置都会；修复 #56468 已合并，还没进任何版本。
+- 重置：帮助中心 26 日更新，重置卡、全体重置、付费重置都可能改下一次刷新时间；设置里的「历史记录」能看 30 天重置卡记录；别为了测试再用一张。第 7 节补上 25 日、26 日两次全体重置。
+- 精简：已知问题表里已修好的 4 行（启动聊天时出错、安装脚本 404、Windows 沙盒 `os error 32`、WSL `os error 2`）收进表下面的折叠区；折叠区里 9 月下旬已经修好的 10 行删掉，「按报错找」里对应的几行直接写上答案；「模型满载」里 10 月 9–23 日的逐波记录压成每波一行；「更新后打不开」开头 6–9 月的旧版本列表删掉；文末「中文界面文字取自哪一版」的长段挪到本页最后的「出处」。所有报错原文都还在「按报错找」里。
+- 其他：后台服务 `codex app-server daemon update`；`codex resume --all`（OpenAI 的人的回答）；`Reconnecting... waiting for network`；「无法生成提交信息」和「提交消息时出错」不是一回事；按报错找补了请求超时、令牌交换失败、电脑操控、被限流 / 被风控、重置卡用不了、续费会不会刷新额度、卡顿、10053 / 10054 的中文原文等写法。
+
 ## 2026-10-24
 
 - 版本：CLI 0.164.0 正式版 10 月 23 日发布（npm 国内镜像、Homebrew 都已跟上）；桌面版 10 月 21–22 日连推 26.1016.51333、61520、62342，24 日起有人收到 26.1021.22027。
@@ -146,3 +159,7 @@ Codex 改了安装方式、登录流程、报错或额度规则，这里记一�
 - 收录中文界面里对应的报错写法，以及 100 多条中英界面对照（[UI-GLOSSARY.md](UI-GLOSSARY.md)）。
 - 收录 AGENTS.md 中文模板（[templates/AGENTS.md](templates/AGENTS.md)）。
 - 记录 GPT-5.5 于 2026 年 10 月 14 日从 ChatGPT 和 Codex 下线，写死 `gpt-5.5` 的设置和脚本需要改。
+
+## 出处：中文界面文字和命令原文取自哪一版
+
+中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示、10 月 16 日新增的权限、远程控制、恢复对话和「正在思考」几处文字，10 月 21 日新增的「帮我批准」自动审核、反馈权限、字号几处文字，都取自 26.1007.21159；10 月 24 日新增的「启动聊天时出错」「本地模式」「工作树」、重置相关的「你当前的用量暂时无需重置」「允许助手使用用量重置次数」「购买即时重置」、浏览器插件「已被你的组织停用，或在你所在地区不可用」，取自 26.1016.62342；10 月 26 日新增的网络安全标记（「此聊天已被标记为可能存在网络安全风险」「正在进一步审慎考虑此请求」「此内容无法显示」）、重置「历史记录」「无法重置用量」、「无法生成提交信息」，也取自 26.1016.62342，VS Code 的「安装特定版本...」「自动更新」「移动到」取自 VS Code 官方简体中文语言包（microsoft/vscode-loc）；CLI 的 `Reconnecting... waiting for network`、`Your account was flagged for potentially high-risk cyber activity`、`codex resume --all`、`codex app-server daemon update` 对照的是 0.164.0 的源码；CLI 里的「无法设置管理员沙盒」选择框、登录页的 `Sign-in could not be completed` / `State mismatch`、端口被占时改用 1457 的逻辑、MCP 启动超时的提示和 30 秒默认值、`~/.codex/.env` 的读取、`/approve` 的说明，对照的是 0.163.0 的源码；`codex archive` / `unarchive` / `delete`、`codex app-server daemon stop` 对照了它自带的 Codex（0.162.0-alpha.17.2）的帮助输出和 0.163.0 的源码；CLI 卡住时的 `Working (… • esc to interrupt)` 取自 0.163.0 的源码；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。
