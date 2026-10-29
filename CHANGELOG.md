@@ -2,6 +2,10 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-10-30
+
+- Pro 额度翻倍（美国时间 10 月 29 日）：Pro 100、Pro 500 的 Work / Codex 额度翻倍；Pro 200 原定下调老订阅额度的计划取消，较低的那档翻倍到和较高的一样。三档约为 Plus 的 10、20、50 倍（50 倍是 Codex 负责人 Tibo 回复网友时确认的）；Chat 里 GPT-6 Pro 的每周额度 Pro 100、Pro 500 不变，Plus 不变。页首套餐说明、第 7 节「经常用完」一行和文末开通方式随之更新。依据：OpenAI 帮助中心 About ChatGPT Pro tiers（10 月 29 日更新）、Tibo 当天的原帖。
+
 ## 2026-10-27
 
 - 新模型 GPT-6.1 Terra（美国时间 10 月 26 日）：只在 Work 和 Codex，Plus、Pro、Business、Enterprise、Edu 可用，普通对话里没有，Free 和 Go 不包括。Plus 每 5 小时约 35–285 条（GPT-6.1 Sol 是 15–160），CLI 要 0.159.0 以上，`codex -m gpt-6.1-terra`。页首套餐说明、第 6 节「模型不支持」的推荐模型、第 7 节估算表随之更新。依据：ChatGPT Learn 更新日志、Models、Pricing。
