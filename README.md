@@ -1,6 +1,6 @@
 # Codex 国内使用与报错速查（2026）：安装、登录、手机号、代理、额度
 
-> **最后核对：2026 年 10 月 30 日**（北京时间）· Codex CLI 0.166.0 · 桌面版 26.1023 · VS Code 插件 26.1021
+> **最后核对：2026 年 11 月 3 日**（北京时间）· Codex CLI 0.166.0 · 桌面版 26.1027 · VS Code 插件 26.1021
 > 遇到报错，直接 Ctrl + F 搜报错里的几个词。终端、英文界面、中文界面三种写法都收了。
 > 觉得有用就点右上角 ⭐ Star，下次报错不用再到处搜。
 
@@ -17,7 +17,7 @@
 - 输入框上方出现「此聊天已被标记为可能存在网络安全风险」（`This chat was flagged for possible cybersecurity risk`）：网络安全方面的安全检查拦下了这次请求，这一条本身不是封号。换个说法再发，觉得是误判就用 `/feedback` 反馈：[看这里](#被标记为网络安全风险flagged-for-possible-cybersecurity-risk)
 - 周额度还剩八九成，却一直报 `exceeded retry limit, last status: 429 Too Many Requests`：10 月 25–26 日那一波之后新开的 issue 少了，但 28 日还有两位 Pro 用户在报，没有官方回复：[看这里](#请求太多429-too-many-requests)
 - 上下文、自动压缩：「正在压缩上下文」卡住、压缩完忘了在做什么、刚开始没多久就压缩。各模型的上下文多大、在哪设、10 月 30 日的 CLI 0.166.0 修了什么：[看这里](#上下文满了ran-out-of-room-in-the-models-context-window)
-- 重置：Tibo 10 月 25 日、26 日、28 日又各发了一次全体重置。OpenAI 帮助中心写明：用重置卡、全体重置、付费重置都可能改掉你下一次额度刷新的时间；点「使用重置」至少要有一项剩余不到 80%：[看这里](#重置机会用不了你当前的用量暂时无需重置)
+- 重置：Tibo 的 28 天计划 11 月 2 日结束，最后两天（11 月 1 日、2 日）各发了一张重置卡，10 月 28 日之后没有再全体重置。OpenAI 帮助中心写明：用重置卡、全体重置、付费重置都可能改掉你下一次额度刷新的时间；点「使用重置」至少要有一项剩余不到 80%：[看这里](#重置机会用不了你当前的用量暂时无需重置)
 
 ## 目录
 
@@ -1249,7 +1249,7 @@ You've hit your usage limit. Upgrade your plan to continue, or try again at …
 | 5 小时额度用完 | 等报错里写的时间，一般几小时内就回来。Plus 有 5 小时限制；Pro 目前没有，只算每周额度（官方定价页，10 月 18 日核对） |
 | 每周额度用完 | 等周额度重置；急用就换个消耗低的模型，或者买额外额度 |
 | 当前模型用完了 | 按提示换一个模型开新会话 |
-| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」，点「使用重置」。至少有一项用量剩余不到 80% 才用得了，见下面的[重置机会用不了](#重置机会用不了你当前的用量暂时无需重置)。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，最近几乎隔一两天一次：最近一次是北京时间 10 月 28 日 10:42 宣布、14:29 说已经完成（[宣布](https://x.com/thsottiaux/status/2115273064481218829)、[完成](https://x.com/thsottiaux/status/2115330127886463244)）；26 日 13:21 他说「今天是重置」，没说几点到（[原帖](https://x.com/thsottiaux/status/2114588174249071102)）；25 日 11:39 宣布、14:06 说已经全部到账（[宣布](https://x.com/thsottiaux/status/2114200152701575656)、[到账](https://x.com/thsottiaux/status/2114237083652882932)）；再往前是 22 日、23 日接连宣布的两次，都说「明天太平洋时间上午 10 点前」到，也就是北京时间 23 日、24 日凌晨 1 点前后（原帖：[22 日](https://x.com/thsottiaux/status/2113162277688070445)、[23 日](https://x.com/thsottiaux/status/2113492187770175603)），以及 10 月 20 日 14:33（[原帖](https://x.com/thsottiaux/status/2112432076767289678)）；最近一张重置卡是 10 月 8 日凌晨发的（GPT-6 进普通 Chat 那天）。重置卡有具体的到期时间，过期不能恢复：网页版 Settings → Usage 里把鼠标停在到期日期上，能看到具体时间和时区（OpenAI_Support 10 月 6 日在[官方社区](https://community.openai.com/t/1403334)的答复）。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
+| 手上有重置机会 | 中文界面叫「使用已储备的重置机会」，点「使用重置」。至少有一项用量剩余不到 80% 才用得了，见下面的[重置机会用不了](#重置机会用不了你当前的用量暂时无需重置)。Codex 负责人 Tibo 经常在新模型上线、用户数破纪录这类时候给大家发重置，10 月他的 28 天计划期间几乎隔一两天一次，计划 11 月 2 日结束，最后两天各发了一张重置卡：北京时间 11 月 1 日 08:43（[原帖](https://x.com/thsottiaux/status/2116692529970311254)）和 11 月 2 日 07:27（[原帖](https://x.com/thsottiaux/status/2117035794678546764)）。最近一次全体重置是北京时间 10 月 28 日 10:42 宣布、14:29 说已经完成（[宣布](https://x.com/thsottiaux/status/2115273064481218829)、[完成](https://x.com/thsottiaux/status/2115330127886463244)）；26 日 13:21 他说「今天是重置」，没说几点到（[原帖](https://x.com/thsottiaux/status/2114588174249071102)）；25 日 11:39 宣布、14:06 说已经全部到账（[宣布](https://x.com/thsottiaux/status/2114200152701575656)、[到账](https://x.com/thsottiaux/status/2114237083652882932)）；再往前是 22 日、23 日接连宣布的两次，都说「明天太平洋时间上午 10 点前」到，也就是北京时间 23 日、24 日凌晨 1 点前后（原帖：[22 日](https://x.com/thsottiaux/status/2113162277688070445)、[23 日](https://x.com/thsottiaux/status/2113492187770175603)），以及 10 月 20 日 14:33（[原帖](https://x.com/thsottiaux/status/2112432076767289678)）；再往前一张重置卡是 10 月 8 日凌晨发的（GPT-6 进普通 Chat 那天）。重置卡有具体的到期时间，过期不能恢复：网页版 Settings → Usage 里把鼠标停在到期日期上，能看到具体时间和时区（OpenAI_Support 10 月 6 日在[官方社区](https://community.openai.com/t/1403334)的答复）。[每一次的时间和原推在这里](https://aonir.com/guides/codex-usage-reset/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_resets) |
 | 经常用完，影响干活 | 考虑升级。Pro 分三档：Pro 100、Pro 200、Pro 500（$100 / $200 / $500）。美国时间 10 月 29 日起 Pro 的 Work / Codex 额度翻倍，Pro 200 原定下调老订阅额度的计划取消，Plus 不变（[OpenAI 帮助中心](https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers)）；翻倍后三档分别约为 Plus 的 10、20、50 倍，倍数是 Codex 负责人 Tibo 的说法（[原帖](https://x.com/thsottiaux/status/2115850175868727621)，50 倍他[亲自确认](https://x.com/thsottiaux/status/2115851811576053881)）。[翻倍的详细说明](https://aonir.com/guides/chatgpt-pro-usage-doubled/?utm_source=github&utm_medium=referral&utm_campaign=codex_guide&utm_content=guide_pro_doubled) |
 
 Plus 每 5 小时大概能发多少条（官方定价页的估算，本地任务，10 月 26 日核对）：
