@@ -2,6 +2,16 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-11-05
+
+- 额度规则：12 月起 Plus、Pro、Business 的 ChatGPT 和 Codex 共用一份额度，按 token 计，模型越高级、任务越复杂用得越多，Instant 聊天不算；合并后的剩余额度和刷新时间在 设置 → Usage 看。具体日期、每档额度多大，官方还没写。页首新加一条，第 7 节加一段。依据：OpenAI 帮助中心 Understanding ChatGPT and Codex usage limits（11 月 5 日读到）；11 月 1 日起用户在 V2EX 贴出的 OpenAI 邮件。
+- 新增 Postman 一段：10 月 24 日前后起，Postman 桌面版（报告人用的是 12.33.4）会自己往 Codex 里装插件和启动钩子，表现是 `MCP server startup failed server_name="postman"`（`Auth required`）、Codex 总先调 Postman 的技能；Postman 11 月 5 日说撤回这次改动。删法写在第 6 节「插件和 MCP 连不上」（命令取自 `codex plugin --help`，我们没在装了它的电脑上跑过），按报错找加了一行。
+- 新增「让 Codex 操作 Chrome 失败」：`The browser access host is unavailable`、`Cannot read properties of undefined (reading 'timeoutMs')`，11 月 2 日起变多，没有官方回复；一位 Linux 用户更新桌面版到 26.1029.61003 后好了。状态表第一行、按报错找各加一行。
+- 版本：页首桌面版改成 26.1029（11 月 4 日起 issue 里出现 26.1029.61003、Windows 商店包 26.1029.7803.0，5 日有 Mac 用户贴出 26.1030.10813）；CLI 正式版还是 0.166.0（0.167.0、0.168.0 只有 alpha）；VS Code 插件还是 26.1021.22027。
+- 报错状态回 openai/codex 核对到 11 月 5 日：「模型满载」还没退，UTC 11 月 2 日 12 个（重数后）、3 日 8 个、4 日 13 个，issue 里仍没有官方回复，加了用户转述的客服建议（新开一个短一点的对话）和「新对话照样报」的反例；429 一段加 OpenAI 的人 11 月 4 日的回复（改了提示的写法，之后的版本里出，没说等待会不会变）；VS Code 插件到 11 月 5 日仍没有新版本，第 6 节加「换一个全新的 VS Code 配置目录试试」（一位用户）；额度小圆环加「像是分批开放」（一位用户查到要服务器那边打开开关，V2EX 上也有人说自己的还在）；`DisposableStack` 加一位 Windows 用户确认退回插件管用；WSL 那一种「无法加载组织设置」报告人 11 月 3 日说更新后好了；「无法加载工作空间设置」又一位 Mac 用户说不再出现；`0x80070020` 5 日还有人重装后照样报。
+- 常见问题「`codex resume` 里看不到以前的会话」加一段：接过中转站、DeepSeek 再换回官方（「转正」）后旧会话不见了，记录还在本地；CLI 0.166.0 源码里这个列表按当前 `model_provider` 过滤，`--all` 不去掉这一条，临时看用 `codex resume --all -c model_provider="旧名字"`。来源：LINUX DO 上的提问和 openai/codex 源码。「无法加载工作空间设置」一行加 LINUX DO 上一位要开 TUN 才拉得到模型配置的报告。
+- 常见问题「Computer Use 插件不可用」：按官方文档现在的写法改了装法（设置 → Computer use → `Any App`）。文末「官方来源」加上帮助中心 20001625，状态的核对日期改成 11 月 5 日。
+
 ## 2026-11-03
 
 - 重置：Tibo 的 28 天计划 11 月 2 日结束。最后两天各发了一张重置卡（11 月 1 日 08:43「Banked 1/2」、11 月 2 日 07:27「Day 28/ Banked 2/2」，第 26 天他提前预告过），10 月 28 日之后没有再全体重置。页首「重置」一行和第 7 节「手上有重置机会」一格随之更新。依据：Tibo 的原帖。
