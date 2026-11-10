@@ -2,6 +2,21 @@
 
 Codex 改了安装方式、登录流程、报错或额度规则，这里记一笔。日期为北京时间。
 
+## 2026-11-10
+
+- 新增「项目列表空了：没有项目（No projects）」：11 月 6 日起桌面版 26.1103 上，退出登录或切换账号后左边栏的项目全没了，聊天只在「最近」里。OpenAI 的人北京时间 11 月 10 日凌晨在 #59895 回复，修复在「周二的版本」里发；用户的办法（完全退出重开；改 `~/.codex/.codex-global-state.json` 合并回原账号的项目列表，六位用户成功，非官方，先备份）。
+- 新增「SSH 远程项目：重启应用后不自动连上」（26.1103，Windows、macOS；设置 → 连接里取消勾选再勾上「连接」，至少六位用户确认）、「让 Codex 打开某个网站被拦：Site safety policy blocked this URL」（6 月起就有人报，11 月 5–8 日又新开 7 个；微信公众号文章、拼多多商家后台等，「始终允许」也没用，没有官方回复）。
+- 已知问题表加「让 Codex 定时盯一个任务被拒」（`Do not create an automation to track a specific job …`，11 月 5–9 日 5 个 issue；一位用户自己手动建定时任务成功）和「Linux 桌面版 26.1103.32239 回车、发送没反应」（两位用户退回 26.1027.51404 后好了）。
+- 「被标记为网络安全风险」加三句同类提示（8–9 月起就有，11 月 5–9 日又有十几个人报误判）：让你申请 Daybreak 的「此内容无法显示」、「Daybreak 不适用于 Astra」、`This request was blocked by our safety systems`（`misalignmentPolicyViolation`）。
+- VS Code 插件打不开：OpenAI 的人北京时间 11 月 10 日 14:26 第一次回复，已复现、打算第二天发修好的版本；加了两个各只有一位用户试过的办法（最后再打开 Codex 侧边栏；Linux 上 `code --disable-gpu`）。到 10 日下午插件市场还没有新版本。
+- 远程控制加一条：「无法更新远程控制状态」「远程控制授权失败」（`Failed to authorize remote control`）、日志里 `Multi-factor authentication required` 的，两位用户开了 ChatGPT 账号的 MFA 就好了（其中一位以为开着，网页版安全设置里其实没开）。
+- 「更新后打不开」加两种：Windows 更新后报 `0x80070020`，用 GPG 签名提交的，`gpgconf --kill scdaemon`、`gpgconf --kill gpg-agent` 后马上能开（一位用户）；WSL 模式下弹「无法加载组织设置」、日志 `policy-read reason=protocol` 的，一位用户查到是 BIOS 没开硬件虚拟化。
+- 常见问题：「恢复对话失败」加 `AbsolutePathBuf deserialized without a base path`（Windows 26.1103，云端管理的聊天，先去网页版）；「`codex resume` 里看不到以前的会话」加 CLI 0.167.0 的改动（换了提供方，保存的聊天仍然显示）；「Codex 为什么这么慢」加 OpenAI 11 月 4 日说已修好对话越长内存越涨的问题。
+- 第 7 节：12 月共用额度 11 月 10 日重读帮助中心没变；加一位 V2EX 用户说自己的账号像是提前合并了（个人观察）。
+- 状态核对到 11 月 10 日：「模型满载」7 日起少了（UTC 5 日、6 日各 6 个，7、8 日周末 0 个，9 日 2 个、同一个人），还要再看；429 那句提示 0.167.0 里没提；Postman 11 月 5 日说撤回、issue 已关，之后几版更新说明是空的；Chrome 浏览器控制 11 月 5–9 日又新开十几个，多在单独的 CLI 里。
+- 「最近两周的已知问题」：开头的各版本推送记录换成一段「现在的版本」（桌面版 26.1103、CLI 0.167.0、VS Code 插件 26.1021.22027）；新加 7 行（项目列表、SSH、Linux 发送没反应、定时任务被拒、网站被拦、恢复对话失败、网络安全新提示）；已经修好、两周没有新报告或一直没进展的 12 行挪进折叠区（额度小圆环、SYSTEMROOT、workspace routing 404、DisposableStack、API Key 的 Work 浏览器、周额度掉一大截、OAuth state not found、WSL 组织设置、服务器处理失败、无法加载你的账户、无法加载工作空间设置、Server is draining），每一条的报错原文都还在「按报错找」里（SYSTEMROOT 那一行是新补的）。按报错找加 7 行、改 4 行。页首「这几天问得最多的」换成 11 月 10 日的 8 条。
+- 版本：页首和安装一节改成 CLI 0.167.0（11 月 6 日，npm 国内镜像一致）、桌面版 26.1103。
+
 ## 2026-11-05
 
 - 额度规则：12 月起 Plus、Pro、Business 的 ChatGPT 和 Codex 共用一份额度，按 token 计，模型越高级、任务越复杂用得越多，Instant 聊天不算；合并后的剩余额度和刷新时间在 设置 → Usage 看。具体日期、每档额度多大，官方还没写。页首新加一条，第 7 节加一段。依据：OpenAI 帮助中心 Understanding ChatGPT and Codex usage limits（11 月 5 日读到）；11 月 1 日起用户在 V2EX 贴出的 OpenAI 邮件。
@@ -196,4 +211,4 @@ Codex 改了安装方式、登录流程、报错或额度规则，这里记一�
 
 ## 出处：中文界面文字和命令原文取自哪一版
 
-中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示、10 月 16 日新增的权限、远程控制、恢复对话和「正在思考」几处文字，10 月 21 日新增的「帮我批准」自动审核、反馈权限、字号几处文字，都取自 26.1007.21159；10 月 24 日新增的「启动聊天时出错」「本地模式」「工作树」、重置相关的「你当前的用量暂时无需重置」「允许助手使用用量重置次数」「购买即时重置」、浏览器插件「已被你的组织停用，或在你所在地区不可用」，取自 26.1016.62342；10 月 26 日新增的网络安全标记（「此聊天已被标记为可能存在网络安全风险」「正在进一步审慎考虑此请求」「此内容无法显示」）、重置「历史记录」「无法重置用量」、「无法生成提交信息」，也取自 26.1016.62342，VS Code 的「安装特定版本...」「自动更新」「移动到」取自 VS Code 官方简体中文语言包（microsoft/vscode-loc）；CLI 的 `Reconnecting... waiting for network`、`Your account was flagged for potentially high-risk cyber activity`、`codex resume --all`、`codex app-server daemon update` 对照的是 0.164.0 的源码；CLI 里的「无法设置管理员沙盒」选择框、登录页的 `Sign-in could not be completed` / `State mismatch`、端口被占时改用 1457 的逻辑、MCP 启动超时的提示和 30 秒默认值、`~/.codex/.env` 的读取、`/approve` 的说明，对照的是 0.163.0 的源码；`codex archive` / `unarchive` / `delete`、`codex app-server daemon stop` 对照了它自带的 Codex（0.162.0-alpha.17.2）的帮助输出和 0.163.0 的源码；CLI 卡住时的 `Working (… • esc to interrupt)` 取自 0.163.0 的源码；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。
+中文界面的文字取自 ChatGPT 桌面版（macOS）自带的简体中文语言包，9 月 24 日按 26.915.31945 整理，10 月 3 日按 26.930.21537 复核，10 月 11–12 日新增的几条提示、10 月 16 日新增的权限、远程控制、恢复对话和「正在思考」几处文字，10 月 21 日新增的「帮我批准」自动审核、反馈权限、字号几处文字，都取自 26.1007.21159；10 月 24 日新增的「启动聊天时出错」「本地模式」「工作树」、重置相关的「你当前的用量暂时无需重置」「允许助手使用用量重置次数」「购买即时重置」、浏览器插件「已被你的组织停用，或在你所在地区不可用」，取自 26.1016.62342；10 月 26 日新增的网络安全标记（「此聊天已被标记为可能存在网络安全风险」「正在进一步审慎考虑此请求」「此内容无法显示」）、重置「历史记录」「无法重置用量」、「无法生成提交信息」，也取自 26.1016.62342，VS Code 的「安装特定版本...」「自动更新」「移动到」取自 VS Code 官方简体中文语言包（microsoft/vscode-loc）；CLI 的 `Reconnecting... waiting for network`、`Your account was flagged for potentially high-risk cyber activity`、`codex resume --all`、`codex app-server daemon update` 对照的是 0.164.0 的源码；CLI 里的「无法设置管理员沙盒」选择框、登录页的 `Sign-in could not be completed` / `State mismatch`、端口被占时改用 1457 的逻辑、MCP 启动超时的提示和 30 秒默认值、`~/.codex/.env` 的读取、`/approve` 的说明，对照的是 0.163.0 的源码；`codex archive` / `unarchive` / `delete`、`codex app-server daemon stop` 对照了它自带的 Codex（0.162.0-alpha.17.2）的帮助输出和 0.163.0 的源码；CLI 卡住时的 `Working (… • esc to interrupt)` 取自 0.163.0 的源码；`codex doctor` 输出来自我们编辑电脑上的实际运行结果（CLI 0.153.4）；`--no-daemon`、`--no-alt-screen`、`codex app-server daemon …`、`codex features …` 对照了桌面版 26.930 自带的 Codex（0.159.0-alpha.12.1）的帮助输出。11 月 10 日新增的「没有项目」「最近」「连接」「继续聊天未成功」「远程控制授权失败」，以及「对于某些网络安全请求，我们会格外谨慎……」「Daybreak 不适用于 Astra……」两句的中文，取自桌面版 26.1103.32239 的语言包。
