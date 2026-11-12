@@ -114,6 +114,7 @@
 | `account/read failed during TUI bootstrap`、`workspace routing discovery failed`、`failed to load workspace requirements` | 后台服务版本旧了，或者还记着旧的代理端口 | [后台服务报错](#后台服务daemon报错) |
 | 桌面版 `Sign-in failed: workspace routing discovery timed out`，常和 `token_exchange_failed` 一起 | 桌面版不读终端里的代理变量 | [4. 国内网络](#4-国内网络终端要单独设代理) |
 | `workspace routing discovery failed`，日志里 `/backend-api/codex/models` 返回 `404`；CLI、插件、桌面版全都这样，网页版正常 | 10 月 20 日起账号那一侧的问题，换网络、重装没用 | [最近的已知问题](#最近两周的已知问题) |
+| 桌面版对话里报 `workspace routing discovery unauthorized (401)`（前面可能先有一句 `workspace routing discovery failed`），旁边是「正在重新连接 5/5」 | 保存的登录过期了；一位用户更新桌面版后好了 | [401](#登录失效或官方故障401-unauthorized) |
 | `Couldn't verify feedback permissions`、未能验证反馈权限。请重试 | `/feedback` 自己出错 | [常见问题](#常见问题) |
 | Windows 桌面版登录后几十秒自己退出，没有任何提示 | 10 月 7 日那一版装运行时组件时崩溃 | [登录后自己退出](#windows-桌面版登录后几十秒自己退出) |
 | VS Code 日志里 `Failed to release queued message send lock`、`"undefined" is not valid JSON` | 插件 10 月 1 日那一版的问题，已修：更新插件，还卡住就重启 VS Code | [#49988](https://github.com/openai/codex/issues/49988) |
@@ -994,10 +995,11 @@ CLI 里只显示 `exceeded retry limit, last status: 429 Too Many Requests`。�
 unexpected status 401 Unauthorized: Incorrect API key provided: sk-svcac***…. You can find your API key at https://platform.openai.com/account/api-keys., url: https://chatgpt.com/backend-api/codex/responses
 ```
 
-401 有两种，处理办法相反，先分清：
+401 有几种，处理办法不一样，先分清：
 
 - **报错里带 `Incorrect API key provided: sk-svcac…`，而你明明是用 ChatGPT 登录的，没填过 API Key。** 这是 OpenAI 服务器那边的故障，不是你的账号问题。北京时间 9 月 26 日 06:58–07:54 出过一次，CLI、桌面版、插件、网页版同时受影响，维护者回复是大范围故障，不用重复报告（[#48237](https://github.com/openai/codex/issues/48237)，[官方事故记录](https://status.openai.com/incidents/01M3DCNWMW57HYK8FJ5FBFPA39)）。这时**重新登录没用**，看 [status.openai.com](https://status.openai.com)，等恢复。当时压缩上下文也会报同一个错（`Error running remote compact task`）。
 - **只有 `401 Unauthorized`，状态页一切正常，别人也没事。** 多半是你本机的登录失效了：`codex logout`，再 `codex login`。反复出现的，看[登录过期](#登录过期refresh-token-was-already-used)那一节。
+- **桌面版对话里报 `workspace routing discovery unauthorized (401)`，前面可能先有一句 `workspace routing discovery failed`，旁边是「正在重新连接 5/5」。** 先更新桌面版：提示「有可用更新」的点「更新」，没提示的手动检查更新。11 月 12 日一位 Mac 用户发来截图，点了更新之后就好了（用户报告，没有官方说明）。已经更新到 26.1106 还报的，再退出登录、重新登录：一位 Mac 用户远程打开桌面版里的对话时连着三次报这一句，日志里是 `token_expired`，重新登录后恢复（[#49443](https://github.com/openai/codex/issues/49443#issuecomment-6248506863)）。
 
 ### 后台服务（daemon）报错
 
